@@ -13,7 +13,7 @@
 #include "interpreter.h"
 
 int main(void) {
-    char *str = file_to_string(PROJECT_ROOT "/examples/asm/a_equals_a_plus_10.asm");
+    char *str = file_to_string(PROJECT_ROOT "/examples/asm/a_equals_a_plus_10_messycode.asm");
     char** arr = string_to_array(str);
     char** arr_clean = string_to_array(str);
 

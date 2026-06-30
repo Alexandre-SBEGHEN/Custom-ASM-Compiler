@@ -131,3 +131,8 @@ char* string_clean(char* str) {
 
     return copy;
 }
+
+/* Pré-tokenisation d'un tableau de lignes de codes */
+char** array_to_string_tokens(const char** array) {
+    return NULL;
+}

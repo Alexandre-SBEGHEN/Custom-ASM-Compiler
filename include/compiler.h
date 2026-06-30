@@ -55,4 +55,14 @@ char** string_to_array(const char* str);
  */
 char* string_clean(char* str);
 
+/**
+ * Crée une liste de tokens sous la forme de string.
+ *
+ * Etape nécessaire avant la vraie tokénisation.
+ *
+ * @param[in] array Le tableau de lignes.
+ * @return Pointeur vers le nouveau tableau, NULL en cas d'échec.
+ */
+char** array_to_string_tokens(const char** array);
+
 #endif
