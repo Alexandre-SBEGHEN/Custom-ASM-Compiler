@@ -2,6 +2,10 @@
  * @file compiler.h
  * @brief Compilateur de code ASM
  *
+ * Lecture de fichiers, nettoyage des
+ * lignes de code, tokenisation,
+ * puis parsing.
+ *
  * Ça va pas être de la rigolade
  *
  * @author Alexandre SBEGHEN
