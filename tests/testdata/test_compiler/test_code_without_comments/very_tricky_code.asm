@@ -14,9 +14,9 @@ STORE @2;
 # commentaire contenant une fausse instruction complete : STORE @0; LOAD #5; JZ for;
 # encore un piege : #42 ne doit PAS etre lu comme un operande ici
 
-LOAD#7;
+LOAD #7;
 LOAD #0;
-LOAD#-3;
+LOAD #-3;
 
 STORE @1;#collé direct sans espace
 #

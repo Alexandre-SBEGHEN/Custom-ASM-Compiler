@@ -16,9 +16,13 @@ int main(void) {
     char* str = file_to_string(PROJECT_ROOT
         "/tests/testdata/test_compiler/test_code_without_comments/very_tricky_code.asm");
     char* str_w_o_comments = code_without_comments(str);
+    char** tokens = array_of_isolated_keywords(str_w_o_comments);
 
-    printf("%s\n————————————————————————————————————————\n", str_w_o_comments);
+    for (size_t i = 0; tokens[i] != NULL; i++)
+        printf("%s\n", tokens[i]);
 
+    free(tokens[0]);
+    free(tokens);
     free(str_w_o_comments);
     free(str);
     return 0;

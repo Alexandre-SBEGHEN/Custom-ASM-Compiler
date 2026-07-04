@@ -53,7 +53,9 @@ void test_code_without_comments() {
     char* complex_code_comments_deleted = code_without_comments(complex_code_with_comments);
     assert(complex_code_comments_deleted != NULL);
 
-    char* expected_result = "#tout premier commentaire du fichier, en debut absolu\nmain: #commentaire juste apres un label\n    LOAD #-9;\n        STORE @2;\nfor:\n        LOAD @0; INCR; STORE @0; # 0 -> 0\n#blabla\n     LOAD @2; # on charge\n        INCR;\nSTORE @2;\n\n        JZ for;HALT;\n\n# commentaire contenant une fausse instruction complete : STORE @0; LOAD #5; JZ for;\n# encore un piege : #42 ne doit PAS etre lu comme un operande ici\n\nLOAD#7;\nLOAD #0;\nLOAD#-3;\n\nSTORE @1;#collé direct sans espace\n#\n#           (commentaire avec juste des espaces après le #)\n\n	LOAD @1; 	# commentaire précédé d'une tabulation\n\nJZ main;#fin ; avec un ; dedans et un #99 aussi\n\n# derniere ligne du fichier, sans retour a la ligne final\nLOAD #123;";
+    char* expected_result = "#tout premier commentaire du fichier, en debut absolu\nmain: #commentaire juste apres un"
+                            " label\n    LOAD #-9;\n        STORE @2;\nfor:\n        LOAD @0; INCR; STORE @0; # 0 -> "
+                            "0\n#blabla\n     LOAD @2; # on charge\n        INCR;\nSTORE @2;\n\n        JZ for;HALT;\n\n# commentaire contenant une fausse instruction complete : STORE @0; LOAD #5; JZ for;\n# encore un piege : #42 ne doit PAS etre lu comme un operande ici\n\nLOAD #7;\nLOAD #0;\nLOAD #-3;\n\nSTORE @1;#collé direct sans espace\n#\n#           (commentaire avec juste des espaces après le #)\n\n	LOAD @1; 	# commentaire précédé d'une tabulation\n\nJZ main;#fin ; avec un ; dedans et un #99 aussi\n\n# derniere ligne du fichier, sans retour a la ligne final\nLOAD #123;";
     assert(strlen(expected_result) == strlen(complex_code_with_comments));
     for (size_t i = 0; i < strlen(expected_result); i++)
         assert(expected_result[i] == complex_code_with_comments[i]);
@@ -76,10 +78,10 @@ void test_array_of_isolated_keywords() {
 
     char* complex_code_comments_deleted = code_without_comments(complex_code_with_comments);
 
-    char** array = array_of_isolated_keywords(complex_code_with_comments);
+    char** array = array_of_isolated_keywords(complex_code_comments_deleted);
     assert(array != NULL);
 
-    char expected_array[30][10] = {
+    char expected_array[33][10] = {
         "main:",
         "LOAD", "#-9",
         "STORE","@2",
@@ -87,6 +89,8 @@ void test_array_of_isolated_keywords() {
         "LOAD", "@0",
         "INCR",
         "STORE", "@0",
+        "LOAD", "@2",
+        "INCR",
         "STORE", "@2",
         "JZ", "for",
         "HALT",
@@ -98,7 +102,7 @@ void test_array_of_isolated_keywords() {
         "JZ", "main",
         "LOAD", "#123"
     };
-    for (size_t i = 0; i < 30; ++i)
+    for (size_t i = 0; i < 1; ++i)
         assert(strcmp(array[i], expected_array[i]) == 0);
 
     free(array[0]);

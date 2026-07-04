@@ -77,5 +77,57 @@ char* code_without_comments(const char* str) {
 
 /* Pré-tokénisation -> tableau de mots clés */
 char** array_of_isolated_keywords(const char* str) {
-    return NULL;
+    char* copy = strdup(str);
+    if (copy == NULL)
+        return NULL;
+
+    // Préparer la séparation (token, séparateurs, nombre de lignes nécessaires)
+    char* token;
+    const char* sep = "\n\t ;";
+    size_t rows = 0;
+
+    // Combien de lignes à allouer ?
+    token = strtok(copy, sep);
+    while (token != NULL) {
+        ++rows;
+        token = strtok(NULL, sep);
+    }
+    free(copy);
+
+    // Allocation du tableau des mots clés
+    // Tableau de pointeurs
+    char** array;
+    if ((array = malloc(rows * sizeof(char*))) == NULL)
+        return NULL;
+
+    // Bloc de données contiguës
+    const size_t max_chars_per_row = 16;
+    char* data;
+    if ((data = calloc(rows * max_chars_per_row, sizeof(char))) == NULL) {
+        free(array);
+        return NULL;
+    }
+
+    // Lier adresses et emplacements dans le bloc
+    for (size_t i = 0; i < rows; ++i)
+        array[i] = data + i * max_chars_per_row;
+
+    // Affectation dans le tableau
+    copy = strdup(str);
+    if (copy == NULL) {
+        free(data);
+        free(array);
+        return NULL;
+    }
+
+    token = strtok(copy, sep);
+    size_t i = 0;
+    while (i < rows && token != NULL) {
+        strcpy(array[i], token);
+        token = strtok(NULL, sep);
+        ++i;
+    }
+    free(copy);
+
+    return array;
 }
