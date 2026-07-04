@@ -74,3 +74,8 @@ char* code_without_comments(const char* str) {
 
     return copy;
 }
+
+/* Pré-tokénisation -> tableau de mots clés */
+char** array_of_isolated_keywords(const char* str) {
+    return NULL;
+}
