@@ -29,6 +29,10 @@ char* file_to_string(const char* filename);
 /**
  * @brief Retire les commentaires d'un code.
  *
+ * Remplace les commentaires (# jusqu'à fin de ligne)
+ * par des espaces.
+ * N'affecte les # qui servent d'opérande (ex: LOAD #0).
+ *
  * @param[in, out] str Code sur lequel effectuer les modifications
  */
 void remove_comments(char* str);
