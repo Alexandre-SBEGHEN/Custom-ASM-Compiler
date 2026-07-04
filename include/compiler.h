@@ -33,13 +33,13 @@ char* file_to_string(const char* filename);
  * par des espaces.
  * N'affecte les # qui servent d'opérande (ex: LOAD #0).
  *
- * @param[in, out] str Code sur lequel effectuer les modifications
+ * @param[in] str Code sur lequel effectuer les modifications
  * @return Pointeur vers la string, NULL en cas d'échec.
  *
  * @note Cette fonction effectue une allocation dynamique
  * de mémoire, penser à libérer la mémoire avec free().
  */
-char* code_without_comments(char* str);
+char* code_without_comments(const char* str);
 
 
 

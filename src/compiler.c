@@ -38,7 +38,7 @@ char* file_to_string(const char* filename) {
 }
 
 /* Suppression des commentaires */
-char* code_without_comments(char* str) {
+char* code_without_comments(const char* str) {
     char* copy = strdup(str);
     if (copy == NULL)
         return NULL;
