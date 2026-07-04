@@ -34,3 +34,8 @@ char* file_to_string(const char* filename) {
     fclose(file);
     return str;
 }
+
+/* Suppression des commentaires */
+void remove_comments(char* str) {
+    
+}
