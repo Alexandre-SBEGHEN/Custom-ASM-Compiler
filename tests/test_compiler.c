@@ -36,21 +36,21 @@ void test_file_to_string() {
 }
 
 /**
- * @brief Test de la fonction code_without_comments().
+ * @brief Test de la fonction remove_comments().
  *
  * Prend un gros morceau de codes avec des commentaires
  * qui testent les différents cas possibles et vérifie
  * la correspondance entre le résultat de la fonction
  * et le résultat attendu.
  *
- * @see code_without_comments()
+ * @see remove_comments()
  */
-void test_code_without_comments() {
+void test_remove_comments() {
     char* complex_code_with_comments = file_to_string(PROJECT_ROOT
-        "/tests/testdata/test_compiler/test_code_without_comments/very_tricky_code.asm");
+        "/tests/testdata/test_compiler/test_remove_comments/very_tricky_code.asm");
     assert(complex_code_with_comments != NULL);
 
-    char* complex_code_comments_deleted = code_without_comments(complex_code_with_comments);
+    char* complex_code_comments_deleted = remove_comments(complex_code_with_comments);
     assert(complex_code_comments_deleted != NULL);
 
     char* expected_result = "#tout premier commentaire du fichier, en debut absolu\nmain: #commentaire juste apres un"
@@ -64,21 +64,21 @@ void test_code_without_comments() {
 }
 
 /**
- * @brief Test de la fonction array_of_isolated_keywords().
+ * @brief Test de la fonction string_to_keywords().
  *
  * Exécute la fonction avec un grand code et
  * vérifie la correspondance entre le tableau de
  * la fonction et le tableau attendu.
  *
- * @see array_of_isolated_keywords()
+ * @see string_to_keywords()
  */
-void test_array_of_isolated_keywords() {
+void test_string_to_keywords() {
     char* complex_code_with_comments = file_to_string(PROJECT_ROOT
-        "/tests/testdata/test_compiler/test_code_without_comments/very_tricky_code.asm");
+        "/tests/testdata/test_compiler/test_remove_comments/very_tricky_code.asm");
 
-    char* complex_code_comments_deleted = code_without_comments(complex_code_with_comments);
+    char* complex_code_comments_deleted = remove_comments(complex_code_with_comments);
 
-    char** array = array_of_isolated_keywords(complex_code_comments_deleted);
+    char** array = string_to_keywords(complex_code_comments_deleted);
     assert(array != NULL);
 
     char expected_array[33][10] = {
@@ -113,8 +113,8 @@ void test_array_of_isolated_keywords() {
 
 int main() {
     test_file_to_string();
-    test_code_without_comments();
-    test_array_of_isolated_keywords();
+    test_remove_comments();
+    test_string_to_keywords();
 
     return 0;
 }

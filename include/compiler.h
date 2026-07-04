@@ -15,6 +15,35 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
+#include <stdint.h>
+
+/* --- Alias --------------------------------------------------------------- */
+
+typedef enum TokenTypeEnum TokenType;
+typedef struct TokenStruct Token;
+
+/* --- Enums et Structs ---------------------------------------------------- */
+
+enum TokenTypeEnum {
+    TT_NOTHING,
+    TT_LABEL_DEF,
+    TT_LABEL_GOTO,
+    TT_NUMBER,
+    TT_ADDRESS,
+    TT_INST
+};
+
+struct TokenStruct {
+    TokenType type;
+    int32_t value;
+};
+
+/* --- Constantes ---------------------------------------------------------- */
+
+
+
+/* --- Fonctions ----------------------------------------------------------- */
+
 /**
  * @brief Récupère le contenu d'un fichier dans une string.
  *
@@ -39,7 +68,7 @@ char* file_to_string(const char* filename);
  * @note Cette fonction effectue une allocation dynamique
  * de mémoire, penser à libérer la mémoire avec free().
  */
-char* code_without_comments(const char* str);
+char* remove_comments(const char* str);
 
 /**
  * @brief Transforme un code clean (sans commentaires) en liste de mots clés.
@@ -55,6 +84,18 @@ char* code_without_comments(const char* str);
  * de mémoire, penser à libérer la mémoire avec free(). À
  * effectuer sur array[0] ET array.
  */
-char** array_of_isolated_keywords(const char* str);
+char** string_to_keywords(const char* str);
+
+/**
+ * @brief Crée un token à partir d'un mot-clé.
+ *
+ * @param[in] keyword Le mot-clé à tokeniser.
+ * @return Pointeur vers la structure allouée ou NULL en cas
+ * d'échec d'allocation.
+ *
+ * @note Cette fonction effectue une allocation dynamique
+ * de mémoire, penser à libérer la mémoire avec free().
+ */
+Token* keyword_to_token(const char* keyword);
 
 #endif

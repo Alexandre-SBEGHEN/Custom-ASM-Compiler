@@ -38,7 +38,7 @@ char* file_to_string(const char* filename) {
 }
 
 /* Suppression des commentaires */
-char* code_without_comments(const char* str) {
+char* remove_comments(const char* str) {
     char* copy = strdup(str);
     if (copy == NULL)
         return NULL;
@@ -75,8 +75,8 @@ char* code_without_comments(const char* str) {
     return copy;
 }
 
-/* Pré-tokénisation -> tableau de mots clés */
-char** array_of_isolated_keywords(const char* str) {
+/* Pré-tokénisation → tableau de mots clés */
+char** string_to_keywords(const char* str) {
     char* copy = strdup(str);
     if (copy == NULL)
         return NULL;
@@ -130,4 +130,9 @@ char** array_of_isolated_keywords(const char* str) {
     free(copy);
 
     return array;
+}
+
+/* Tokénisation d'un mot-clé */
+Token* keyword_to_token(const char* keyword) {
+    return NULL;
 }
