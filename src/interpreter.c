@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Création dynamique d'une structure registre Register */
+/* Création dynamique d'une structure registre Program */
 Program* program_create(size_t size) {
     Program* prog;
 
@@ -47,42 +47,42 @@ int program_interpret(const Program* prog, Machine* mac) {
             return 1;
 
         // Obtenir la paire opération / argument
-        int32_t op = prog->inst[inst_index].op;
-        int32_t arg = prog->inst[inst_index].arg;
+        const Opcode op = prog->inst[inst_index].op;
+        const int32_t arg = prog->inst[inst_index].arg;
 
         // Action selon l'instruction
         switch (op) {
             // Ne rien faire
-            case 0:
+            case OP_NOTHING:
                 break;
             // LOAD #?
-            case 1:
+            case OP_LOAD_DIRECT:
                 ram_load_direct(mac, arg);
                 break;
             // LOAD @?
-            case 2:
+            case OP_LOAD_FROM:
                 ram_load_from(mac, arg);
             // STORE @?
-            case 3:
+            case OP_STORE_TO:
                 ram_store_to(mac, arg);
                 break;
             // INCR
-            case 4:
+            case OP_INCR:
                 ram_increment(mac);
                 break;
             // DECR
-            case 5:
+            case OP_DECR:
                 ram_decrement(mac);
                 break;
             // JUMP ?
-            case 6:
+            case OP_JUMP:
                 // Gérer l'overflow (erreur 1)
                 if (arg < 0)
                     return 1;
                 inst_index = arg;
                 continue;
             // JZ ?
-            case 7:
+            case OP_JZ:
                 // Gérer l'overflow (erreur 1)
                 if (arg < 0)
                     return 1;
@@ -92,7 +92,7 @@ int program_interpret(const Program* prog, Machine* mac) {
                 }
                 break;
             // HALT
-            case 8:
+            case OP_HALT:
                 return 0;
             // Instruction inconnue (erreur 2)
             default:
@@ -112,12 +112,12 @@ Program* file_bin_to_program(const char* filename) {
 
     //Vérifier que le fichier contient des blocs de 8 octets (paire instruction / opérande)
     fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
+    const long file_size = ftell(file);
     rewind(file);
     if (file_size % 8 != 0) return NULL;
 
     // Le nombre d'instructions est la taille du fichier / 8
-    long number_of_instructions = file_size / 8;
+    const long number_of_instructions = file_size / 8;
     Program* prog = program_create(number_of_instructions);
     if (prog == NULL) return NULL;
 
@@ -131,13 +131,13 @@ Program* file_bin_to_program(const char* filename) {
         }
 
         // On concatène les parties pour obtenir le grand nombre (4 octets)
-        int32_t inst = (int32_t)(
+        const int32_t inst = (int32_t)(
             (int32_t)instbytes[0] << 24 |
             (int32_t)instbytes[1] << 16 |
             (int32_t)instbytes[2] << 8 |
             (int32_t)instbytes[3]
         );
-        int32_t arg = (int32_t)(
+        const int32_t arg = (int32_t)(
             (int32_t)argbytes[0] << 24 |
             (int32_t)argbytes[1] << 16 |
             (int32_t)argbytes[2] << 8 |
@@ -145,7 +145,7 @@ Program* file_bin_to_program(const char* filename) {
         );
 
         // On encode inst et arg dans le programme
-        prog->inst[i].op = inst;
+        prog->inst[i].op = (Opcode)(inst);
         prog->inst[i].arg = arg;
     }
 

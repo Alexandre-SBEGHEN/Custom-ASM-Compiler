@@ -17,20 +17,26 @@
 
 #include "machine.h"
 
+/* --- Constantes ---------------------------------------------------------- */
+
+/**
+ * @brief Code des différentes instructions.
+ */
 enum OpcodeEnum {
+    OP_NOTHING,
     OP_LOAD_DIRECT,
-    OP_LOAD_AT,
+    OP_LOAD_FROM,
     OP_STORE_TO,
-    INCR,
-    DECR,
-    JUMP,
-    JZ,
-    HALT
+    OP_INCR,
+    OP_DECR,
+    OP_JUMP,
+    OP_JZ,
+    OP_HALT
 };
 
 /* --- Alias --------------------------------------------------------------- */
 
-typedef enum OpCodeEnum Opcode;
+typedef enum OpcodeEnum Opcode;
 typedef struct InstructionStruct Instruction;
 typedef struct ProgramStruct Program;
 
@@ -41,7 +47,7 @@ typedef struct ProgramStruct Program;
  * Contient deux champs opération et argument/opérande
  */
 struct InstructionStruct {
-    int32_t op;
+    Opcode op;
     int32_t arg;
 };
 

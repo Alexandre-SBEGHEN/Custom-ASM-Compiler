@@ -70,9 +70,9 @@ void test_program_interpret() {
 
     // Programme 1 (a = 1)
     Instruction prog_a_equals_1[3] = {
-        {1, 1},
-        {3, 0},
-        {8, 0}
+        {OP_LOAD_DIRECT, 1},
+        {OP_STORE_TO, 0},
+        {OP_HALT, 0}
     };
     memcpy(prog->inst, prog_a_equals_1, sizeof(prog_a_equals_1));
     program_interpret(prog, mac);
@@ -80,16 +80,16 @@ void test_program_interpret() {
 
     // Programme 2 (a = a + 10)
     Instruction prog_a_equals_a_plus_10[10] = {
-        {1, -9},
-        {3, 2},
-        {2, 0},
-        {4, 0},
-        {3, 0},
-        {2, 2},
-        {4, 0},
-        {3, 2},
-        {7, 2},
-        {8, 0}
+        {OP_LOAD_DIRECT, -9},
+        {OP_STORE_TO, 2},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 2},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 2},
+        {OP_JZ, 2},
+        {OP_HALT, 0}
     };
     memcpy(prog->inst, prog_a_equals_a_plus_10, sizeof(prog_a_equals_a_plus_10));
     mac->mem->data[0] = 0;
@@ -107,22 +107,22 @@ void test_program_interpret() {
 
     // Programme 3 (a = |a|)
     Instruction prog_a_equals_abs_of_a[16] = {
-        {2, 0},
-        {4, 0},
-        {3, 1},
-        {2, 0},
-        {4, 0},
-        {7, 7},
-        {6, 15},
-        {2, 0},
-        {4, 0},
-        {4, 0},
-        {3, 0},
-        {2, 1},
-        {4, 0},
-        {3, 1},
-        {7, 7},
-        {8, 0}
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_JZ, 7},
+        {OP_JUMP, 15},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 1},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_JZ, 7},
+        {OP_HALT, 0}
     };
     memcpy(prog->inst, prog_a_equals_abs_of_a, sizeof(prog_a_equals_abs_of_a));
     mac->mem->data[0] = 0;
@@ -159,9 +159,9 @@ void test_file_bin_to_program() {
     );
     assert(prog != NULL);
     Instruction prog_a_equals_1[3] = {
-        {1, 1},
-        {3, 0},
-        {8, 0}
+        {OP_LOAD_DIRECT, 1},
+        {OP_STORE_TO, 0},
+        {OP_HALT, 0}
     };
     for (size_t i = 0; i < prog->size; ++i) {
         assert(prog->inst[i].op == prog_a_equals_1[i].op);
@@ -175,16 +175,16 @@ void test_file_bin_to_program() {
     );
     assert(prog != NULL);
     Instruction prog_a_equals_a_plus_10[10] = {
-        {1, -9},
-        {3, 2},
-        {2, 0},
-        {4, 0},
-        {3, 0},
-        {2, 2},
-        {4, 0},
-        {3, 2},
-        {7, 2},
-        {8, 0}
+        {OP_LOAD_DIRECT, -9},
+        {OP_STORE_TO, 2},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 2},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 2},
+        {OP_JZ, 2},
+        {OP_HALT, 0}
     };
     for (size_t i = 0; i < prog->size; ++i) {
         assert(prog->inst[i].op == prog_a_equals_a_plus_10[i].op);
@@ -198,22 +198,22 @@ void test_file_bin_to_program() {
     );
     assert(prog != NULL);
     Instruction prog_a_equals_abs_of_a[16] = {
-        {2, 0},
-        {4, 0},
-        {3, 1},
-        {2, 0},
-        {4, 0},
-        {7, 7},
-        {6, 15},
-        {2, 0},
-        {4, 0},
-        {4, 0},
-        {3, 0},
-        {2, 1},
-        {4, 0},
-        {3, 1},
-        {7, 7},
-        {8, 0}
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_JZ, 7},
+        {OP_JUMP, 15},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 1},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_JZ, 7},
+        {OP_HALT, 0}
     };
     for (size_t i = 0; i < prog->size; ++i) {
         assert(prog->inst[i].op == prog_a_equals_abs_of_a[i].op);
