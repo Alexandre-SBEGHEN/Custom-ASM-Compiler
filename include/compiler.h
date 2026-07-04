@@ -26,6 +26,13 @@
  */
 char* file_to_string(const char* filename);
 
+/**
+ * @brief Retire les commentaires d'un code.
+ *
+ * @param[in, out] str Code sur lequel effectuer les modifications
+ */
+void remove_comments(char* str);
+
 
 
 #endif
