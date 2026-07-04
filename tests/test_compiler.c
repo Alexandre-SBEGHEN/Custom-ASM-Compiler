@@ -61,9 +61,56 @@ void test_code_without_comments() {
     free(complex_code_comments_deleted);
 }
 
+/**
+ * @brief Test de la fonction array_of_isolated_keywords().
+ *
+ * Exécute la fonction avec un grand code et
+ * vérifie la correspondance entre le tableau de
+ * la fonction et le tableau attendu.
+ *
+ * @see array_of_isolated_keywords()
+ */
+void test_array_of_isolated_keywords() {
+    char* complex_code_with_comments = file_to_string(PROJECT_ROOT
+        "/tests/testdata/test_compiler/test_code_without_comments/very_tricky_code.asm");
+
+    char* complex_code_comments_deleted = code_without_comments(complex_code_with_comments);
+
+    char** array = array_of_isolated_keywords(complex_code_with_comments);
+    assert(array != NULL);
+
+    char expected_array[30][10] = {
+        "main:",
+        "LOAD", "#-9",
+        "STORE","@2",
+        "for:",
+        "LOAD", "@0",
+        "INCR",
+        "STORE", "@0",
+        "STORE", "@2",
+        "JZ", "for",
+        "HALT",
+        "LOAD", "#7",
+        "LOAD", "#0",
+        "LOAD", "#-3",
+        "STORE", "@1",
+        "LOAD", "@1",
+        "JZ", "main",
+        "LOAD", "#123"
+    };
+    for (size_t i = 0; i < 30; ++i)
+        assert(strcmp(array[i], expected_array[i]) == 0);
+
+    free(array[0]);
+    free(array);
+    free(complex_code_comments_deleted);
+    free(complex_code_with_comments);
+}
+
 int main() {
     test_file_to_string();
     test_code_without_comments();
+    test_array_of_isolated_keywords();
 
     return 0;
 }
