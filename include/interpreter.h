@@ -17,8 +17,20 @@
 
 #include "machine.h"
 
+enum OpcodeEnum {
+    OP_LOAD_DIRECT,
+    OP_LOAD_AT,
+    OP_STORE_TO,
+    INCR,
+    DECR,
+    JUMP,
+    JZ,
+    HALT
+};
+
 /* --- Alias --------------------------------------------------------------- */
 
+typedef enum OpCodeEnum Opcode;
 typedef struct InstructionStruct Instruction;
 typedef struct ProgramStruct Program;
 

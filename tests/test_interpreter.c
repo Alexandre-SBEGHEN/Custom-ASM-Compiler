@@ -69,17 +69,17 @@ void test_program_interpret() {
     Program* prog = program_create(16);
 
     // Programme 1 (a = 1)
-    Instruction progtest_1[3] = {
+    Instruction prog_a_equals_1[3] = {
         {1, 1},
         {3, 0},
         {8, 0}
     };
-    memcpy(prog->inst, progtest_1, sizeof(progtest_1));
+    memcpy(prog->inst, prog_a_equals_1, sizeof(prog_a_equals_1));
     program_interpret(prog, mac);
     assert(mac->mem->data[0] == 1);
 
     // Programme 2 (a = a + 10)
-    Instruction progtest_2[10] = {
+    Instruction prog_a_equals_a_plus_10[10] = {
         {1, -9},
         {3, 2},
         {2, 0},
@@ -91,7 +91,7 @@ void test_program_interpret() {
         {7, 2},
         {8, 0}
     };
-    memcpy(prog->inst, progtest_2, sizeof(progtest_2));
+    memcpy(prog->inst, prog_a_equals_a_plus_10, sizeof(prog_a_equals_a_plus_10));
     mac->mem->data[0] = 0;
     program_interpret(prog, mac);
     assert(mac->mem->data[0] == 10);
@@ -106,7 +106,7 @@ void test_program_interpret() {
     assert(mac->mem->data[0] == 0);
 
     // Programme 3 (a = |a|)
-    Instruction progtest_3[16] = {
+    Instruction prog_a_equals_abs_of_a[16] = {
         {2, 0},
         {4, 0},
         {3, 1},
@@ -124,7 +124,7 @@ void test_program_interpret() {
         {7, 7},
         {8, 0}
     };
-    memcpy(prog->inst, progtest_3, sizeof(progtest_3));
+    memcpy(prog->inst, prog_a_equals_abs_of_a, sizeof(prog_a_equals_abs_of_a));
     mac->mem->data[0] = 0;
     program_interpret(prog, mac);
     assert(mac->mem->data[0] == 0);
@@ -158,14 +158,14 @@ void test_file_bin_to_program() {
     PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_1.bin"
     );
     assert(prog != NULL);
-    Instruction progtest_1[3] = {
+    Instruction prog_a_equals_1[3] = {
         {1, 1},
         {3, 0},
         {8, 0}
     };
-    for (size_t i = 1; i < prog->size; ++i) {
-        assert(prog->inst[i].op == progtest_1[i].op);
-        assert(prog->inst[i].arg == progtest_1[i].arg);
+    for (size_t i = 0; i < prog->size; ++i) {
+        assert(prog->inst[i].op == prog_a_equals_1[i].op);
+        assert(prog->inst[i].arg == prog_a_equals_1[i].arg);
     }
     program_delete(&prog);
 
@@ -174,7 +174,7 @@ void test_file_bin_to_program() {
     PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_a_plus_10.bin"
     );
     assert(prog != NULL);
-    Instruction progtest_2[10] = {
+    Instruction prog_a_equals_a_plus_10[10] = {
         {1, -9},
         {3, 2},
         {2, 0},
@@ -186,9 +186,9 @@ void test_file_bin_to_program() {
         {7, 2},
         {8, 0}
     };
-    for (size_t i = 1; i < prog->size; ++i) {
-        assert(prog->inst[i].op == progtest_2[i].op);
-        assert(prog->inst[i].arg == progtest_2[i].arg);
+    for (size_t i = 0; i < prog->size; ++i) {
+        assert(prog->inst[i].op == prog_a_equals_a_plus_10[i].op);
+        assert(prog->inst[i].arg == prog_a_equals_a_plus_10[i].arg);
     }
     program_delete(&prog);
 
@@ -197,7 +197,7 @@ void test_file_bin_to_program() {
     PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_abs_of_a.bin"
     );
     assert(prog != NULL);
-    Instruction progtest_3[16] = {
+    Instruction prog_a_equals_abs_of_a[16] = {
         {2, 0},
         {4, 0},
         {3, 1},
@@ -215,9 +215,9 @@ void test_file_bin_to_program() {
         {7, 7},
         {8, 0}
     };
-    for (size_t i = 1; i < prog->size; ++i) {
-        assert(prog->inst[i].op == progtest_3[i].op);
-        assert(prog->inst[i].arg == progtest_3[i].arg);
+    for (size_t i = 0; i < prog->size; ++i) {
+        assert(prog->inst[i].op == prog_a_equals_abs_of_a[i].op);
+        assert(prog->inst[i].arg == prog_a_equals_abs_of_a[i].arg);
     }
     program_delete(&prog);
 }
