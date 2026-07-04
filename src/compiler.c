@@ -134,5 +134,10 @@ char** string_to_keywords(const char* str) {
 
 /* Tokénisation d'un mot-clé */
 Token* keyword_to_token(const char* keyword) {
-    return NULL;
+    if (keyword == NULL || strlen(keyword) < 2)
+        return NULL;
+
+    if (strchr(keyword, ':') != NULL) {
+
+    }
 }
