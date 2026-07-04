@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "compiler.h"
+#include "interpreter.h"
 
 /**
  * @brief Test de la fonction file_to_string().
@@ -111,10 +112,70 @@ void test_string_to_keywords() {
     free(complex_code_with_comments);
 }
 
+/**
+ * @brief Test de la fonction keyword_to_token().
+ *
+ * Vérifie que les mots-clé sont associés
+ * aux bon tokens.
+ *
+ * @see keyword_to_token()
+ */
+void test_keyword_to_token() {
+    Token* tokens[19] = {
+        keyword_to_token("etiquette:"),
+        keyword_to_token(":etiquette"),
+        keyword_to_token(":etiquette:"),
+        keyword_to_token("etiquette::"),
+        keyword_to_token(":"),
+        keyword_to_token("#0"),
+        keyword_to_token("#67"),
+        keyword_to_token("#-104"),
+        keyword_to_token("@0"),
+        keyword_to_token("@69"),
+        keyword_to_token("@-123"),
+        keyword_to_token("LOAD"),
+        keyword_to_token("STORE"),
+        keyword_to_token("INCR"),
+        keyword_to_token("JUMP"),
+        keyword_to_token("HALT"),
+        keyword_to_token("etiquette"),
+        keyword_to_token("main"),
+        keyword_to_token("sixseven"),
+    };
+    Token expected_tokens[19] = {
+        {TT_LABEL_DEF, -1},
+        {TT_NOTHING, -1},
+        {TT_NOTHING, -1},
+        {TT_NOTHING, -1},
+        {TT_NOTHING, -1},
+        {TT_NUMBER, 0},
+        {TT_NUMBER, 67},
+        {TT_NUMBER, -164},
+        {TT_ADDRESS, 0},
+        {TT_ADDRESS, 69},
+        {TT_ADDRESS, -123},
+        {TT_INST, -1},
+        {TT_INST, (int32_t)OP_STORE_TO},
+        {TT_INST, (int32_t)OP_INCR},
+        {TT_INST, (int32_t)OP_JUMP},
+        {TT_INST, (int32_t)OP_HALT},
+        {TT_LABEL_GOTO, -1},
+        {TT_LABEL_GOTO, -1},
+        {TT_LABEL_GOTO, -1}
+    };
+
+    for (size_t i = 0; i < 19; ++i) {
+        assert(tokens[i] != NULL);
+        assert(tokens[i]->type == expected_tokens[i].type);
+        assert(tokens[i]->value == expected_tokens[i].value);
+    }
+}
+
 int main() {
     test_file_to_string();
     test_remove_comments();
     test_string_to_keywords();
+    test_keyword_to_token();
 
     return 0;
 }
