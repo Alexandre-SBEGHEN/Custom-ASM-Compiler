@@ -6,6 +6,8 @@
  */
 
 #include "compiler.h"
+
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,6 +38,39 @@ char* file_to_string(const char* filename) {
 }
 
 /* Suppression des commentaires */
-void remove_comments(char* str) {
-    
+char* code_without_comments(char* str) {
+    char* copy = strdup(str);
+    if (copy == NULL)
+        return NULL;
+
+    int in_comment = 0;
+    int writing_code = 0;
+
+    const size_t len = strlen(copy);
+    for (size_t i = 0; i < len; ++i) {
+        const char c = copy[i];
+
+        // Remplacement commentaire par ' '
+        if (in_comment) {
+            if (c == '\n')
+                in_comment = 0;
+            else
+                copy[i] = ' ';
+            continue;
+        }
+
+        // Commentaire ou instruction ?
+        if (c == '#') {
+            if (!writing_code) { // Si on n'est pas en train d'écrire du code, c'est un commentaire
+                in_comment = 1;
+                copy[i] = ' ';
+            }
+        } else if (c == ';' || c == ':') { // Fin de l'instruction, on n'écrit plus de code
+            writing_code = 0;
+        } else if (!isspace((unsigned char)c)) { // c est un autre caractère, on écrit donc du code
+            writing_code = 1;
+        }
+    }
+
+    return copy;
 }

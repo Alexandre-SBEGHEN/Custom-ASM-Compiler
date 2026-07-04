@@ -36,29 +36,34 @@ void test_file_to_string() {
 }
 
 /**
- * @brief Test de la fonction remove_comments().
+ * @brief Test de la fonction code_without_comments().
  *
  * Prend un gros morceau de codes avec des commentaires
  * qui testent les différents cas possibles et vérifie
  * la correspondance entre le résultat de la fonction
  * et le résultat attendu.
  *
- * @see remove_comments()
+ * @see code_without_comments()
  */
-void test_remove_comments() {
-    char* complex_code_with_comments = "#tout premier commentaire du fichier, en debut absolu\nmain: #commentaire juste apres un label\n    LOAD #-9;\n        STORE @2;\nfor:\n        LOAD @0; INCR; STORE @0; # 0 -> 0\n#blabla\n     LOAD @2; # on charge\n        INCR;\nSTORE @2;\n\n        JZ for;HALT;\n\n# commentaire contenant une fausse instruction complete : STORE @0; LOAD #5; JZ for;\n# encore un piege : #42 ne doit PAS etre lu comme un operande ici\n\nLOAD#7;\nLOAD #0;\nLOAD#-3;\n\nSTORE @1;#collé direct sans espace\n#\n#           (commentaire avec juste des espaces après le #)\n\n	LOAD @1; 	# commentaire précédé d'une tabulation\n\nJZ main;#fin ; avec un ; dedans et un #99 aussi\n\n# derniere ligne du fichier, sans retour a la ligne final\nLOAD #123;";
-    //remove_comments(complex_code_with_comments);
+void test_code_without_comments() {
+    char* complex_code_with_comments = file_to_string(PROJECT_ROOT
+        "/tests/testdata/test_compiler/test_code_without_comments/very_tricky_code.asm");
+    assert(complex_code_with_comments != NULL);
 
-    char* expected_result = "";
+    char* complex_code_comments_deleted = code_without_comments(complex_code_with_comments);
+    assert(complex_code_comments_deleted != NULL);
 
+    char* expected_result = "#tout premier commentaire du fichier, en debut absolu\nmain: #commentaire juste apres un label\n    LOAD #-9;\n        STORE @2;\nfor:\n        LOAD @0; INCR; STORE @0; # 0 -> 0\n#blabla\n     LOAD @2; # on charge\n        INCR;\nSTORE @2;\n\n        JZ for;HALT;\n\n# commentaire contenant une fausse instruction complete : STORE @0; LOAD #5; JZ for;\n# encore un piege : #42 ne doit PAS etre lu comme un operande ici\n\nLOAD#7;\nLOAD #0;\nLOAD#-3;\n\nSTORE @1;#collé direct sans espace\n#\n#           (commentaire avec juste des espaces après le #)\n\n	LOAD @1; 	# commentaire précédé d'une tabulation\n\nJZ main;#fin ; avec un ; dedans et un #99 aussi\n\n# derniere ligne du fichier, sans retour a la ligne final\nLOAD #123;";
     assert(strlen(expected_result) == strlen(complex_code_with_comments));
     for (size_t i = 0; i < strlen(expected_result); i++)
         assert(expected_result[i] == complex_code_with_comments[i]);
+
+    free(complex_code_comments_deleted);
 }
 
 int main() {
     test_file_to_string();
-    test_remove_comments();
+    test_code_without_comments();
 
     return 0;
 }

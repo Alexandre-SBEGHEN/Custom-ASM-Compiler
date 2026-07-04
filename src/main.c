@@ -13,10 +13,13 @@
 #include "interpreter.h"
 
 int main(void) {
-    char *str = "#tout premier commentaire du fichier, en debut absolu\nmain: #commentaire juste apres un label\n    LOAD #-9;\n        STORE @2;\nfor:\n        LOAD @0; INCR; STORE @0; # 0 -> 0\n#blabla\n     LOAD @2; # on charge\n        INCR;\nSTORE @2;\n\n        JZ for;HALT;\n\n# commentaire contenant une fausse instruction complete : STORE @0; LOAD #5; JZ for;\n# encore un piege : #42 ne doit PAS etre lu comme un operande ici\n\nLOAD#7;\nLOAD #0;\nLOAD#-3;\n\nSTORE @1;#collé direct sans espace\n#\n#           (commentaire avec juste des espaces après le #)\n\n	LOAD @1; 	# commentaire précédé d'une tabulation\n\nJZ main;#fin ; avec un ; dedans et un #99 aussi\n\n# derniere ligne du fichier, sans retour a la ligne final\nLOAD #123;";
+    char* str = file_to_string(PROJECT_ROOT
+        "/tests/testdata/test_compiler/test_code_without_comments/very_tricky_code.asm");
+    char* str_w_o_comments = code_without_comments(str);
 
-    printf("%s\n————————————————————\n", str);
+    printf("%s\n————————————————————————————————————————\n", str_w_o_comments);
 
-    //free(str);
+    free(str_w_o_comments);
+    free(str);
     return 0;
 }
