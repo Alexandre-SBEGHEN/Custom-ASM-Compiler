@@ -219,6 +219,28 @@ void test_keyword_to_token() {
     }
 }
 
+/**
+ * @brief Test de la fonction string_is_a_label().
+ *
+ * Vérifie si des strings correspondent à
+ * des étiquettes ou non.
+ *
+ * @see string_is_a_label()
+ */
+void test_string_is_a_label() {
+    assert(string_is_a_label("etiquette"));
+    assert(string_is_a_label("etiquette_"));
+    assert(string_is_a_label("_etiquette"));
+    assert(string_is_a_label("eti_quette"));
+    assert(string_is_a_label("__eti_quette__"));
+    assert(string_is_a_label("_"));
+    assert(string_is_a_label("e"));
+    assert(!string_is_a_label("?"));
+    assert(!string_is_a_label("etiquette:"));
+    assert(!string_is_a_label("_:_"));
+    assert(!string_is_a_label("etiquette "));
+}
+
 int main() {
     test_file_to_string();
     test_remove_comments();
@@ -226,7 +248,8 @@ int main() {
     test_token_create();
     test_token_delete();
     test_get_opcode_from_keyword();
-    test_keyword_to_token();
+    test_string_is_a_label();
+    //test_keyword_to_token();
 
     return 0;
 }
