@@ -131,6 +131,15 @@ void token_delete(Token** token);
 Opcode get_opcode_from_keyword(const char* keyword);
 
 /**
+ * @brief Vérifie si la string en entrée est une étiquette,
+ * i. e. composée de lettres et '_' uniquement.
+ *
+ * @param[in] str String à vérifier
+ * @return Valeur booléenne de la vérification.
+ */
+int string_is_a_label(const char* str);
+
+/**
  * @brief Crée un token à partir d'un mot-clé.
  *
  * @param[in] keyword Le mot-clé à tokeniser.
