@@ -181,7 +181,11 @@ Opcode get_opcode_from_keyword(const char* keyword) {
 
 /* Vérifier si une string correspond à une étiquette */
 int string_is_a_label(const char* str) {
-    return 0;
+    for (size_t i = 0; i < str[i] != '\0'; ++i)
+        if (!isalpha(str[i]) && str[i] != '_')
+            return 0;
+
+    return 1;
 }
 
 /* Tokénisation d'un mot-clé */
