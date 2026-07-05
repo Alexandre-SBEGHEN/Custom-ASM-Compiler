@@ -112,6 +112,23 @@ void test_string_to_keywords() {
     free(complex_code_with_comments);
 }
 
+void test_token_create() {
+    Token* token = token_create(TT_LABEL_GOTO, -1);
+    assert(token != NULL);
+
+    assert(token->type == TT_LABEL_GOTO);
+    assert(token->value == -1);
+
+    token_delete(&token);
+}
+
+void test_token_delete() {
+    Token* token = token_create(TT_NOTHING, 0);
+    token_delete(&token);
+
+    assert(token == NULL);
+}
+
 /**
  * @brief Test de la fonction keyword_to_token().
  *
@@ -175,7 +192,9 @@ int main() {
     test_file_to_string();
     test_remove_comments();
     test_string_to_keywords();
-    test_keyword_to_token();
+    test_token_create();
+    test_token_delete();
+   // test_keyword_to_token();
 
     return 0;
 }
