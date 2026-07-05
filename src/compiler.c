@@ -162,18 +162,26 @@ Token* keyword_to_token(const char* keyword) {
     if (keyword == NULL || len < 2)
         return NULL;
 
+    Token* token;
     char* colon_pos = strchr(keyword, ':');
     if (colon_pos != NULL && colon_pos == keyword + len - 1) {
         // ':' est unique et en fin de string
+        token = token_create(TT_LABEL_DEF, -1);
     } else if (keyword[0] == '#') {
         // Nombre entier
+        token = token_create(TT_NUMBER, (int32_t)atoi(keyword + 1));
     } else if (keyword[0] == '@') {
         // Adresse mémoire
+        token = token_create(TT_ADDRESS, (int32_t)atoi(keyword + 1));
     } else if (0) {
         // Instruction
     } else if (0) {
         // Etiquette détectée
+        token = token_create(TT_LABEL_GOTO, -1);
     } else {
         // Mot-clé invalide
+        token = token_create(TT_NOTHING, -1);
     }
+
+    return token;
 }
