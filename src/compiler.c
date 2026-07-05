@@ -134,12 +134,26 @@ char** string_to_keywords(const char* str) {
 
 /* Création dynamique d'une structure Token */
 Token* token_create(const TokenType type, const int32_t value) {
-    return NULL;
+    Token* token;
+
+    // Allocation, return NULL si échec
+    if ((token = malloc(sizeof(Token))) == NULL)
+        return NULL;
+
+    // Assignation des champs
+    token->type = type;
+    token->value = value;
+
+    return token;
 }
 
 /* Libération de mémoire d'une structure Token */
 void token_delete(Token** token) {
+    if (token == NULL || *token == NULL)
+        return;
 
+    free(*token);
+    (*token) = NULL;
 }
 
 /* Tokénisation d'un mot-clé */
