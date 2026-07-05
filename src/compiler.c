@@ -12,6 +12,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+const KeywordEntry KEYWORDS[] = {
+    {"LOAD", OP_LOAD},
+    {"STORE", OP_STORE_TO},
+    {"INCR", OP_INCR},
+    {"DECR", OP_DECR},
+    {"JUMP", OP_JUMP},
+    {"JZ", OP_JZ},
+    {"HALT", OP_HALT}
+};
+const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KEYWORDS[0]);
+
 /* Lecture de fichier dans une string */
 char* file_to_string(const char* filename) {
     FILE* file = fopen(filename, "r");

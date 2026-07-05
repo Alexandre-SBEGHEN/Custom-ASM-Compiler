@@ -16,11 +16,13 @@
 #define COMPILER_H
 
 #include <stdint.h>
+#include "interpreter.h"
 
 /* --- Alias --------------------------------------------------------------- */
 
 typedef enum TokenTypeEnum TokenType;
 typedef struct TokenStruct Token;
+typedef struct KeywordEntryStruct KeywordEntry;
 
 /* --- Enums et Structs ---------------------------------------------------- */
 
@@ -38,9 +40,15 @@ struct TokenStruct {
     int32_t value;
 };
 
+struct KeywordEntryStruct {
+    char* keyword;
+    Opcode opcode;
+};
+
 /* --- Constantes ---------------------------------------------------------- */
 
-
+extern const KeywordEntry KEYWORDS[];
+extern const size_t KEYWORDS_COUNT;
 
 /* --- Fonctions ----------------------------------------------------------- */
 
@@ -108,6 +116,19 @@ Token* token_create(TokenType type, int32_t value);
  * @param[in, out] token Adresse du pointeur vers la structure.
  */
 void token_delete(Token** token);
+
+/**
+ * @brief Renvoie l'Opcode associé à un mot clé.
+ *
+ * Exemples :
+ * - INCR -> OP_INCR
+ * - JUMP -> OP_JUMP
+ * - SIXSEVEN -> OP_NOTHING
+ *
+ * @param[in] keyword Le mot-clé.
+ * @return Opcode correspondant, OP_NOTHING si aucune correspondance.
+ */
+Opcode get_opcode_from_keyword(const char* keyword);
 
 /**
  * @brief Crée un token à partir d'un mot-clé.

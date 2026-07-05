@@ -24,6 +24,7 @@
  */
 enum OpcodeEnum {
     OP_NOTHING,
+    OP_LOAD,
     OP_LOAD_DIRECT,
     OP_LOAD_FROM,
     OP_STORE_TO,
