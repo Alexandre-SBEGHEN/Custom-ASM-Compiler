@@ -13,10 +13,13 @@
 #include "interpreter.h"
 
 int main(void) {
-    printf("Number of keywords : %lu\n", KEYWORDS_COUNT);
+    char* keyword = ":";
+    Token* token = keyword_to_token(keyword);
 
-    char* keyword = "MAIN";
-    printf("%s -> %d", keyword, get_opcode_from_keyword(keyword));
+    if (token == NULL)
+        printf("Token is NULL\n");
+    else
+        printf("type: %d\nvalue: %d\n", token->type, token->value);
 
     return 0;
 }

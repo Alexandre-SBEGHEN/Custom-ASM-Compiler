@@ -192,7 +192,7 @@ int string_is_a_label(const char* str) {
 Token* keyword_to_token(const char* keyword) {
     size_t len = strlen(keyword);
     if (keyword == NULL || len < 2)
-        return NULL;
+        return token_create(TT_NOTHING, -1);
 
     Token* token;
     char* colon_pos = strchr(keyword, ':');
@@ -208,8 +208,8 @@ Token* keyword_to_token(const char* keyword) {
         token = token_create(TT_ADDRESS, (int32_t)atoi(keyword + 1));
     } else if ((opcode = get_opcode_from_keyword(keyword)) != OP_NOTHING) {
         // Instruction
-        token = token_create(opcode, 0);
-    } else if (1) {
+        token = token_create(TT_INST, (int32_t)opcode);
+    } else if (string_is_a_label(keyword)) {
         // Etiquette détectée
         token = token_create(TT_LABEL_GOTO, -1);
     } else {
