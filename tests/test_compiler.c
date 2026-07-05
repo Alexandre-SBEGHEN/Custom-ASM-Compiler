@@ -226,7 +226,7 @@ int main() {
     test_token_create();
     test_token_delete();
     test_get_opcode_from_keyword();
-    //test_keyword_to_token();
+    test_keyword_to_token();
 
     return 0;
 }

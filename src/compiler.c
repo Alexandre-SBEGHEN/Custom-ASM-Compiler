@@ -187,6 +187,7 @@ Token* keyword_to_token(const char* keyword) {
 
     Token* token;
     char* colon_pos = strchr(keyword, ':');
+    Opcode opcode;
     if (colon_pos != NULL && colon_pos == keyword + len - 1) {
         // ':' est unique et en fin de string
         token = token_create(TT_LABEL_DEF, -1);
@@ -196,9 +197,10 @@ Token* keyword_to_token(const char* keyword) {
     } else if (keyword[0] == '@') {
         // Adresse mémoire
         token = token_create(TT_ADDRESS, (int32_t)atoi(keyword + 1));
-    } else if (0) {
+    } else if ((opcode = get_opcode_from_keyword(keyword)) != OP_NOTHING) {
         // Instruction
-    } else if (0) {
+        token = token_create(opcode, 0);
+    } else if (1) {
         // Etiquette détectée
         token = token_create(TT_LABEL_GOTO, -1);
     } else {
