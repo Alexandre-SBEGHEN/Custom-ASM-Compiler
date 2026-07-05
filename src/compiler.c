@@ -13,7 +13,7 @@
 #include <string.h>
 
 const KeywordEntry KEYWORDS[] = {
-    {"LOAD", OP_LOAD},
+    {"LOAD", OP_LOAD_DIRECT},
     {"STORE", OP_STORE_TO},
     {"INCR", OP_INCR},
     {"DECR", OP_DECR},
@@ -165,6 +165,17 @@ void token_delete(Token** token) {
 
     free(*token);
     (*token) = NULL;
+}
+
+Opcode get_opcode_from_keyword(const char* keyword) {
+    size_t keyword_index = 0;
+    while (keyword_index < KEYWORDS_COUNT && strcmp(keyword, KEYWORDS[keyword_index].keyword))
+        ++keyword_index;
+
+    if (keyword_index >= KEYWORDS_COUNT)
+        return OP_NOTHING;
+
+    return KEYWORDS[keyword_index].opcode;
 }
 
 /* Tokénisation d'un mot-clé */

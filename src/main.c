@@ -15,5 +15,8 @@
 int main(void) {
     printf("Number of keywords : %lu\n", KEYWORDS_COUNT);
 
+    char* keyword = "MAIN";
+    printf("%s -> %d", keyword, get_opcode_from_keyword(keyword));
+
     return 0;
 }
