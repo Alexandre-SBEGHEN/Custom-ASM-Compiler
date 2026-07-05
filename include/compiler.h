@@ -87,6 +87,29 @@ char* remove_comments(const char* str);
 char** string_to_keywords(const char* str);
 
 /**
+ * @brief Crée dynamiquement une structure Token.
+ *
+ * @param[in] type Type du token (enum TokenType).
+ * @param[in] value Valeur du token.
+ * @return Pointeur vers la structure allouée ou NULL en cas
+ * d'échec d'allocation.
+ *
+ * @note Penser à libérer la mémoire après utilisation.
+ * @see token_delete()
+ */
+Token* token_create(TokenType type, int32_t value);
+
+/**
+ * @brief Libération de mémoire d'une structure Token.
+ *
+ * Utilisation du double pointeur en paramètre pour
+ * mettre automatiquement sa valeur à NULL.
+ *
+ * @param[in, out] token Adresse du pointeur vers la structure.
+ */
+void token_delete(Token** token);
+
+/**
  * @brief Crée un token à partir d'un mot-clé.
  *
  * @param[in] keyword Le mot-clé à tokeniser.
