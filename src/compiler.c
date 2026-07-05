@@ -134,10 +134,22 @@ char** string_to_keywords(const char* str) {
 
 /* Tokénisation d'un mot-clé */
 Token* keyword_to_token(const char* keyword) {
-    if (keyword == NULL || strlen(keyword) < 2)
+    size_t len = strlen(keyword);
+    if (keyword == NULL || len < 2)
         return NULL;
 
-    if (strchr(keyword, ':') != NULL) {
-
+    char* colon_pos = strchr(keyword, ':');
+    if (colon_pos != NULL && colon_pos == keyword + len - 1) {
+        // ':' est unique et en fin de string
+    } else if (keyword[0] == '#') {
+        // Nombre entier
+    } else if (keyword[0] == '@') {
+        // Adresse mémoire
+    } else if (0) {
+        // Instruction
+    } else if (0) {
+        // Etiquette détectée
+    } else {
+        // Mot-clé invalide
     }
 }
