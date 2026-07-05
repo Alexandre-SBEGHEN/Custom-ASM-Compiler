@@ -167,6 +167,7 @@ void token_delete(Token** token) {
     (*token) = NULL;
 }
 
+/* Mot-clé -> Opcode */
 Opcode get_opcode_from_keyword(const char* keyword) {
     size_t keyword_index = 0;
     while (keyword_index < KEYWORDS_COUNT && strcmp(keyword, KEYWORDS[keyword_index].keyword))

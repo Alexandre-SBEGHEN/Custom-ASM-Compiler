@@ -112,6 +112,15 @@ void test_string_to_keywords() {
     free(complex_code_with_comments);
 }
 
+/**
+ * @brief Test de la fonction token_create().
+ *
+ * Vérifie que :
+ * - Le token créé n'est pas NULL ;
+ * - Ses champs ont les bonnes valeurs.
+ *
+ * @see token_create()
+ */
 void test_token_create() {
     Token* token = token_create(TT_LABEL_GOTO, -1);
     assert(token != NULL);
@@ -122,6 +131,14 @@ void test_token_create() {
     token_delete(&token);
 }
 
+/**
+ * @brief Test de la fonction token_delete().
+ *
+ * Vérifie que :
+ * - Le pointeur est défini à NULL.
+ *
+ * @see token_delete()
+ */
 void test_token_delete() {
     Token* token = token_create(TT_NOTHING, 0);
     token_delete(&token);
@@ -129,6 +146,14 @@ void test_token_delete() {
     assert(token == NULL);
 }
 
+/**
+ * @brief Test de la fonction get_opcode_from_keyword().
+ *
+ * Vérifie pour différents mots-clés les
+ * Opcodes en résultat.
+ *
+ * @see get_opcode_from_keyword()
+ */
 void test_get_opcode_from_keyword() {
     assert(get_opcode_from_keyword("LOAD") == OP_LOAD_DIRECT);
     assert(get_opcode_from_keyword("INCR") == OP_INCR);
