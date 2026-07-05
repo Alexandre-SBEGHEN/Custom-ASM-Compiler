@@ -198,11 +198,11 @@ void test_keyword_to_token() {
         {TT_NOTHING, -1},
         {TT_NUMBER, 0},
         {TT_NUMBER, 67},
-        {TT_NUMBER, -164},
+        {TT_NUMBER, -104},
         {TT_ADDRESS, 0},
         {TT_ADDRESS, 69},
         {TT_ADDRESS, -123},
-        {TT_INST, -1},
+        {TT_INST, (int32_t)OP_LOAD_DIRECT},
         {TT_INST, (int32_t)OP_STORE_TO},
         {TT_INST, (int32_t)OP_INCR},
         {TT_INST, (int32_t)OP_JUMP},
@@ -249,7 +249,7 @@ int main() {
     test_token_delete();
     test_get_opcode_from_keyword();
     test_string_is_a_label();
-    //test_keyword_to_token();
+    test_keyword_to_token();
 
     return 0;
 }
