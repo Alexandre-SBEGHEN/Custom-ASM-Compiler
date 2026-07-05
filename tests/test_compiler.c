@@ -194,7 +194,7 @@ int main() {
     test_string_to_keywords();
     test_token_create();
     test_token_delete();
-   // test_keyword_to_token();
+   test_keyword_to_token();
 
     return 0;
 }
