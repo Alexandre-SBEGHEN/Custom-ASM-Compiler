@@ -132,6 +132,16 @@ char** string_to_keywords(const char* str) {
     return array;
 }
 
+/* Création dynamique d'une structure Token */
+Token* token_create(const TokenType type, const int32_t value) {
+    return NULL;
+}
+
+/* Libération de mémoire d'une structure Token */
+void token_delete(Token** token) {
+
+}
+
 /* Tokénisation d'un mot-clé */
 Token* keyword_to_token(const char* keyword) {
     size_t len = strlen(keyword);
