@@ -13,13 +13,19 @@
 #include "interpreter.h"
 
 int main(void) {
-    char* keyword = ":";
+    char* keyword = "INCR";
     Token* token = keyword_to_token(keyword);
 
-    if (token == NULL)
+    if (token == NULL) {
         printf("Token is NULL\n");
-    else
-        printf("type: %d\nvalue: %d\n", token->type, token->value);
+    } else {
+        printf("type: %d\nvalue: %d\nlabel: ", token->type, token->value);
+        if (token->label == NULL)
+            printf("NULL\n");
+        else
+            printf("%s\n", token->label);
+    }
+
 
     return 0;
 }

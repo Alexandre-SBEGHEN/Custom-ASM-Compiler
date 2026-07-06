@@ -38,6 +38,8 @@ enum TokenTypeEnum {
 struct TokenStruct {
     TokenType type;
     int32_t value;
+    char* label;
+    Token* next;
 };
 
 struct KeywordEntryStruct {
@@ -99,13 +101,14 @@ char** string_to_keywords(const char* str);
  *
  * @param[in] type Type du token (enum TokenType).
  * @param[in] value Valeur du token.
+ * @param[in] label (OPTIONNEL) Label du token, mettre NULL si aucun label
  * @return Pointeur vers la structure allouée ou NULL en cas
  * d'échec d'allocation.
  *
  * @note Penser à libérer la mémoire après utilisation.
  * @see token_delete()
  */
-Token* token_create(TokenType type, int32_t value);
+Token* token_create(TokenType type, int32_t value, const char* label);
 
 /**
  * @brief Libération de mémoire d'une structure Token.

@@ -144,16 +144,27 @@ char** string_to_keywords(const char* str) {
 }
 
 /* Création dynamique d'une structure Token */
-Token* token_create(const TokenType type, const int32_t value) {
+Token* token_create(const TokenType type, const int32_t value, const char* label) {
     Token* token;
 
     // Allocation, return NULL si échec
     if ((token = malloc(sizeof(Token))) == NULL)
         return NULL;
 
+    // Allocation du label
+    if (label == NULL) {
+        token->label = NULL;
+    } else {
+        if ((token->label = strdup(label)) == NULL) {
+            free(token);
+            return NULL;
+        }
+    }
+
     // Assignation des champs
     token->type = type;
     token->value = value;
+    token->next = NULL;
 
     return token;
 }
@@ -162,6 +173,8 @@ Token* token_create(const TokenType type, const int32_t value) {
 void token_delete(Token** token) {
     if (token == NULL || *token == NULL)
         return;
+
+    free((*token)->label);
 
     free(*token);
     (*token) = NULL;
@@ -192,29 +205,30 @@ int string_is_a_label(const char* str) {
 Token* keyword_to_token(const char* keyword) {
     size_t len = strlen(keyword);
     if (keyword == NULL || len < 2)
-        return token_create(TT_NOTHING, -1);
+        return token_create(TT_NOTHING, -1, NULL);
 
     Token* token;
     char* colon_pos = strchr(keyword, ':');
     Opcode opcode;
     if (colon_pos != NULL && colon_pos == keyword + len - 1) {
         // ':' est unique et en fin de string
-        token = token_create(TT_LABEL_DEF, -1);
+        token = token_create(TT_LABEL_DEF, -1, keyword);
+        token->label[strlen(token->label) - 1] = '\0';
     } else if (keyword[0] == '#') {
         // Nombre entier
-        token = token_create(TT_NUMBER, (int32_t)atoi(keyword + 1));
+        token = token_create(TT_NUMBER, (int32_t)atoi(keyword + 1), NULL);
     } else if (keyword[0] == '@') {
         // Adresse mémoire
-        token = token_create(TT_ADDRESS, (int32_t)atoi(keyword + 1));
+        token = token_create(TT_ADDRESS, (int32_t)atoi(keyword + 1), NULL);
     } else if ((opcode = get_opcode_from_keyword(keyword)) != OP_NOTHING) {
         // Instruction
-        token = token_create(TT_INST, (int32_t)opcode);
+        token = token_create(TT_INST, (int32_t)opcode, NULL);
     } else if (string_is_a_label(keyword)) {
         // Etiquette détectée
-        token = token_create(TT_LABEL_GOTO, -1);
+        token = token_create(TT_LABEL_GOTO, -1, keyword);
     } else {
         // Mot-clé invalide
-        token = token_create(TT_NOTHING, -1);
+        token = token_create(TT_NOTHING, -1, NULL);
     }
 
     return token;

@@ -122,12 +122,20 @@ void test_string_to_keywords() {
  * @see token_create()
  */
 void test_token_create() {
-    Token* token = token_create(TT_LABEL_GOTO, -1);
+    Token* token = token_create(TT_INST, 4, NULL);
+    assert(token != NULL);
+
+    assert(token->type == TT_INST);
+    assert(token->value == 4);
+    assert(token->label == NULL);
+    token_delete(&token);
+
+    token = token_create(TT_LABEL_GOTO, -1, "main");
     assert(token != NULL);
 
     assert(token->type == TT_LABEL_GOTO);
     assert(token->value == -1);
-
+    assert(strcmp(token->label, "main") == 0);
     token_delete(&token);
 }
 
@@ -140,7 +148,7 @@ void test_token_create() {
  * @see token_delete()
  */
 void test_token_delete() {
-    Token* token = token_create(TT_NOTHING, 0);
+    Token* token = token_create(TT_NOTHING, 0, NULL);
     token_delete(&token);
 
     assert(token == NULL);
@@ -158,6 +166,28 @@ void test_get_opcode_from_keyword() {
     assert(get_opcode_from_keyword("LOAD") == OP_LOAD_DIRECT);
     assert(get_opcode_from_keyword("INCR") == OP_INCR);
     assert(get_opcode_from_keyword("SIXSEVEN") == OP_NOTHING);
+}
+
+/**
+ * @brief Test de la fonction string_is_a_label().
+ *
+ * Vérifie si des strings correspondent à
+ * des étiquettes ou non.
+ *
+ * @see string_is_a_label()
+ */
+void test_string_is_a_label() {
+    assert(string_is_a_label("etiquette"));
+    assert(string_is_a_label("etiquette_"));
+    assert(string_is_a_label("_etiquette"));
+    assert(string_is_a_label("eti_quette"));
+    assert(string_is_a_label("__eti_quette__"));
+    assert(string_is_a_label("_"));
+    assert(string_is_a_label("e"));
+    assert(!string_is_a_label("?"));
+    assert(!string_is_a_label("etiquette:"));
+    assert(!string_is_a_label("_:_"));
+    assert(!string_is_a_label("etiquette "));
 }
 
 /**
@@ -188,57 +218,39 @@ void test_keyword_to_token() {
         keyword_to_token("HALT"),
         keyword_to_token("etiquette"),
         keyword_to_token("main"),
-        keyword_to_token("sixseven"),
+        keyword_to_token("sixseven")
     };
     Token expected_tokens[19] = {
-        {TT_LABEL_DEF, -1},
-        {TT_NOTHING, -1},
-        {TT_NOTHING, -1},
-        {TT_NOTHING, -1},
-        {TT_NOTHING, -1},
-        {TT_NUMBER, 0},
-        {TT_NUMBER, 67},
-        {TT_NUMBER, -104},
-        {TT_ADDRESS, 0},
-        {TT_ADDRESS, 69},
-        {TT_ADDRESS, -123},
-        {TT_INST, (int32_t)OP_LOAD_DIRECT},
-        {TT_INST, (int32_t)OP_STORE_TO},
-        {TT_INST, (int32_t)OP_INCR},
-        {TT_INST, (int32_t)OP_JUMP},
-        {TT_INST, (int32_t)OP_HALT},
-        {TT_LABEL_GOTO, -1},
-        {TT_LABEL_GOTO, -1},
-        {TT_LABEL_GOTO, -1}
+        {TT_LABEL_DEF, -1, "etiquette"},
+        {TT_NOTHING, -1, NULL},
+        {TT_NOTHING, -1, NULL},
+        {TT_NOTHING, -1, NULL},
+        {TT_NOTHING, -1, NULL},
+        {TT_NUMBER, 0, NULL},
+        {TT_NUMBER, 67, NULL},
+        {TT_NUMBER, -104, NULL},
+        {TT_ADDRESS, 0, NULL},
+        {TT_ADDRESS, 69, NULL},
+        {TT_ADDRESS, -123, NULL},
+        {TT_INST, (int32_t)OP_LOAD_DIRECT, NULL},
+        {TT_INST, (int32_t)OP_STORE_TO, NULL},
+        {TT_INST, (int32_t)OP_INCR, NULL},
+        {TT_INST, (int32_t)OP_JUMP, NULL},
+        {TT_INST, (int32_t)OP_HALT, NULL},
+        {TT_LABEL_GOTO, -1, "etiquette"},
+        {TT_LABEL_GOTO, -1, "main"},
+        {TT_LABEL_GOTO, -1, "sixseven"}
     };
 
     for (size_t i = 0; i < 19; ++i) {
         assert(tokens[i] != NULL);
         assert(tokens[i]->type == expected_tokens[i].type);
         assert(tokens[i]->value == expected_tokens[i].value);
+        if (expected_tokens[i].label == NULL)
+            assert(tokens[i]->label == NULL);
+        else
+            assert(strcmp(tokens[i]->label, expected_tokens[i].label) == 0);
     }
-}
-
-/**
- * @brief Test de la fonction string_is_a_label().
- *
- * Vérifie si des strings correspondent à
- * des étiquettes ou non.
- *
- * @see string_is_a_label()
- */
-void test_string_is_a_label() {
-    assert(string_is_a_label("etiquette"));
-    assert(string_is_a_label("etiquette_"));
-    assert(string_is_a_label("_etiquette"));
-    assert(string_is_a_label("eti_quette"));
-    assert(string_is_a_label("__eti_quette__"));
-    assert(string_is_a_label("_"));
-    assert(string_is_a_label("e"));
-    assert(!string_is_a_label("?"));
-    assert(!string_is_a_label("etiquette:"));
-    assert(!string_is_a_label("_:_"));
-    assert(!string_is_a_label("etiquette "));
 }
 
 int main() {
