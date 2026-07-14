@@ -233,3 +233,18 @@ Token* keyword_to_token(const char* keyword) {
 
     return token;
 }
+
+/* Tokénisation d'une série de mots-clé */
+Token* keywords_to_tokens(const char** keywords) {
+    return NULL;
+}
+
+/* Vérifie la validité d'une série de tokens */
+int tokens_check_validity(const Token* first) {
+    return 0;
+}
+
+/* Parsing des tokens */
+Program* tokens_parse(const Token* first) {
+    return NULL;
+}
