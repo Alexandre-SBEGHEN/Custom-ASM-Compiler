@@ -253,6 +253,46 @@ void test_keyword_to_token() {
     }
 }
 
+/**
+ * @brief Test de la fonction keywords_to_tokens().
+ *
+ * Exécute la fonction sur une série de mots-clé et
+ * vérifie que la liste chaînée de tokens obtenue
+ * correspond à la liste attendue.
+ *
+ * @see keywords_to_tokens()
+ */
+void test_keywords_to_tokens() {
+
+}
+
+/**
+ * @brief Test de la fonction tokens_check_validity().
+ *
+ * Vérifie sur différentes séries de tokens que les
+ * suites valides sont acceptées et que les suites
+ * invalides sont rejetées.
+ *
+ * @see tokens_check_validity()
+ */
+void test_tokens_check_validity() {
+
+}
+
+/**
+ * @brief Test de la fonction tokens_parse().
+ *
+ * Exécute la fonction sur une série de tokens et
+ * vérifie la correspondance entre le Program obtenu
+ * et le Program attendu.
+ *
+ * @see tokens_parse()
+ */
+void test_tokens_parse() {
+
+}
+
+
 int main() {
     test_file_to_string();
     test_remove_comments();
@@ -262,6 +302,10 @@ int main() {
     test_get_opcode_from_keyword();
     test_string_is_a_label();
     test_keyword_to_token();
+
+    test_keywords_to_tokens();
+    test_tokens_check_validity();
+    test_tokens_parse();
 
     return 0;
 }
