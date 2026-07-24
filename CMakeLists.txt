@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD 11)
 # Exécutable principal
 add_executable(RAM_Machine_ASM_Compiler_Interpreter_V2
         src/main.c
+        src/myarray.c
+        src/mystring.c
         src/machine.c
         src/interpreter.c
         src/compiler.c
