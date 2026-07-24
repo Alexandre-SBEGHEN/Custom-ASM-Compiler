@@ -21,7 +21,7 @@ add_executable(test_blank tests/test_blank.c)
 target_include_directories(test_blank PRIVATE include/)
 add_test(NAME test_blank COMMAND test_blank)
 
-add_executable(test_machine src/machine.c tests/test_machine.c)
+add_executable(test_machine src/machine.c tests/test_machine.c src/myarray.c)
 target_include_directories(test_machine PRIVATE include/)
 add_test(NAME test_machine COMMAND test_machine)
 
