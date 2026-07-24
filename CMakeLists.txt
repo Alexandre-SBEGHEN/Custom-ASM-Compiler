@@ -29,9 +29,9 @@ add_executable(test_interpreter src/interpreter.c src/machine.c tests/test_inter
 target_include_directories(test_interpreter PRIVATE include/)
 add_test(NAME test_interpreter COMMAND test_interpreter)
 
-# add_executable(test_compiler src/compiler.c src/interpreter.c src/machine.c tests/test_compiler.c)
-# target_include_directories(test_compiler PRIVATE include/)
-# add_test(NAME test_compiler COMMAND test_compiler)
+add_executable(test_compiler src/compiler.c src/interpreter.c src/machine.c tests/test_compiler.c src/myarray.c src/mystring.c)
+target_include_directories(test_compiler PRIVATE include/)
+add_test(NAME test_compiler COMMAND test_compiler)
 
 # Variables
 add_compile_definitions(PROJECT_ROOT="${CMAKE_SOURCE_DIR}")
