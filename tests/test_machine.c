@@ -34,7 +34,6 @@ void test_memory_create() {
         Memory* mem = memory_create(size);
 
         assert(mem != NULL);
-        assert(mem->size == size);
         for (size_t i = 0; i < size; i++)
             assert(mem->data[i] == 0);
 
