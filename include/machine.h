@@ -25,29 +25,25 @@ typedef struct Machine Machine;
 
 /**
  * @brief Structure du registre.
- * Contient son unique valeur de type int32_t.
  */
 struct RegisterStruct {
-    int32_t val;
+    int32_t val; /**< Unique valeur du registre */
 };
 
 /**
  * @brief Structure de la mémoire.
- * Contient un tableau d'entiers de type int32_t.
  */
 struct MemoryStruct {
-    size_t size;
-    int32_t* data;
+    size_t size; /**< Taille de la mémoire */
+    int32_t* data; /**< Données de la mémoire */
 };
 
 /**
  * @brief Structure de la machine RAM.
- * Contient une mémoire (structure Memory) et
- * un registre (structure Register).
  */
 struct Machine {
-    Memory* mem;
-    Register* reg;
+    Memory* mem; /**< Mémoire de la machine RAM */
+    Register* reg; /**< Registre de la machine RAM */
 };
 
 /* --- Fonctions ----------------------------------------------------------- */
@@ -68,12 +64,9 @@ Register* register_create();
 /**
  * @brief Libération de mémoire d'une structure Register.
  *
- * Utilisation du double pointeur en paramètre pour
- * mettre automatiquement sa valeur à NULL.
- *
- * @param[in, out] reg Adresse du pointeur vers la structure.
+ * @param[out] reg Adresse du pointeur vers la structure.
  */
-void register_delete(Register** reg);
+void register_delete(Register* reg);
 
 /**
  * @brief Crée dynamiquement une structure mémoire Memory.
@@ -92,12 +85,9 @@ Memory* memory_create(size_t size);
 /**
  * @brief Libération de mémoire d'une structure Memory.
  *
- * Utilisation du double pointeur en paramètre pour
- * mettre automatiquement sa valeur à NULL.
- *
- * @param[in, out] mem Adresse du pointeur vers la structure.
+ * @param[out] mem Adresse du pointeur vers la structure.
  */
-void memory_delete(Memory** mem);
+void memory_delete(Memory* mem);
 
 /**
  * @brief Crée dynamiquement une structure machine Machine.
@@ -114,12 +104,9 @@ Machine* machine_create(size_t memsize);
 /**
  * @brief Libération de mémoire d'une structure Machine.
  *
- * Utilisation du double pointeur en paramètre pour
- * mettre automatiquement sa valeur à NULL.
- *
- * @param[in, out] mac Adresse du pointeur vers la structure.
+ * @param[out] mac Adresse du pointeur vers la structure.
  */
-void machine_delete(Machine** mac);
+void machine_delete(Machine* mac);
 
 /**
  * @brief Chargement direct du registre.

@@ -8,7 +8,7 @@
 #include "machine.h"
 #include <stdlib.h>
 
-/* Création dynamique d'une structure registre Register */
+/** Création dynamique d'une structure registre Register */
 Register* register_create() {
     Register* reg;
 
@@ -22,16 +22,12 @@ Register* register_create() {
     return reg;
 }
 
-/* Libération de mémoire d'une structure Register */
-void register_delete(Register** reg) {
-    if (reg == NULL || *reg == NULL)
-        return;
-
-    free(*reg);
-    (*reg) = NULL;
+/** Libération de mémoire d'une structure Register */
+void register_delete(Register* reg) {
+    free(reg);
 }
 
-/* Création dynamique d'une structure mémoire Memory */
+/** Création dynamique d'une structure mémoire Memory */
 Memory* memory_create(const size_t size) {
     Memory* mem;
 
@@ -50,16 +46,12 @@ Memory* memory_create(const size_t size) {
     return mem;
 }
 
-/* Libération de mémoire d'une structure Memory */
-void memory_delete(Memory** mem) {
-    if (mem == NULL || *mem == NULL)
-        return;
-
-    free(*mem);
-    (*mem) = NULL;
+/** Libération de mémoire d'une structure Memory */
+void memory_delete(Memory* mem) {
+    free(mem);
 }
 
-/* Création dynamique d'une structure machine Machine */
+/** Création dynamique d'une structure machine Machine */
 Machine* machine_create(const size_t memsize) {
     Machine* mac;
 
@@ -72,7 +64,7 @@ Machine* machine_create(const size_t memsize) {
     }
 
     if ((mac->reg = register_create()) == NULL) {
-        memory_delete(&mac->mem);
+        memory_delete(mac->mem);
         free(mac);
         return NULL;
     }
@@ -80,38 +72,37 @@ Machine* machine_create(const size_t memsize) {
     return mac;
 }
 
-/* Libération de mémoire d'une structure Machine */
-void machine_delete(Machine** mac) {
-    if (mac == NULL || *mac == NULL)
+/** Libération de mémoire d'une structure Machine */
+void machine_delete(Machine* mac) {
+    if (mac == NULL)
         return;
 
-    memory_delete(&(*mac)->mem);
-    register_delete(&(*mac)->reg);
-    free(*mac);
-    (*mac) = NULL;
+    memory_delete(mac->mem);
+    register_delete(mac->reg);
+    free(mac);
 }
 
-/* Chargement direct du registre */
+/** Chargement direct du registre */
 void ram_load_direct(Machine* mac, int32_t val) {
     mac->reg->val = val;
 }
 
-/* Chargement du registre depuis la mémoire */
+/** Chargement du registre depuis la mémoire */
 void ram_load_from(Machine* mac, size_t index) {
     mac->reg->val = mac->mem->data[index];
 }
 
-/* Rangement du registre vers la mémoire */
+/** Rangement du registre vers la mémoire */
 void ram_store_to(Machine* mac, size_t index) {
     mac->mem->data[index] = mac->reg->val;
 }
 
-/* Incrémentation du registre */
+/** Incrémentation du registre */
 void ram_increment(Machine* mac) {
     mac->reg->val += 1;
 }
 
-/* Décrémentation du registre */
+/** Décrémentation du registre */
 void ram_decrement(Machine* mac) {
     mac->reg->val -= 1;
 }
