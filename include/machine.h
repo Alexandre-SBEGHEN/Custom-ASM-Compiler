@@ -34,8 +34,7 @@ struct RegisterStruct {
  * @brief Structure de la mémoire.
  */
 struct MemoryStruct {
-    size_t size; /**< Taille de la mémoire */
-    int32_t* data; /**< Données de la mémoire */
+    int32_t* data; /**< Tableau de données de la mémoire */
 };
 
 /**

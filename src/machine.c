@@ -7,6 +7,7 @@
 
 #include "machine.h"
 #include <stdlib.h>
+#include "myarray.h"
 
 /** Création dynamique d'une structure registre Register */
 Register* register_create() {
@@ -35,19 +36,18 @@ Memory* memory_create(const size_t size) {
     if ((mem = malloc(sizeof(Memory))) == NULL)
         return NULL;
 
-    mem->size = size;
 
     // Allocation des données, echec -> free reg puis return NULL
-    if ((mem->data = calloc(size, sizeof(int32_t))) == NULL) {
-        free(mem);
-        return NULL;
-    }
+    mem->data = array_create(int32_t);
+    for (size_t i = 0; i < size; ++i)
+        array_push(mem->data, 0);
 
     return mem;
 }
 
 /** Libération de mémoire d'une structure Memory */
 void memory_delete(Memory* mem) {
+    array_delete(mem->data);
     free(mem);
 }
 
