@@ -101,50 +101,32 @@ void test_string_to_keywords() {
     free(complex_code_with_comments);
 }
 
-
-
-
 /**
  * @brief Test de la fonction token_create().
- *
- * Vérifie que :
- * - Le token créé n'est pas NULL ;
- * - Ses champs ont les bonnes valeurs.
  *
  * @see token_create()
  */
 void test_token_create() {
     Token* token = token_create(TT_INST, 4, NULL);
+
     assert(token != NULL);
 
     assert(token->type == TT_INST);
     assert(token->value == 4);
     assert(token->label == NULL);
-    token_delete(&token);
+    token_delete(token);
 
     token = token_create(TT_LABEL_GOTO, -1, "main");
     assert(token != NULL);
 
     assert(token->type == TT_LABEL_GOTO);
     assert(token->value == -1);
-    assert(strcmp(token->label, "main") == 0);
-    token_delete(&token);
+    assert(string_equals(token->label, "main"));
+
+    token_delete(token);
 }
 
-/**
- * @brief Test de la fonction token_delete().
- *
- * Vérifie que :
- * - Le pointeur est défini à NULL.
- *
- * @see token_delete()
- */
-void test_token_delete() {
-    Token* token = token_create(TT_NOTHING, 0, NULL);
-    token_delete(&token);
 
-    assert(token == NULL);
-}
 
 /**
  * @brief Test de la fonction get_opcode_from_keyword().
@@ -253,7 +235,7 @@ int main() {
     test_string_to_keywords();
 
     // test_token_create();
-    // test_token_delete();
+
     // test_get_opcode_from_keyword();
     // test_string_is_a_label();
     // test_keyword_to_token();
