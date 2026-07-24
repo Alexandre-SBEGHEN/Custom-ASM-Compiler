@@ -129,9 +129,6 @@ Token* token_create(TokenType type, int32_t value, const char* label);
  */
 void token_delete(Token* token);
 
-
-
-
 /**
  * @brief Renvoie l'Opcode associé à un mot clé.
  *
@@ -144,6 +141,9 @@ void token_delete(Token* token);
  * @return Opcode correspondant, OP_NOTHING si aucune correspondance.
  */
 Opcode get_opcode_from_keyword(const char* keyword);
+
+
+
 
 /**
  * @brief Vérifie si la string en entrée est une étiquette,

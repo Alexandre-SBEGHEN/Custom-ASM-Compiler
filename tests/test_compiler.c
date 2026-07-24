@@ -126,13 +126,8 @@ void test_token_create() {
     token_delete(token);
 }
 
-
-
 /**
  * @brief Test de la fonction get_opcode_from_keyword().
- *
- * Vérifie pour différents mots-clés les
- * Opcodes en résultat.
  *
  * @see get_opcode_from_keyword()
  */
@@ -141,6 +136,8 @@ void test_get_opcode_from_keyword() {
     assert(get_opcode_from_keyword("INCR") == OP_INCR);
     assert(get_opcode_from_keyword("SIXSEVEN") == OP_NOTHING);
 }
+
+
 
 /**
  * @brief Test de la fonction string_is_a_label().
@@ -234,9 +231,9 @@ int main() {
     test_remove_comments();
     test_string_to_keywords();
 
-    // test_token_create();
+    test_token_create();
+    test_get_opcode_from_keyword();
 
-    // test_get_opcode_from_keyword();
     // test_string_is_a_label();
     // test_keyword_to_token();
 

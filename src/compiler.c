@@ -149,13 +149,10 @@ void token_delete(Token* token) {
     free(token);
 }
 
-
-
-
 /* Mot-clé -> Opcode */
 Opcode get_opcode_from_keyword(const char* keyword) {
     size_t keyword_index = 0;
-    while (keyword_index < KEYWORDS_COUNT && strcmp(keyword, KEYWORDS[keyword_index].keyword))
+    while (keyword_index < KEYWORDS_COUNT && !string_equals(keyword, KEYWORDS[keyword_index].keyword))
         ++keyword_index;
 
     if (keyword_index >= KEYWORDS_COUNT)
@@ -163,6 +160,9 @@ Opcode get_opcode_from_keyword(const char* keyword) {
 
     return KEYWORDS[keyword_index].opcode;
 }
+
+
+
 
 /* Vérifier si une string correspond à une étiquette */
 int string_is_a_label(const char* str) {
