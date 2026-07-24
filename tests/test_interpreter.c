@@ -7,7 +7,6 @@
 
 #include <assert.h>
 #include <stddef.h>
-#include <string.h>
 #include "machine.h"
 #include "interpreter.h"
 #include "myarray.h"
