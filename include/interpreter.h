@@ -44,22 +44,17 @@ typedef struct ProgramStruct Program;
 
 /**
  * @brief Structure d'une instruction.
- * Contient deux champs opération et argument/opérande
  */
 struct InstructionStruct {
-    Opcode op;
-    int32_t arg;
+    Opcode op; /**< Opération */
+    int32_t arg; /**< Argument / Opérande */
 };
 
 /**
  * @brief Structure du programme compilé.
- * Champs:
- * - size : nombre d'instructions
- * - inst : tableau de structures d'instructions Instruction
  */
 struct ProgramStruct {
-    size_t size;
-    Instruction* inst;
+    Instruction* inst; /**< Liste des instructions */
 };
 
 /* --- Fonctions ----------------------------------------------------------- */
@@ -67,26 +62,20 @@ struct ProgramStruct {
 /**
  * @brief Crée dynamiquement une structure programme Program.
  *
- * Valeurs de la matrice initialisées par défaut à 0.
- *
- * @param[in] size Nombre d'instructions (=taille) du programme.
  * @return Pointeur vers la structure allouée ou NULL en cas
  * d'échec d'allocation.
  *
  * @note Penser à libérer la mémoire après utilisation.
  * @see program_delete()
  */
-Program* program_create(size_t size);
+Program* program_create();
 
 /**
  * @brief Libération de mémoire d'une structure Program.
  *
- * Utilisation du double pointeur en paramètre pour
- * mettre automatiquement sa valeur à NULL.
- *
  * @param[in, out] prog Adresse du pointeur vers la structure.
  */
-void program_delete(Program** prog);
+void program_delete(Program* prog);
 
 /**
  * @brief Interprète un programme compilé sous la forme d'une structure Program.

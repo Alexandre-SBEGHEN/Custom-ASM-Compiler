@@ -8,32 +8,24 @@
 #include "interpreter.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "myarray.h"
 
 /* Création dynamique d'une structure registre Program */
-Program* program_create(size_t size) {
+Program* program_create() {
     Program* prog;
 
     if ((prog = malloc(sizeof(Program))) == NULL)
         return NULL;
 
-    prog->size = size;
-
-    if ((prog->inst = malloc(size * sizeof(Instruction))) == NULL) {
-        free(prog);
-        return NULL;
-    }
+    prog->inst = array_create(Instruction);
 
     return prog;
 }
 
 /* Libération de mémoire d'une structure Program */
-void program_delete(Program** prog) {
-    if (prog == NULL || *prog == NULL)
-        return;
-
-    free((*prog)->inst);
-    free(*prog);
-    *prog = NULL;
+void program_delete(Program* prog) {
+    array_delete(prog->inst);
+    free(prog);
 }
 
 /* Exécution d'un programme compilé */
@@ -43,7 +35,7 @@ int program_interpret(const Program* prog, Machine* mac) {
     // Boucle du programme
     while (1) {
         // Index en dehors du programme (erreur 1)
-        if (inst_index >= prog->size)
+        if (inst_index >= array_size(prog->inst))
             return 1;
 
         // Obtenir la paire opération / argument
@@ -118,24 +110,24 @@ Program* file_bin_to_program(const char* filename) {
 
     // Le nombre d'instructions est la taille du fichier / 8
     const long number_of_instructions = file_size / 8;
-    Program* prog = program_create(number_of_instructions);
+    Program* prog = program_create();
     if (prog == NULL) return NULL;
 
     // Encodage des instructions
     for (long i = 0; i < number_of_instructions; ++i) {
         // On place chaque "partie" (octet) du nombre dans un buffer
-        unsigned char instbytes[4], argbytes[4];
-        if (fread(instbytes, 1, 4, file) != 4 || fread(argbytes, 1, 4, file) != 4) {
-            program_delete(&prog);
+        unsigned char opbytes[4], argbytes[4];
+        if (fread(opbytes, 1, 4, file) != 4 || fread(argbytes, 1, 4, file) != 4) {
+            program_delete(prog);
             return NULL;
         }
 
         // On concatène les parties pour obtenir le grand nombre (4 octets)
-        const int32_t inst = (int32_t)(
-            (int32_t)instbytes[0] << 24 |
-            (int32_t)instbytes[1] << 16 |
-            (int32_t)instbytes[2] << 8 |
-            (int32_t)instbytes[3]
+        const int32_t op = (int32_t)(
+            (int32_t)opbytes[0] << 24 |
+            (int32_t)opbytes[1] << 16 |
+            (int32_t)opbytes[2] << 8 |
+            (int32_t)opbytes[3]
         );
         const int32_t arg = (int32_t)(
             (int32_t)argbytes[0] << 24 |
@@ -145,8 +137,12 @@ Program* file_bin_to_program(const char* filename) {
         );
 
         // On encode inst et arg dans le programme
-        prog->inst[i].op = (Opcode)(inst);
+        Instruction inst = {(Opcode)(op), arg};
+        array_push(prog->inst, inst);
+        /*
+        prog->inst[i].op = (Opcode)(op);
         prog->inst[i].arg = arg;
+        */
     }
 
     fclose(file);
