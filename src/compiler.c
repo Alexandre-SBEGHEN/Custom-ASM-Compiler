@@ -90,7 +90,27 @@ char* remove_comments(const char* str) {
 
 /* Pré-tokénisation → tableau de mots clés */
 string* string_to_keywords(const char* str) {
-    return NULL;
+    char* copy = strdup(str);
+    if (copy == NULL)
+        return NULL;
+
+    char* token;
+    const char* sep = "\n\t ;";
+
+    string* keywords = array_create(string);
+    if (keywords == NULL) {
+        free(copy);
+        return NULL;
+    }
+
+    token = strtok(copy, sep);
+    while (token != NULL) {
+        array_push(keywords, string_create(token));
+        token = strtok(NULL, sep);
+    }
+    free(copy);
+
+    return keywords;
 }
 
 
