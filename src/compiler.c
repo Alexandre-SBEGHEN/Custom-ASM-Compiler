@@ -113,10 +113,6 @@ string* string_to_keywords(const char* str) {
     return keywords;
 }
 
-
-
-
-
 /* Création dynamique d'une structure Token */
 Token* token_create(const TokenType type, const int32_t value, const char* label) {
     Token* token;
@@ -129,7 +125,7 @@ Token* token_create(const TokenType type, const int32_t value, const char* label
     if (label == NULL) {
         token->label = NULL;
     } else {
-        if ((token->label = strdup(label)) == NULL) {
+        if ((token->label = string_create(label)) == NULL) {
             free(token);
             return NULL;
         }
@@ -138,21 +134,23 @@ Token* token_create(const TokenType type, const int32_t value, const char* label
     // Assignation des champs
     token->type = type;
     token->value = value;
-    token->next = NULL;
 
     return token;
 }
 
 /* Libération de mémoire d'une structure Token */
-void token_delete(Token** token) {
-    if (token == NULL || *token == NULL)
+void token_delete(Token* token) {
+    if (token == NULL)
         return;
 
-    free((*token)->label);
+    if (token->label != NULL)
+        string_delete(token->label);
 
-    free(*token);
-    (*token) = NULL;
+    free(token);
 }
+
+
+
 
 /* Mot-clé -> Opcode */
 Opcode get_opcode_from_keyword(const char* keyword) {

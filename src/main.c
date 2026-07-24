@@ -15,22 +15,12 @@
 #include "interpreter.h"
 
 int main(void) {
-    char* complex_code_with_comments = file_to_string(
-        PROJECT_ROOT "/tests/testdata/test_compiler/test_remove_comments/very_tricky_code.asm"
-    );
-    char* complex_code_without_comments = remove_comments(complex_code_with_comments);
+    Token* token = token_create(TT_INST, 4, NULL);
 
-    string* keywords = string_to_keywords(complex_code_without_comments);
+    printf("type: %d\n", token->type);
+    printf("type: %d\n", token->value);
+    printf("type: %s\n", token->label);
 
-    for (size_t i = 0; i < array_size(keywords); i++)
-        printf("%s\n", keywords[i]);
-
-
-
-    for (size_t i = 0; i < array_size(keywords); i++)
-        string_delete(keywords[i]);
-    array_delete(keywords);
-    free(complex_code_without_comments);
-    free(complex_code_with_comments);
+    token_delete(token);
     return 0;
 }

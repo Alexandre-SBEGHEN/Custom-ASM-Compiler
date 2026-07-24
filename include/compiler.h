@@ -122,18 +122,15 @@ string* string_to_keywords(const char* str);
  */
 Token* token_create(TokenType type, int32_t value, const char* label);
 
-
-
-
 /**
  * @brief Libération de mémoire d'une structure Token.
  *
- * Utilisation du double pointeur en paramètre pour
- * mettre automatiquement sa valeur à NULL.
- *
- * @param[in, out] token Adresse du pointeur vers la structure.
+ * @param[out] token Adresse du pointeur vers la structure.
  */
-void token_delete(Token** token);
+void token_delete(Token* token);
+
+
+
 
 /**
  * @brief Renvoie l'Opcode associé à un mot clé.
