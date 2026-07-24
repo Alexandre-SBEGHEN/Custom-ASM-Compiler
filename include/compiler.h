@@ -142,9 +142,6 @@ void token_delete(Token* token);
  */
 Opcode get_opcode_from_keyword(const char* keyword);
 
-
-
-
 /**
  * @brief Vérifie si la string en entrée est une étiquette,
  * i. e. composée de lettres et '_' uniquement.

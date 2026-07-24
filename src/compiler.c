@@ -161,9 +161,6 @@ Opcode get_opcode_from_keyword(const char* keyword) {
     return KEYWORDS[keyword_index].opcode;
 }
 
-
-
-
 /* Vérifier si une string correspond à une étiquette */
 int string_is_a_label(const char* str) {
     for (size_t i = 0; i < str[i] != '\0'; ++i)
@@ -172,6 +169,8 @@ int string_is_a_label(const char* str) {
 
     return 1;
 }
+
+
 
 /* Tokénisation d'un mot-clé */
 Token* keyword_to_token(const char* keyword) {

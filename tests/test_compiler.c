@@ -137,13 +137,8 @@ void test_get_opcode_from_keyword() {
     assert(get_opcode_from_keyword("SIXSEVEN") == OP_NOTHING);
 }
 
-
-
 /**
  * @brief Test de la fonction string_is_a_label().
- *
- * Vérifie si des strings correspondent à
- * des étiquettes ou non.
  *
  * @see string_is_a_label()
  */
@@ -160,6 +155,8 @@ void test_string_is_a_label() {
     assert(!string_is_a_label("_:_"));
     assert(!string_is_a_label("etiquette "));
 }
+
+
 
 /**
  * @brief Test de la fonction keyword_to_token().
@@ -233,8 +230,8 @@ int main() {
 
     test_token_create();
     test_get_opcode_from_keyword();
+    test_string_is_a_label();
 
-    // test_string_is_a_label();
     // test_keyword_to_token();
 
     // test_keywords_to_tokens();
