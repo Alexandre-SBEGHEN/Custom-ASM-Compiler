@@ -17,6 +17,8 @@
 
 #include <stdint.h>
 #include "interpreter.h"
+#include "myarray.h"
+#include "mystring.h"
 
 /* --- Alias --------------------------------------------------------------- */
 
@@ -91,10 +93,15 @@ char* remove_comments(const char* str);
  * @return Pointeur vers le tableau de strings, NULL en cas d'échec
  *
  * @note Cette fonction effectue une allocation dynamique
- * de mémoire, penser à libérer la mémoire avec free(). À
- * effectuer sur array[0] ET array.
+ * de mémoire, penser à libérer la mémoire.
+ *
+ * @see string_delete()
+ * @see array_delete()
  */
-char** string_to_keywords(const char* str);
+string* string_to_keywords(const char* str);
+
+
+
 
 /**
  * @brief Crée dynamiquement une structure Token.
@@ -154,33 +161,5 @@ int string_is_a_label(const char* str);
  */
 Token* keyword_to_token(const char* keyword);
 
-/**
- * @brief Crée une série de token sous la forme d'une liste chaînée.
- *
- * @param[in] keywords Mots-clé à tokeniser.
- * @return Pointeur vers le premier token, NULL en cas d'échec.
- *
- * @note Penser à libérer la mémoire après utilisation des tokens.
- * @see token_delete()
- */
-Token* keywords_to_tokens(const char** keywords);
-
-/**
- * @brief Vérifie la validité sémantique d'une série de tokens.
- *
- * @param[in] first Pointeur vers le premier token.
- * @return 0 si invalide, valide si autre valeur (il peut y avoir des warning)
- */
-int tokens_check_validity(const Token* first);
-
-/**
- * @brief Effectue un parsing des token.
- *
- * C'est l'étape finale du compilateur, la tranformation
- * en une structure que l'interpréteur peut comprendre.
- *
- * @param[in] first Pointeur vers le premier token.
- */
-Program* tokens_parse(const Token* first);
 
 #endif

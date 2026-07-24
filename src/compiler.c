@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "myarray.h"
+#include "mystring.h"
 
 const KeywordEntry KEYWORDS[] = {
     {"LOAD", OP_LOAD_DIRECT},
@@ -87,61 +89,13 @@ char* remove_comments(const char* str) {
 }
 
 /* Pré-tokénisation → tableau de mots clés */
-char** string_to_keywords(const char* str) {
-    char* copy = strdup(str);
-    if (copy == NULL)
-        return NULL;
-
-    // Préparer la séparation (token, séparateurs, nombre de lignes nécessaires)
-    char* token;
-    const char* sep = "\n\t ;";
-    size_t rows = 0;
-
-    // Combien de lignes à allouer ?
-    token = strtok(copy, sep);
-    while (token != NULL) {
-        ++rows;
-        token = strtok(NULL, sep);
-    }
-    free(copy);
-
-    // Allocation du tableau des mots clés
-    // Tableau de pointeurs
-    char** array;
-    if ((array = malloc(rows * sizeof(char*))) == NULL)
-        return NULL;
-
-    // Bloc de données contiguës
-    const size_t max_chars_per_row = 16;
-    char* data;
-    if ((data = calloc(rows * max_chars_per_row, sizeof(char))) == NULL) {
-        free(array);
-        return NULL;
-    }
-
-    // Lier adresses et emplacements dans le bloc
-    for (size_t i = 0; i < rows; ++i)
-        array[i] = data + i * max_chars_per_row;
-
-    // Affectation dans le tableau
-    copy = strdup(str);
-    if (copy == NULL) {
-        free(data);
-        free(array);
-        return NULL;
-    }
-
-    token = strtok(copy, sep);
-    size_t i = 0;
-    while (i < rows && token != NULL) {
-        strcpy(array[i], token);
-        token = strtok(NULL, sep);
-        ++i;
-    }
-    free(copy);
-
-    return array;
+string* string_to_keywords(const char* str) {
+    return NULL;
 }
+
+
+
+
 
 /* Création dynamique d'une structure Token */
 Token* token_create(const TokenType type, const int32_t value, const char* label) {
@@ -232,19 +186,4 @@ Token* keyword_to_token(const char* keyword) {
     }
 
     return token;
-}
-
-/* Tokénisation d'une série de mots-clé */
-Token* keywords_to_tokens(const char** keywords) {
-    return NULL;
-}
-
-/* Vérifie la validité d'une série de tokens */
-int tokens_check_validity(const Token* first) {
-    return 0;
-}
-
-/* Parsing des tokens */
-Program* tokens_parse(const Token* first) {
-    return NULL;
 }
