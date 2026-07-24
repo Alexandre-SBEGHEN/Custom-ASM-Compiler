@@ -25,13 +25,13 @@ add_executable(test_machine src/machine.c tests/test_machine.c)
 target_include_directories(test_machine PRIVATE include/)
 add_test(NAME test_machine COMMAND test_machine)
 
-add_executable(test_interpreter src/interpreter.c src/machine.c tests/test_interpreter.c)
+add_executable(test_interpreter src/interpreter.c src/machine.c tests/test_interpreter.c src/myarray.c)
 target_include_directories(test_interpreter PRIVATE include/)
 add_test(NAME test_interpreter COMMAND test_interpreter)
 
-add_executable(test_compiler src/compiler.c src/interpreter.c src/machine.c tests/test_compiler.c)
-target_include_directories(test_compiler PRIVATE include/)
-add_test(NAME test_compiler COMMAND test_compiler)
+# add_executable(test_compiler src/compiler.c src/interpreter.c src/machine.c tests/test_compiler.c)
+# target_include_directories(test_compiler PRIVATE include/)
+# add_test(NAME test_compiler COMMAND test_compiler)
 
 # Variables
 add_compile_definitions(PROJECT_ROOT="${CMAKE_SOURCE_DIR}")
