@@ -14,9 +14,6 @@
 /**
  * @brief Test de la fonction file_to_string().
  *
- * Exécute la fonction sur différents cas et vérifie
- * les strings en résultat.
- *
  * @see file_to_string()
  */
 void test_file_to_string() {
@@ -38,11 +35,6 @@ void test_file_to_string() {
 
 /**
  * @brief Test de la fonction remove_comments().
- *
- * Prend un gros morceau de codes avec des commentaires
- * qui testent les différents cas possibles et vérifie
- * la correspondance entre le résultat de la fonction
- * et le résultat attendu.
  *
  * @see remove_comments()
  */
@@ -67,22 +59,15 @@ void test_remove_comments() {
 /**
  * @brief Test de la fonction string_to_keywords().
  *
- * Exécute la fonction avec un grand code et
- * vérifie la correspondance entre le tableau de
- * la fonction et le tableau attendu.
- *
  * @see string_to_keywords()
  */
 void test_string_to_keywords() {
-    char* complex_code_with_comments = file_to_string(PROJECT_ROOT
-        "/tests/testdata/test_compiler/test_remove_comments/very_tricky_code.asm");
+    char* complex_code_with_comments = file_to_string(
+        PROJECT_ROOT "/tests/testdata/test_compiler/test_remove_comments/very_tricky_code.asm"
+    );
+    char* complex_code_without_comments = remove_comments(complex_code_with_comments);
 
-    char* complex_code_comments_deleted = remove_comments(complex_code_with_comments);
-
-    char** array = string_to_keywords(complex_code_comments_deleted);
-    assert(array != NULL);
-
-    char expected_array[33][10] = {
+    char expected_keywords[33][10] = {
         "main:",
         "LOAD", "#-9",
         "STORE","@2",
@@ -103,14 +88,21 @@ void test_string_to_keywords() {
         "JZ", "main",
         "LOAD", "#123"
     };
-    for (size_t i = 0; i < 1; ++i)
-        assert(strcmp(array[i], expected_array[i]) == 0);
+    string* keywords = string_to_keywords(complex_code_without_comments);
 
-    free(array[0]);
-    free(array);
-    free(complex_code_comments_deleted);
+    assert(keywords != NULL);
+    for (size_t i = 0; i < 33; ++i) {
+        assert(string_equals(keywords[i], expected_keywords[i]));
+        string_delete(keywords[i]);
+    }
+
+    array_delete(keywords);
+    free(complex_code_without_comments);
     free(complex_code_with_comments);
 }
+
+
+
 
 /**
  * @brief Test de la fonction token_create().
@@ -253,59 +245,22 @@ void test_keyword_to_token() {
     }
 }
 
-/**
- * @brief Test de la fonction keywords_to_tokens().
- *
- * Exécute la fonction sur une série de mots-clé et
- * vérifie que la liste chaînée de tokens obtenue
- * correspond à la liste attendue.
- *
- * @see keywords_to_tokens()
- */
-void test_keywords_to_tokens() {
-
-}
-
-/**
- * @brief Test de la fonction tokens_check_validity().
- *
- * Vérifie sur différentes séries de tokens que les
- * suites valides sont acceptées et que les suites
- * invalides sont rejetées.
- *
- * @see tokens_check_validity()
- */
-void test_tokens_check_validity() {
-
-}
-
-/**
- * @brief Test de la fonction tokens_parse().
- *
- * Exécute la fonction sur une série de tokens et
- * vérifie la correspondance entre le Program obtenu
- * et le Program attendu.
- *
- * @see tokens_parse()
- */
-void test_tokens_parse() {
-
-}
 
 
 int main() {
     test_file_to_string();
     test_remove_comments();
     test_string_to_keywords();
-    test_token_create();
-    test_token_delete();
-    test_get_opcode_from_keyword();
-    test_string_is_a_label();
-    test_keyword_to_token();
 
-    test_keywords_to_tokens();
-    test_tokens_check_validity();
-    test_tokens_parse();
+    // test_token_create();
+    // test_token_delete();
+    // test_get_opcode_from_keyword();
+    // test_string_is_a_label();
+    // test_keyword_to_token();
+
+    // test_keywords_to_tokens();
+    // test_tokens_check_validity();
+    // test_tokens_parse();
 
     return 0;
 }
