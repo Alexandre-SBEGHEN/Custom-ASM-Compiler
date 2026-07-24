@@ -23,7 +23,7 @@ const KeywordEntry KEYWORDS[] = {
     {"JZ", OP_JZ},
     {"HALT", OP_HALT}
 };
-const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KEYWORDS[0]);
+const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KeywordEntry);
 
 /* Lecture de fichier dans une string */
 char* file_to_string(const char* filename) {

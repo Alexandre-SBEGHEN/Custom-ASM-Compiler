@@ -28,6 +28,9 @@ typedef struct KeywordEntryStruct KeywordEntry;
 
 /* --- Enums et Structs ---------------------------------------------------- */
 
+/**
+ * @brief Types qu'un token peut prendre.
+ */
 enum TokenTypeEnum {
     TT_NOTHING,
     TT_LABEL_DEF,
@@ -37,16 +40,21 @@ enum TokenTypeEnum {
     TT_INST
 };
 
+/**
+ * @brief Structure d'un token.
+ */
 struct TokenStruct {
-    TokenType type;
-    int32_t value;
-    char* label;
-    Token* next;
+    TokenType type; /**< Type du token */
+    int32_t value; /**< Valeur du token */
+    string label; /**< Libellé du token (facultatif) */
 };
 
+/**
+ * @brief Association mot-clé / opcode.
+ */
 struct KeywordEntryStruct {
-    char* keyword;
-    Opcode opcode;
+    char* keyword; /**< Mot clé */
+    Opcode opcode; /**< Opcode correspondant */
 };
 
 /* --- Constantes ---------------------------------------------------------- */
@@ -100,9 +108,6 @@ char* remove_comments(const char* str);
  */
 string* string_to_keywords(const char* str);
 
-
-
-
 /**
  * @brief Crée dynamiquement une structure Token.
  *
@@ -116,6 +121,9 @@ string* string_to_keywords(const char* str);
  * @see token_delete()
  */
 Token* token_create(TokenType type, int32_t value, const char* label);
+
+
+
 
 /**
  * @brief Libération de mémoire d'une structure Token.
