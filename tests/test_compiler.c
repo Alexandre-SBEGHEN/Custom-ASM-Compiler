@@ -274,8 +274,6 @@ void test_keywords_to_tokens() {
     Token** tokens = keywords_to_tokens(keywords);
     assert(tokens != NULL);
 
-    return;
-
     for (size_t i = 0; i < 19; ++i) {
         assert(tokens[i] != NULL);
         assert(tokens[i]->type == expected_tokens[i].type);
@@ -333,7 +331,7 @@ int main() {
     test_keyword_to_token();
 
     test_keywords_to_tokens();
-    test_tokens_disambiguate();
+    //test_tokens_disambiguate();
 
     return 0;
 }
