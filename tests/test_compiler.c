@@ -286,6 +286,8 @@ void test_keywords_to_tokens() {
         string_delete(keywords[i]);
         token_delete(tokens[i]);
     }
+
+    array_delete(keywords);
 }
 
 void test_tokens_disambiguate() {
@@ -331,7 +333,7 @@ int main() {
     test_keyword_to_token();
 
     test_keywords_to_tokens();
-    //test_tokens_disambiguate();
+    test_tokens_disambiguate();
 
     return 0;
 }
