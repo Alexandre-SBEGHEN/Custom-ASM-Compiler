@@ -237,5 +237,111 @@ void tokens_disambiguate(Token** tokens) {
 
 /* Validité des tokens */
 bool tokens_check_validity(Token** tokens) {
-    return true;
+    const size_t tokens_len = array_size(tokens);
+
+    string* all_labels = array_create(string);
+    for (size_t i = 0; i < tokens_len; ++i)
+        if (tokens[i]->type == TT_LABEL_DEF)
+            array_push(all_labels, string_create(tokens[i]->label));
+    size_t all_labels_len = array_size(all_labels);
+
+    string* declared_labels = array_create(string);
+
+    bool tokens_are_valid = true;
+
+    for (size_t i = 0; i < tokens_len; ++i) {
+        size_t declared_labels_len = array_size(declared_labels);
+        Token* previous = (i > 0) ? tokens[i-1] : NULL;
+        Token* token = tokens[i];
+        Token* next = (i < tokens_len - 1) ? tokens[i+1] : NULL;
+
+        // Critère 1 : opérande orphelin
+        bool is_number = token->type == TT_NUMBER;
+        bool is_address = token->type == TT_ADDRESS;
+
+        bool previous_is_load = previous != NULL &&
+            previous->type == TT_INST && previous->value == (int32_t)OP_LOAD_DIRECT;
+        bool previous_is_load_or_store = previous != NULL && previous->type == TT_INST &&
+            (previous->value == (Opcode)OP_LOAD_FROM || previous->value == (Opcode)OP_STORE_TO);
+
+        bool is_orphan = (is_number && !previous_is_load) || (is_address && !previous_is_load_or_store);
+
+        if (is_orphan) {
+            tokens_are_valid = false;
+            break;
+        }
+
+        // Critère 2 : LOAD/STORE sans opérande ou mauvais opérande
+        bool is_load = token->type == TT_INST &&
+            (token->value == (int32_t)OP_LOAD_DIRECT || token->value == (int32_t)OP_LOAD_FROM);
+        bool is_store = token->type == TT_INST && token->value == (int32_t)OP_STORE_TO;
+        bool next_is_number = (next != NULL && next->type == TT_NUMBER);
+        bool next_is_address = (next != NULL && next->type == TT_ADDRESS);
+
+        bool wrong_or_no_operand = (is_load && !next_is_number && !next_is_address) ||
+            (is_store && !next_is_address);
+
+        if (wrong_or_no_operand) {
+            tokens_are_valid = false;
+            break;
+        }
+
+        // Critère 3: JUMP/JZ sans étiquette en successeur
+        bool is_jump = token->type == TT_INST &&
+            (token->value == (int32_t)OP_JUMP || token->value == (int32_t)OP_JZ);
+        bool next_is_label = (next != NULL && next->type == TT_LABEL_GOTO);
+
+        bool jump_missing_label = is_jump && !next_is_label;
+
+        if (jump_missing_label) {
+            tokens_are_valid = false;
+            break;
+        }
+
+        // Critère 4 : redéfinition d'une étiquette déjà existante
+        bool is_label_def = token->type == TT_LABEL_DEF;
+        bool label_already_exists = false;
+        if (declared_labels_len > 0 && token->label != NULL)
+            for (size_t j = 0; j < declared_labels_len; ++j)
+                if (string_equals(declared_labels[j], token->label)) {
+                    label_already_exists = true;
+                    break;
+                }
+
+        bool declaring_existing_label = is_label_def && label_already_exists;
+
+        if (declaring_existing_label) {
+            tokens_are_valid = false;
+            break;
+        } else if (is_label_def) {
+            array_push(declared_labels, string_create(token->label));
+        }
+
+        // Critère 5 : saut vers une étiquette jamais déclarée
+        bool is_label_goto = token->type == TT_LABEL_GOTO;
+        bool label_does_not_exist = true;
+        if (all_labels_len > 0 && token->label != NULL)
+            for (size_t j = 0; j < all_labels_len; ++j)
+                if (string_equals(all_labels[j], token->label)) {
+                    label_does_not_exist = false;
+                    break;
+                }
+
+        bool jump_to_nonexisting_label = is_label_goto && label_does_not_exist;
+
+        if (jump_to_nonexisting_label) {
+            tokens_are_valid = false;
+            break;
+        }
+    }
+
+    // Libérer la mémoire
+    for (size_t i = 0; i < array_size(declared_labels); ++i)
+        string_delete(declared_labels[i]);
+    for (size_t i = 0; i < array_size(all_labels); ++i)
+        string_delete(all_labels[i]);
+    array_delete(declared_labels);
+    array_delete(all_labels);
+
+    return tokens_are_valid;
 }
