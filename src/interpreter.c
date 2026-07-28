@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "myarray.h"
+#include "stdbool.h"
 
 /* Création dynamique d'une structure registre Program */
 Program* program_create() {
@@ -33,7 +34,7 @@ int program_interpret(const Program* prog, Machine* mac) {
     size_t inst_index = 0;
 
     // Boucle du programme
-    while (1) {
+    while (true) {
         // Index en dehors du programme (erreur 1)
         if (inst_index >= array_size(prog->inst))
             return 1;

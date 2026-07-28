@@ -19,6 +19,7 @@
 #include "interpreter.h"
 #include "myarray.h"
 #include "mystring.h"
+#include "stdbool.h"
 
 /* --- Alias --------------------------------------------------------------- */
 
@@ -149,7 +150,7 @@ Opcode get_opcode_from_keyword(const char* keyword);
  * @param[in] str String à vérifier
  * @return Valeur booléenne de la vérification.
  */
-int string_is_a_label(const char* str);
+bool string_is_a_label(const char* str);
 
 /**
  * @brief Crée un token à partir d'un mot-clé.

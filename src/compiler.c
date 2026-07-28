@@ -12,6 +12,7 @@
 #include <string.h>
 #include "myarray.h"
 #include "mystring.h"
+#include "stdbool.h"
 
 const KeywordEntry KEYWORDS[] = {
     {"LOAD", OP_LOAD_DIRECT},
@@ -55,8 +56,8 @@ char* remove_comments(const char* str) {
     if (copy == NULL)
         return NULL;
 
-    int in_comment = 0;
-    int reading_code = 0;
+    bool in_comment = false;
+    bool reading_code = false;
 
     const size_t len = strlen(copy);
     for (size_t i = 0; i < len; ++i) {
@@ -65,7 +66,7 @@ char* remove_comments(const char* str) {
         // Remplacement commentaire par ' '
         if (in_comment) {
             if (c == '\n')
-                in_comment = 0;
+                in_comment = false;
             else
                 copy[i] = ' ';
             continue;
@@ -74,13 +75,13 @@ char* remove_comments(const char* str) {
         // Commentaire ou instruction ?
         if (c == '#') {
             if (!reading_code) { // Si on n'est pas en train de lire du code, c'est un commentaire
-                in_comment = 1;
+                in_comment = true;
                 copy[i] = ' ';
             }
         } else if (c == ';' || c == ':') { // Fin de l'instruction, on ne lit plus de code
-            reading_code = 0;
+            reading_code = false;
         } else if (!isspace((unsigned char)c)) { // C'est un autre caractère, on lit donc du code
-            reading_code = 1;
+            reading_code = true;
         }
     }
 
@@ -161,12 +162,12 @@ Opcode get_opcode_from_keyword(const char* keyword) {
 }
 
 /* Vérifier si une string correspond à une étiquette */
-int string_is_a_label(const char* str) {
+bool string_is_a_label(const char* str) {
     for (size_t i = 0; i < str[i] != '\0'; ++i)
         if (!isalpha(str[i]) && str[i] != '_')
-            return 0;
+            return false;
 
-    return 1;
+    return true;
 }
 
 /* Tokénisation d'un mot-clé */
