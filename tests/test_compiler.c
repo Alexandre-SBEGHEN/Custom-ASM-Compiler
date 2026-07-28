@@ -290,6 +290,11 @@ void test_keywords_to_tokens() {
     array_delete(keywords);
 }
 
+/**
+ * @brief Test de la fonction tokens_disambiguate().
+ *
+ * @see tokens_disambiguate()
+ */
 void test_tokens_disambiguate() {
     Token** tokens = array_create(Token*);
     array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
