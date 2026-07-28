@@ -1,4 +1,4 @@
-# Assembly compiler & interpreter for RAM Machine (V2)
+# Assembly compiler & interpreter for RAM Machine
 
 ## Important
 
