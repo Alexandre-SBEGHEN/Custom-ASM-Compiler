@@ -161,7 +161,7 @@ int string_is_a_label(const char* str);
  * @note Cette fonction effectue une allocation dynamique
  * de mémoire, penser à libérer la mémoire avec free().
  */
-Token* keyword_to_token(const char* keyword);
+Token* keyword_to_token(const string keyword);
 
 
 #endif

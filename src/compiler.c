@@ -170,21 +170,22 @@ int string_is_a_label(const char* str) {
     return 1;
 }
 
-
-
 /* Tokénisation d'un mot-clé */
-Token* keyword_to_token(const char* keyword) {
-    size_t len = strlen(keyword);
+Token* keyword_to_token(const string keyword) {
+    const size_t len = string_length(keyword);
+
     if (keyword == NULL || len < 2)
         return token_create(TT_NOTHING, -1, NULL);
 
     Token* token;
     char* colon_pos = strchr(keyword, ':');
     Opcode opcode;
+
     if (colon_pos != NULL && colon_pos == keyword + len - 1) {
         // ':' est unique et en fin de string
         token = token_create(TT_LABEL_DEF, -1, keyword);
-        token->label[strlen(token->label) - 1] = '\0';
+        string_crop(token->label, 0, 1);
+        //token->label[strlen(token->label) - 1] = '\0';
     } else if (keyword[0] == '#') {
         // Nombre entier
         token = token_create(TT_NUMBER, (int32_t)atoi(keyword + 1), NULL);

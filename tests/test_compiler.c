@@ -156,38 +156,38 @@ void test_string_is_a_label() {
     assert(!string_is_a_label("etiquette "));
 }
 
-
-
 /**
  * @brief Test de la fonction keyword_to_token().
- *
- * Vérifie que les mots-clé sont associés
- * aux bon tokens.
  *
  * @see keyword_to_token()
  */
 void test_keyword_to_token() {
-    Token* tokens[19] = {
-        keyword_to_token("etiquette:"),
-        keyword_to_token(":etiquette"),
-        keyword_to_token(":etiquette:"),
-        keyword_to_token("etiquette::"),
-        keyword_to_token(":"),
-        keyword_to_token("#0"),
-        keyword_to_token("#67"),
-        keyword_to_token("#-104"),
-        keyword_to_token("@0"),
-        keyword_to_token("@69"),
-        keyword_to_token("@-123"),
-        keyword_to_token("LOAD"),
-        keyword_to_token("STORE"),
-        keyword_to_token("INCR"),
-        keyword_to_token("JUMP"),
-        keyword_to_token("HALT"),
-        keyword_to_token("etiquette"),
-        keyword_to_token("main"),
-        keyword_to_token("sixseven")
+    string keywords[19] = {
+        string_create("etiquette:"),
+        string_create(":etiquette"),
+        string_create(":etiquette:"),
+        string_create("etiquette::"),
+        string_create(":"),
+        string_create("#0"),
+        string_create("#67"),
+        string_create("#-104"),
+        string_create("@0"),
+        string_create("@69"),
+        string_create("@-123"),
+        string_create("LOAD"),
+        string_create("STORE"),
+        string_create("INCR"),
+        string_create("JUMP"),
+        string_create("HALT"),
+        string_create("etiquette"),
+        string_create("main"),
+        string_create("sixseven")
     };
+    Token* tokens[19];
+    for (size_t i = 0; i < 19; ++i) {
+        tokens[i] = keyword_to_token(keywords[i]);
+        string_delete(keywords[i]);
+    }
     Token expected_tokens[19] = {
         {TT_LABEL_DEF, -1, "etiquette"},
         {TT_NOTHING, -1, NULL},
@@ -218,6 +218,8 @@ void test_keyword_to_token() {
             assert(tokens[i]->label == NULL);
         else
             assert(strcmp(tokens[i]->label, expected_tokens[i].label) == 0);
+
+        token_delete(tokens[i]);
     }
 }
 
@@ -232,11 +234,7 @@ int main() {
     test_get_opcode_from_keyword();
     test_string_is_a_label();
 
-    // test_keyword_to_token();
-
-    // test_keywords_to_tokens();
-    // test_tokens_check_validity();
-    // test_tokens_parse();
+    test_keyword_to_token();
 
     return 0;
 }
