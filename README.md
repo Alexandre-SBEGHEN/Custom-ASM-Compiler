@@ -152,14 +152,3 @@ interprète le programme renvoie la valeur 0. Sinon, elle renvoie un code d'erre
 | 0 | Aucune erreur |
 | 1 | Overflow, index de lecture en dehors du programme (`<0` OU `>= taille`) |
 | 2 | Instruction inconnue |
-
-## Progression
-
-- [x] Machine RAM (mémoire + registre)
-- [x] Instructions de base (load, store, increment, decrement)
-- [ ] Compilateur
-- [ ] Gestion des étiquettes (compilation)
-- [x] Fichier binaire → structure Program exploitable par l'interpréteur
-- [x] Interpréteur
-- [x] Prise en charge des sauts (interpréteur)
-- [ ] Interface utilisateur (terminal)
