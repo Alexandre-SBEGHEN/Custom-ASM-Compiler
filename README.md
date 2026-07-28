@@ -1,5 +1,15 @@
 # Assembly compiler & interpreter for RAM Machine
 
+## Contexte
+
+Durant mon premier TP d'assembleur, notre professeur nous a introduit à un langage assembleur rudimentaire avant de
+nous faire réaliser des exercices pratiques. Le problème : il nous était impossible d'exécuter notre code pour
+vérifier son exactitude. J'ai donc décidé de créer un programme capable de lire et d'exécuter du code écrit dans cet
+assembleur.
+
+J'en ai également profité pour l'implémenter entièrement en C, afin de consolider mes compétences dans ce langage et
+d'apprendre la manipulation de fichiers.
+
 ## Ma première application du TDD
 
 Pour ce projet, j'ai voulu mettre en pratique la méthode du TDD (Test-Driven Development), apprise durant ma première
@@ -14,16 +24,6 @@ que ce que j'ai déjà écrit est fiable.
 Cette approche s'est révélée particulièrement utile dans un projet comme celui-ci, où le compilateur et
 l'interpréteur reposent sur une succession d'étapes (lecture, tokenisation, parsing, exécution). Pouvoir tester
 chaque brique indépendamment évite de devoir tout redéboguer à la main à chaque modification.
-
-## Contexte
-
-Durant mon premier TP d'assembleur, notre professeur nous a introduit à un langage assembleur rudimentaire avant de
-nous faire réaliser des exercices pratiques. Le problème : il nous était impossible d'exécuter notre code pour
-vérifier son exactitude. J'ai donc décidé de créer un programme capable de lire et d'exécuter du code écrit dans cet
-assembleur.
-
-J'en ai également profité pour l'implémenter entièrement en C, afin de consolider mes compétences dans ce langage et
-d'apprendre la manipulation de fichiers.
 
 ## Machine Ram
 
