@@ -6,7 +6,6 @@
  */
 
 #include "compiler.h"
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -223,5 +222,14 @@ Token** keywords_to_tokens(string* keywords) {
 
 /* Ajustement des tokens */
 void tokens_disambiguate(Token** tokens) {
+    for (size_t i = 0; i < array_size(tokens) - 1; ++i) {
+        Token* token = tokens[i];
+        Token* next = tokens[i + 1];
 
+        if (token->type != TT_INST || token->value != (int32_t)OP_LOAD_DIRECT)
+            continue;
+
+        if (next->type == TT_ADDRESS)
+            token->value = (int32_t)OP_LOAD_FROM;
+    }
 }
