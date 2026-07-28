@@ -205,3 +205,18 @@ Token* keyword_to_token(const string keyword) {
 
     return token;
 }
+
+/* Tokénisation d'un tableau de mot clés */
+Token** keywords_to_tokens(string* keywords) {
+    Token** tokens = array_create(Token*);
+    if (tokens == NULL)
+        return NULL;
+
+    for (size_t i = 0; i < array_size(keywords); ++i) {
+        const string keyword = keywords[i];
+        Token* token = keyword_to_token(keyword);
+        array_push(tokens, token);
+    }
+
+    return tokens;
+}

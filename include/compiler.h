@@ -163,5 +163,12 @@ int string_is_a_label(const char* str);
  */
 Token* keyword_to_token(const string keyword);
 
+/**
+ * @brief Crée une série de tokens à partir de mots-clé.
+ *
+ * @param[in] keywords Pointeur vers le tableau des mots-clé.
+ * @return Pointeur vers le tableau de tokens.
+ */
+Token** keywords_to_tokens(string* keywords);
 
 #endif

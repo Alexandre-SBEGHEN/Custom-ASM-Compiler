@@ -15,12 +15,14 @@
 #include "interpreter.h"
 
 int main(void) {
-    Token* token = token_create(TT_INST, 4, NULL);
+    char* code = file_to_string(PROJECT_ROOT "/examples/asm/a_equals_a_plus_10.asm");
+    char* code_without_comments = remove_comments(code);
+    string* keywords = string_to_keywords(code_without_comments);
+    Token** tokens = keywords_to_tokens(keywords);
 
-    printf("type: %d\n", token->type);
-    printf("type: %d\n", token->value);
-    printf("type: %s\n", token->label);
-
-    token_delete(token);
+    for (size_t i = 0; i < array_size(tokens); ++i) {
+        Token* t = tokens[i];
+        printf("token[type: %d, val: %d, label: %s]\n", t->type, t->value, t->label);
+    }
     return 0;
 }
