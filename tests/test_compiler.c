@@ -308,6 +308,8 @@ void test_tokens_disambiguate() {
         {TT_ADDRESS, 404, NULL}
     };
 
+    tokens_disambiguate(tokens);
+
     for (size_t i = 0; i < 6; ++i) {
         assert(tokens[i]->type == expected_tokens[i].type);
         assert(tokens[i]->value == expected_tokens[i].value);
