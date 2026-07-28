@@ -159,7 +159,9 @@ int string_is_a_label(const char* str);
  * d'échec d'allocation.
  *
  * @note Cette fonction effectue une allocation dynamique
- * de mémoire, penser à libérer la mémoire avec free().
+ * de mémoire, penser à libérer la mémoire.
+ *
+ * @see token_delete()
  */
 Token* keyword_to_token(const string keyword);
 
@@ -168,7 +170,26 @@ Token* keyword_to_token(const string keyword);
  *
  * @param[in] keywords Pointeur vers le tableau des mots-clé.
  * @return Pointeur vers le tableau de tokens.
+ *
+ * @note Cette fonction effectue une allocation dynamique
+ * de mémoire, penser à libérer la mémoire.
+ *
+ * @see token_delete()
  */
 Token** keywords_to_tokens(string* keywords);
+
+/**
+ * @brief Lève les ambiguïtés entre les tokens qui peuvent
+ * avoir plusieurs significations en fonction du contexte.
+ *
+ * Le token LOAD par exemple, peut être une instruction
+ * de registre ou de mémoire s'il est suivi de '#...'
+ * ou '@...'. Cette fonction a donc pour but d'examiner
+ * le contexte des tokens pour effectuer les changements
+ * nécessaires.
+ *
+ * @param[in, out] tokens Pointeur vers le tableau de tokens.
+ */
+void tokens_disambiguate(Token** tokens);
 
 #endif

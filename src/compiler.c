@@ -220,3 +220,8 @@ Token** keywords_to_tokens(string* keywords) {
 
     return tokens;
 }
+
+/* Ajustement des tokens */
+void tokens_disambiguate(Token** tokens) {
+
+}
