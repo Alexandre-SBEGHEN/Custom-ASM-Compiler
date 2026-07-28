@@ -290,6 +290,37 @@ void test_keywords_to_tokens() {
     }
 }
 
+void test_tokens_disambiguate() {
+    Token** tokens = array_create(Token*);
+    array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
+    array_push(tokens, token_create(TT_NOTHING, 0, NULL));
+    array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
+    array_push(tokens, token_create(TT_NUMBER, 67, NULL));
+    array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
+    array_push(tokens, token_create(TT_ADDRESS, 404, NULL));
+
+    Token expected_tokens[6] = {
+        {TT_INST, (int32_t)OP_LOAD_DIRECT, NULL},
+        {TT_NOTHING, 0, NULL},
+        {TT_INST, (int32_t)OP_LOAD_DIRECT, NULL},
+        {TT_NUMBER, 67, NULL},
+        {TT_INST, (int32_t)OP_LOAD_FROM, NULL},
+        {TT_ADDRESS, 404, NULL}
+    };
+
+    for (size_t i = 0; i < 6; ++i) {
+        assert(tokens[i]->type == expected_tokens[i].type);
+        assert(tokens[i]->value == expected_tokens[i].value);
+        if (expected_tokens[i].label == NULL)
+            assert(tokens[i]->label == NULL);
+        else
+            assert(strcmp(tokens[i]->label, expected_tokens[i].label) == 0);
+
+        token_delete(tokens[i]);
+    }
+
+    array_delete(tokens);
+}
 
 int main() {
     test_file_to_string();
@@ -299,9 +330,10 @@ int main() {
     test_token_create();
     test_get_opcode_from_keyword();
     test_string_is_a_label();
-
     test_keyword_to_token();
+
     test_keywords_to_tokens();
+    test_tokens_disambiguate();
 
     return 0;
 }
