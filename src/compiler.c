@@ -234,3 +234,8 @@ void tokens_disambiguate(Token** tokens) {
             token->value = (int32_t)OP_LOAD_FROM;
     }
 }
+
+/* Validité des tokens */
+bool tokens_check_validity(const Token** tokens) {
+    return true;
+}

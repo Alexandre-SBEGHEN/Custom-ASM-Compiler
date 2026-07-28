@@ -193,4 +193,13 @@ Token** keywords_to_tokens(string* keywords);
  */
 void tokens_disambiguate(Token** tokens);
 
+/**
+ * Cette fonction a pour but de vérifier si les tokens ont du
+ * sens, donc si le code écrit en amont est correct.
+ *
+ * @param[in] tokens Pointeur vers le tableau de tokens.
+ * @return Validité des tokens.
+ */
+bool tokens_check_validity(const Token** tokens);
+
 #endif
