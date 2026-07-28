@@ -56,7 +56,7 @@ char* remove_comments(const char* str) {
         return NULL;
 
     int in_comment = 0;
-    int writing_code = 0;
+    int reading_code = 0;
 
     const size_t len = strlen(copy);
     for (size_t i = 0; i < len; ++i) {
@@ -73,14 +73,14 @@ char* remove_comments(const char* str) {
 
         // Commentaire ou instruction ?
         if (c == '#') {
-            if (!writing_code) { // Si on n'est pas en train d'écrire du code, c'est un commentaire
+            if (!reading_code) { // Si on n'est pas en train de lire du code, c'est un commentaire
                 in_comment = 1;
                 copy[i] = ' ';
             }
-        } else if (c == ';' || c == ':') { // Fin de l'instruction, on n'écrit plus de code
-            writing_code = 0;
-        } else if (!isspace((unsigned char)c)) { // c est un autre caractère, on écrit donc du code
-            writing_code = 1;
+        } else if (c == ';' || c == ':') { // Fin de l'instruction, on ne lit plus de code
+            reading_code = 0;
+        } else if (!isspace((unsigned char)c)) { // C'est un autre caractère, on lit donc du code
+            reading_code = 1;
         }
     }
 
