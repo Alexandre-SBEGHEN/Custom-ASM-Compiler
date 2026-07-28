@@ -3,7 +3,7 @@
  * @brief Interface et macros des tableaux dynamiques.
  * @author Alexandre SBEGHEN
  * @date 2026-07-23
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 #ifndef MYARRAY_H
@@ -67,18 +67,18 @@ extern const size_t ARRAY_INIT_CAPACITY;
  * d'une macro-définition qui agit comme telle.
  */
 #define array_push(array, val) do { \
-    ArrayHeader* h = (ArrayHeader*)array - 1; \
+    ArrayHeader* h = (ArrayHeader*)(array) - 1; \
     if (h->size >= h->capacity) { \
         size_t newcapacity = h->capacity * 2; \
         size_t newsize = newcapacity * h->itemsize + sizeof(ArrayHeader); \
         ArrayHeader* newh = realloc(h, newsize); \
         if (newh) { \
             newh->capacity = newcapacity; \
-            array = (void*)(newh+1); \
+            (array) = (void*)(newh+1); \
             h = newh; \
         } \
     } \
-    array[h->size] = val; \
+    (array)[h->size] = (val); \
     h->size += 1; \
 } while (0) \
 
@@ -93,7 +93,7 @@ extern const size_t ARRAY_INIT_CAPACITY;
  * d'une macro-définition qui agit comme telle.
  */
 #define array_remove_last(array) do { \
-    ArrayHeader* h = (ArrayHeader*)array - 1; \
+    ArrayHeader* h = (ArrayHeader*)(array) - 1; \
     if (h->size == 0) \
         break; \
     h->size -= 1; \
@@ -116,11 +116,11 @@ extern const size_t ARRAY_INIT_CAPACITY;
  * d'une macro-définition qui agit comme telle.
  */
 #define array_pop(array, dest) do { \
-    ArrayHeader* h = (ArrayHeader*)array - 1; \
+    ArrayHeader* h = (ArrayHeader*)(array) - 1; \
     if (h->size == 0) \
         break; \
     h->size -= 1; \
-    *dest = array[h->size]; \
+    *(dest) = (array)[h->size]; \
 } while (0)
 
 /**
@@ -169,9 +169,9 @@ size_t array_size(const void* array);
  * penser à les libérer en premier.
  */
 #define array_delete(array) do { \
-    ArrayHeader* h = (ArrayHeader*)array - 1; \
+    ArrayHeader* h = (ArrayHeader*)(array) - 1; \
     free(h); \
-    array = NULL; \
+    (array) = NULL; \
 } while (0)
 
 #endif
