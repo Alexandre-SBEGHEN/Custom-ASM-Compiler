@@ -341,7 +341,7 @@ void test_tokens_disambiguate(void) {
 void test_tokens_check_validity(void) {
     Token** tokens = array_create(Token*);
 
-    /* --- Critère 1 : opérande orphelin (aucune instruction valide avant) --- */
+    // --- Critère 1 : opérande orphelin (aucune instruction valide avant) ---
 
     // TT_NUMBER en tout premier token, sans instruction avant
     array_push(tokens, token_create(TT_NUMBER, 5, NULL));
@@ -360,7 +360,7 @@ void test_tokens_check_validity(void) {
     array_delete(tokens);
     tokens = array_create(Token*);
 
-    /* --- Critère 2 : LOAD/STORE sans opérande ou mauvais opérande --- */
+    // --- Critère 2 : LOAD/STORE sans opérande ou mauvais opérande ---
 
     // LOAD en fin de flux, sans opérande
     array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
@@ -396,7 +396,7 @@ void test_tokens_check_validity(void) {
     array_delete(tokens);
     tokens = array_create(Token*);
 
-    /* --- Critère 3 : JUMP/JZ sans étiquette en successeur --- */
+    // --- Critère 3 : JUMP/JZ sans étiquette en successeur ---
 
     // JUMP en fin de flux, sans étiquette
     array_push(tokens, token_create(TT_INST, (int32_t)OP_JUMP, NULL));
@@ -414,21 +414,23 @@ void test_tokens_check_validity(void) {
         token_delete(tokens[i]);
     array_delete(tokens);
     tokens = array_create(Token*);
-
-    /* --- Critère 4 : redéfinition d'une étiquette déjà existante --- */
-    array_push(tokens, token_create(TT_LABEL_DEF, 0, "boucle"));
+    
+    // --- Critère 4 : redéfinition d'une étiquette déjà existante ---
+    array_push(tokens, token_create(TT_LABEL_DEF, 0, string_create("boucle")));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_DECR, NULL));
-    array_push(tokens, token_create(TT_LABEL_DEF, 0, "boucle"));
+    array_push(tokens, token_create(TT_LABEL_DEF, 0, string_create("boucle")));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
+
     assert(!tokens_check_validity(tokens));
+
     for (size_t i = 0; i < array_size(tokens); ++i)
         token_delete(tokens[i]);
     array_delete(tokens);
     tokens = array_create(Token*);
 
-    /* --- Critère 5 : saut vers une étiquette jamais déclarée --- */
+    // --- Critère 5 : saut vers une étiquette jamais déclarée ---
     array_push(tokens, token_create(TT_INST, (int32_t)OP_JUMP, NULL));
-    array_push(tokens, token_create(TT_LABEL_GOTO, 0, "fin"));
+    array_push(tokens, token_create(TT_LABEL_GOTO, 0, string_create("fin")));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
     assert(!tokens_check_validity(tokens));
     for (size_t i = 0; i < array_size(tokens); ++i)
@@ -436,7 +438,7 @@ void test_tokens_check_validity(void) {
     array_delete(tokens);
     tokens = array_create(Token*);
 
-    /* --- Cas valides : ne doivent pas être rejetés --- */
+    // --- Cas valides : ne doivent pas être rejetés ---
 
     // Programme simple sans étiquette
     array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
@@ -454,10 +456,10 @@ void test_tokens_check_validity(void) {
 
     // Saut en avant vers une étiquette définie plus loin
     array_push(tokens, token_create(TT_INST, (int32_t)OP_JUMP, NULL));
-    array_push(tokens, token_create(TT_LABEL_GOTO, 0, "fin"));
+    array_push(tokens, token_create(TT_LABEL_GOTO, 0, string_create("fin")));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
     array_push(tokens, token_create(TT_NUMBER, 1, NULL));
-    array_push(tokens, token_create(TT_LABEL_DEF, 0, "fin"));
+    array_push(tokens, token_create(TT_LABEL_DEF, 0, string_create("fin")));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
     assert(tokens_check_validity(tokens));
     for (size_t i = 0; i < array_size(tokens); ++i)
@@ -466,10 +468,10 @@ void test_tokens_check_validity(void) {
     tokens = array_create(Token*);
 
     // Saut en arrière vers une étiquette déjà définie
-    array_push(tokens, token_create(TT_LABEL_DEF, 0, "boucle"));
+    array_push(tokens, token_create(TT_LABEL_DEF, 0, string_create("boucle")));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_DECR, NULL));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_JZ, NULL));
-    array_push(tokens, token_create(TT_LABEL_GOTO, 0, "boucle"));
+    array_push(tokens, token_create(TT_LABEL_GOTO, 0, string_create("boucle")));
     array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
     assert(tokens_check_validity(tokens));
     for (size_t i = 0; i < array_size(tokens); ++i)
