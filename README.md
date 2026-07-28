@@ -3,8 +3,24 @@
 ## Important
 
 Ceci est la deuxième version du projet, dans un nouveau dépôt, un meilleur IDE (CLion contre VS Code), et un meilleur
-espace de travail. Cliquez [ici](https://github.com/Alexandre-SBEGHEN/RAM-Machine-ASM-Compiler-Interpreter) pour voir
+espace de travail. Cliquez [ici](https://github.com/Alexandre-SBEGHEN/RAM-Machine-ASM-Compiler-Interpreter-Deprecated) 
+pour voir
 l'ancien dépôt.
+
+## Ma première application du TDD
+
+Pour ce projet, j'ai voulu mettre en pratique la méthode du TDD (Test-Driven Development), apprise durant ma première
+année de BUT informatique. Au départ, j'étais plutôt sceptique : je voyais surtout ça comme une contrainte
+supplémentaire, qui allait me ralentir dans le développement plutôt que m'aider.
+
+En pratique, ça s'est avéré tout l'inverse. Écrire les tests avant (ou en même temps) que le code m'a permis de
+savoir avec certitude si mes fonctions fonctionnaient comme prévu, sans avoir à écrire des dizaines de lignes de
+code de vérification dans le `main. Dès qu'un test passe, je peux directement passer à la suite, avec la garantie
+que ce que j'ai déjà écrit est fiable.
+
+Cette approche s'est révélée particulièrement utile dans un projet comme celui-ci, où le compilateur et
+l'interpréteur reposent sur une succession d'étapes (lecture, tokenisation, parsing, exécution). Pouvoir tester
+chaque brique indépendamment évite de devoir tout redéboguer à la main à chaque modification.
 
 ## Contexte
 
@@ -38,6 +54,72 @@ Cette machine est équipée du jeu d'instructions suivant :
 | `JUMP <étiquette>` | Saut inconditionnel à l'étiquette |
 | `JZ <étiquette>` | Saut à l'étiquette si (registre ≤ 0) |
 | `HALT` | Arrêt du programme |
+
+## Compilateur
+
+La compilation est une étape très importante, et sûrement celle qui m'a posé le plus de
+difficultés, car j'ai dû me familiariser avec des termes comme `token` ou `parsing`, pour
+être sûr que ce que je faisais avait du sens.
+
+### Fichier d'entrée → lexer
+
+La première étape consiste à récupérer le contenu d'un fichier sous forme de string.
+
+Il faut ensuite se débarrasser des commentaires (déclarés avec `#`), car ils ne sont utiles
+qu'au(x) développeur(s) du programme. En revanche, il faut veiller à ne pas supprimer les `#` qui indiquent un
+chargement direct du registre (comme dans la ligne 2 où `#1` n'indique pas un commentaire). Pour faire cette
+distinction, je retiens si je suis en train de lire une instruction (donc entre son début et le `;` ou `:` qui la
+termine) : un `#` rencontré à ce moment-là appartient à une instruction (comme `LOAD #1;`) et n'est pas traité
+comme un commentaire. Dans le cas contraire, il marque bien le début d'un commentaire, qui est alors ignoré jusqu'à
+la fin de la ligne. Ainsi, le code suivant :
+
+```asm
+main: #programme principal
+    LOAD #1;
+# HALT;
+    STORE @0; # on enregistre 1 dans @0
+    HALT; #fin
+```
+
+devient :
+
+```asm
+main:
+    LOAD #1;
+    STORE @0;
+    HALT;
+```
+
+Une fois que le code est nettoyé, on demande au **Lexer** (analyseur lexical) de le découper en une série de
+plusieurs « pré-tokens », qui sont, pour l'instant, sous forme de strings. Nous avons donc :
+
+`"main:"` → `"LOAD"` → `"#1"` → `"STORE"` → `"@0"` → `"HALT"`
+
+### Tokénisation et parsing
+
+La tokénisation consiste à créer une liste de « vrais » tokens à partir des pré-tokens. Ils sont considérés comme
+des « vrais » tokens car ils possèdent leur propre structure en mémoire, avec les champs suivants :
+- Un type
+- Une valeur
+- Un libellé (facultatif, utilisé pour les étiquettes)
+
+Certains tokens sont typés dès leur création. C'est le cas par exemple de notre étiquette `main:` : dès sa
+création, elle devient un token de type `TT_LABEL_DEF`, dont la valeur est `-1` et dont le libellé correspond
+à `main`. Ce type est déterminé directement à la lecture du pré-token, grâce au `:` qui indique une définition
+d'étiquette (`TT_LABEL_DEF`), et à distinguer d'un saut vers une étiquette (`TT_LABEL_GOTO`, utilisé par exemple
+avec `JUMP main`), qui lui n'a pas de `:`.
+
+D'autres tokens nécessitent en revanche une passe supplémentaire après coup pour être ajustés selon le contexte :
+une instruction `LOAD` à elle seule ne permet pas de savoir si l'on parle d'un chargement direct du registre ou
+d'un chargement depuis la mémoire. Il faut donc lire la valeur du token suivant, et changer la valeur de l'actuel
+(`OP_LOAD_DIRECT` → `OP_LOAD_FROM`) si le token suivant indique une adresse au lieu d'un nombre.
+
+Une fois que la contextualisation est effectuée, il reste une avant dernière étape, la validité sémantique du
+code. Il s'agit de répondre à la question suivante : est-ce que le code et l'ordre dans lequel les instructions
+sont rédigées ont du sens ?
+
+Si la validation passe, le **Parsing** s'effectue. Des données compréhensibles et exploitables par l'interpréteur
+sont créées → c'est le programme compilé.
 
 ## Programme compilé
 
