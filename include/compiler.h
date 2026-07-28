@@ -197,9 +197,22 @@ void tokens_disambiguate(Token** tokens);
  * Cette fonction a pour but de vérifier si les tokens ont du
  * sens, donc si le code écrit en amont est correct.
  *
+ * Voici les critères d'invalidité :
+ * - Opérande (TT_NUMBER, TT_ADDRESS) non précédé d'une instruction
+ *   capable de le recevoir (LOAD pour #<valeur> ou @<adresse>,
+ *   STORE pour @<adresse> uniquement).
+ * - LOAD ou STORE non suivi immédiatement d'un opérande valide
+ *   pour cette instruction.
+ * - JUMP ou JZ non suivi immédiatement d'un token TT_LABEL_GOTO.
+ * - TT_LABEL_DEF dont l'étiquette est déjà définie ailleurs dans
+ *   le programme.
+ * - TT_LABEL_GOTO référençant une étiquette jamais définie dans
+ *   le programme (l'ordre d'apparition n'importe pas, les sauts
+ *   en avant sont autorisés).
+ *
  * @param[in] tokens Pointeur vers le tableau de tokens.
  * @return Validité des tokens.
  */
-bool tokens_check_validity(const Token** tokens);
+bool tokens_check_validity(Token** tokens);
 
 #endif

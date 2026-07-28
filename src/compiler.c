@@ -236,6 +236,6 @@ void tokens_disambiguate(Token** tokens) {
 }
 
 /* Validité des tokens */
-bool tokens_check_validity(const Token** tokens) {
+bool tokens_check_validity(Token** tokens) {
     return true;
 }
