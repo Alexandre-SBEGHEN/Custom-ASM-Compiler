@@ -16,7 +16,7 @@
  *
  * @see file_to_string()
  */
-void test_file_to_string() {
+void test_file_to_string(void) {
     // Premier fichier (paragraphe simple)
     char* strfile_1 = file_to_string(PROJECT_ROOT "/tests/testdata/test_compiler/test_file_to_string/simple_paragraph"
                                                   ".txt");
@@ -38,7 +38,7 @@ void test_file_to_string() {
  *
  * @see remove_comments()
  */
-void test_remove_comments() {
+void test_remove_comments(void) {
     char* complex_code_with_comments = file_to_string(PROJECT_ROOT
         "/tests/testdata/test_compiler/test_remove_comments/very_tricky_code.asm");
     assert(complex_code_with_comments != NULL);
@@ -61,7 +61,7 @@ void test_remove_comments() {
  *
  * @see string_to_keywords()
  */
-void test_string_to_keywords() {
+void test_string_to_keywords(void) {
     char* complex_code_with_comments = file_to_string(
         PROJECT_ROOT "/tests/testdata/test_compiler/test_remove_comments/very_tricky_code.asm"
     );
@@ -106,7 +106,7 @@ void test_string_to_keywords() {
  *
  * @see token_create()
  */
-void test_token_create() {
+void test_token_create(void) {
     Token* token = token_create(TT_INST, 4, NULL);
 
     assert(token != NULL);
@@ -131,7 +131,7 @@ void test_token_create() {
  *
  * @see get_opcode_from_keyword()
  */
-void test_get_opcode_from_keyword() {
+void test_get_opcode_from_keyword(void) {
     assert(get_opcode_from_keyword("LOAD") == OP_LOAD_DIRECT);
     assert(get_opcode_from_keyword("INCR") == OP_INCR);
     assert(get_opcode_from_keyword("SIXSEVEN") == OP_NOTHING);
@@ -142,7 +142,7 @@ void test_get_opcode_from_keyword() {
  *
  * @see string_is_a_label()
  */
-void test_string_is_a_label() {
+void test_string_is_a_label(void) {
     assert(string_is_a_label("etiquette"));
     assert(string_is_a_label("etiquette_"));
     assert(string_is_a_label("_etiquette"));
@@ -161,7 +161,7 @@ void test_string_is_a_label() {
  *
  * @see keyword_to_token()
  */
-void test_keyword_to_token() {
+void test_keyword_to_token(void) {
     string keywords[19] = {
         string_create("etiquette:"),
         string_create(":etiquette"),
@@ -228,7 +228,7 @@ void test_keyword_to_token() {
  *
  * @see keywords_to_tokens()
  */
-void test_keywords_to_tokens() {
+void test_keywords_to_tokens(void) {
     string* keywords = array_create(string);
     array_push(keywords, string_create("etiquette:"));
     array_push(keywords, string_create(":etiquette"));
@@ -295,7 +295,7 @@ void test_keywords_to_tokens() {
  *
  * @see tokens_disambiguate()
  */
-void test_tokens_disambiguate() {
+void test_tokens_disambiguate(void) {
     Token** tokens = array_create(Token*);
     array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
     array_push(tokens, token_create(TT_NOTHING, 0, NULL));
@@ -329,7 +329,7 @@ void test_tokens_disambiguate() {
     array_delete(tokens);
 }
 
-int main() {
+int main(void) {
     test_file_to_string();
     test_remove_comments();
     test_string_to_keywords();

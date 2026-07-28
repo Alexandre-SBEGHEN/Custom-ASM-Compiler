@@ -16,7 +16,7 @@
  *
  * @see program_create()
  */
-void test_program_create() {
+void test_program_create(void) {
     Program* prog = program_create();
 
     assert(prog != NULL);
@@ -30,7 +30,7 @@ void test_program_create() {
  *
  * @see program_interpret()
  */
-void test_program_interpret() {
+void test_program_interpret(void) {
     Machine* mac = machine_create(2);
     Program* prog = program_create();
 
@@ -133,7 +133,7 @@ void test_program_interpret() {
  *
  * @see file_bin_to_program()
  */
-void test_file_bin_to_program() {
+void test_file_bin_to_program(void) {
     Program* prog;
 
     // Programme 1 (a = 1)
@@ -210,7 +210,7 @@ void test_file_bin_to_program() {
     program_delete(prog);
 }
 
-int main() {
+int main(void) {
     test_program_create();
     test_program_interpret();
     test_file_bin_to_program();
