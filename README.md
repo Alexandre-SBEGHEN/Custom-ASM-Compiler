@@ -1,12 +1,5 @@
 # Assembly compiler & interpreter for RAM Machine
 
-## Important
-
-Ceci est la deuxième version du projet, dans un nouveau dépôt, un meilleur IDE (CLion contre VS Code), et un meilleur
-espace de travail. Cliquez [ici](https://github.com/Alexandre-SBEGHEN/RAM-Machine-ASM-Compiler-Interpreter-Deprecated) 
-pour voir
-l'ancien dépôt.
-
 ## Ma première application du TDD
 
 Pour ce projet, j'ai voulu mettre en pratique la méthode du TDD (Test-Driven Development), apprise durant ma première
