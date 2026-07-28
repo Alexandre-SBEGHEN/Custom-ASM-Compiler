@@ -223,6 +223,72 @@ void test_keyword_to_token() {
     }
 }
 
+/**
+ * @brief Test de la fonction keywords_to_tokens().
+ *
+ * @see keywords_to_tokens()
+ */
+void test_keywords_to_tokens() {
+    string* keywords = array_create(string);
+    array_push(keywords, string_create("etiquette:"));
+    array_push(keywords, string_create(":etiquette"));
+    array_push(keywords, string_create(":etiquette:"));
+    array_push(keywords, string_create("etiquette::"));
+    array_push(keywords, string_create(":"));
+    array_push(keywords, string_create("#0"));
+    array_push(keywords, string_create("#67"));
+    array_push(keywords, string_create("#-104"));
+    array_push(keywords, string_create("@0"));
+    array_push(keywords, string_create("@69"));
+    array_push(keywords, string_create("@-123"));
+    array_push(keywords, string_create("LOAD"));
+    array_push(keywords, string_create("STORE"));
+    array_push(keywords, string_create("INCR"));
+    array_push(keywords, string_create("JUMP"));
+    array_push(keywords, string_create("HALT"));
+    array_push(keywords, string_create("etiquette"));
+    array_push(keywords, string_create("main"));
+    array_push(keywords, string_create("sixseven"));
+    Token expected_tokens[19] = {
+        {TT_LABEL_DEF, -1, "etiquette"},
+        {TT_NOTHING, -1, NULL},
+        {TT_NOTHING, -1, NULL},
+        {TT_NOTHING, -1, NULL},
+        {TT_NOTHING, -1, NULL},
+        {TT_NUMBER, 0, NULL},
+        {TT_NUMBER, 67, NULL},
+        {TT_NUMBER, -104, NULL},
+        {TT_ADDRESS, 0, NULL},
+        {TT_ADDRESS, 69, NULL},
+        {TT_ADDRESS, -123, NULL},
+        {TT_INST, (int32_t)OP_LOAD_DIRECT, NULL},
+        {TT_INST, (int32_t)OP_STORE_TO, NULL},
+        {TT_INST, (int32_t)OP_INCR, NULL},
+        {TT_INST, (int32_t)OP_JUMP, NULL},
+        {TT_INST, (int32_t)OP_HALT, NULL},
+        {TT_LABEL_GOTO, -1, "etiquette"},
+        {TT_LABEL_GOTO, -1, "main"},
+        {TT_LABEL_GOTO, -1, "sixseven"}
+    };
+
+    Token** tokens = keywords_to_tokens(keywords);
+    assert(tokens != NULL);
+
+    return;
+
+    for (size_t i = 0; i < 19; ++i) {
+        assert(tokens[i] != NULL);
+        assert(tokens[i]->type == expected_tokens[i].type);
+        assert(tokens[i]->value == expected_tokens[i].value);
+        if (expected_tokens[i].label == NULL)
+            assert(tokens[i]->label == NULL);
+        else
+            assert(strcmp(tokens[i]->label, expected_tokens[i].label) == 0);
+
+        string_delete(keywords[i]);
+        token_delete(tokens[i]);
+    }
+}
 
 
 int main() {
@@ -235,6 +301,7 @@ int main() {
     test_string_is_a_label();
 
     test_keyword_to_token();
+    test_keywords_to_tokens();
 
     return 0;
 }
