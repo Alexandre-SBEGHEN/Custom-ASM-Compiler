@@ -641,9 +641,7 @@ void test_program_compile(void) {
     assert(program_compile(NULL) == NULL);
 
     // --- Programme 1 : a = 1
-    char* asm_a_equals_1 = file_to_string(
-    PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_1.asm"
-    );
+    char* asm_a_equals_1 = PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_1.asm";
     Instruction expected_prog_a_equals_1[3] = {
         {OP_LOAD_DIRECT, 1},
         {OP_STORE_TO, 0},
@@ -659,9 +657,7 @@ void test_program_compile(void) {
     program_delete(prog);
 
     // --- Programme 2 : a = a + 10
-    char* asm_a_equals_a_plus_10 = file_to_string(
-    PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_a_plus_10.asm"
-    );
+    char* asm_a_equals_a_plus_10 = PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_a_plus_10.asm";
     Instruction expected_prog_a_equals_a_plus_10[10] = {
         {OP_LOAD_DIRECT, -9},
         {OP_STORE_TO, 2},
@@ -684,9 +680,7 @@ void test_program_compile(void) {
     program_delete(prog);
 
     // --- Programme 3 : a = |a|
-    char* asm_a_equals_abs_of_a = file_to_string(
-    PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_abs_of_a.asm"
-    );
+    char* asm_a_equals_abs_of_a = PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_abs_of_a.asm";
     Instruction expected_prog_a_equals_abs_of_a[16] = {
         {OP_LOAD_FROM, 0},
         {OP_INCR, 0},
