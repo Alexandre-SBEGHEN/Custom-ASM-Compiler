@@ -3,16 +3,11 @@
  * @brief Création d'un type string dynamique.
  * @author Alexandre SBEGHEN
  * @date 2026-07-23
- * @version 1.0.0
  */
 
 #ifndef MYSTRING_H
 #define MYSTRING_H
 #include <stddef.h>
-
-/* --- Constantes ---------------------------------------------------------- */
-
-extern const size_t STRING_INIT_CAPACITY;
 
 /* --- Alias --------------------------------------------------------------- */
 

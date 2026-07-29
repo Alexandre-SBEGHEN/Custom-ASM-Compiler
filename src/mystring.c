@@ -3,7 +3,6 @@
  * @brief Implémentation des manipulations de strings.
  * @author Alexandre SBEGHEN
  * @date 2026-07-23
- * @version 1.0.0
  */
 
 #include "mystring.h"
@@ -11,7 +10,7 @@
 #include <string.h>
 #include <ctype.h>
 
-const size_t STRING_INIT_CAPACITY = 8;
+static const size_t STRING_INIT_CAPACITY = 8;
 
 /** Création dynamique d'une string */
 string string_create(const char* init) {

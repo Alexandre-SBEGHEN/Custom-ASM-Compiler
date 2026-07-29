@@ -3,7 +3,6 @@
  * @brief Définition des constantes et des fonctions de manipulation des tableaux.
  * @author Alexandre SBEGHEN
  * @date 2026-07-23
- * @version 1.0.0
  */
 
 #include "myarray.h"

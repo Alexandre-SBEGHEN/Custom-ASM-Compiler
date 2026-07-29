@@ -3,7 +3,6 @@
  * @brief Interface et macros des tableaux dynamiques.
  * @author Alexandre SBEGHEN
  * @date 2026-07-23
- * @version 1.0.1
  */
 
 #ifndef MYARRAY_H
