@@ -404,5 +404,49 @@ Program* tokens_parse(Token** tokens) {
 
 /* Compilation d'un programme sous fichier texte */
 Program* program_compile(const char* filename) {
-    return NULL;
+    if (filename == NULL)
+        return NULL;
+
+    char* code = file_to_string(filename);
+    if (code == NULL)
+        return NULL;
+
+    char* code_without_comments = remove_comments(code);
+    if (code_without_comments == NULL) {
+        free(code);
+        return NULL;
+    }
+
+    string* keywords = string_to_keywords(code_without_comments);
+    if (keywords == NULL) {
+        free(code_without_comments);
+        free(code);
+        return NULL;
+    }
+
+    Token** tokens = keywords_to_tokens(keywords);
+    if (tokens == NULL) {
+        for (size_t i = 0; i < array_size(keywords); ++i)
+            string_delete(keywords[i]);
+        array_delete(keywords);
+        free(code_without_comments);
+        free(code);
+        return NULL;
+    }
+
+    tokens_disambiguate(tokens);
+    Program* prog = NULL;
+    if (tokens_check_validity(tokens))
+        prog = tokens_parse(tokens);
+
+    for (size_t i = 0; i < array_size(tokens); ++i)
+        token_delete(tokens[i]);
+    array_delete(tokens);
+    for (size_t i = 0; i < array_size(keywords); ++i)
+        string_delete(keywords[i]);
+    array_delete(keywords);
+    free(code_without_comments);
+    free(code);
+
+    return prog;
 }
