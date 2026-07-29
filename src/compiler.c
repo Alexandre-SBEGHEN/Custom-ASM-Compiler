@@ -348,5 +348,56 @@ bool tokens_check_validity(Token** tokens) {
 
 /* Parsing des tokens */
 Program* tokens_parse(Token** tokens) {
-    return NULL;
+    if (tokens == NULL)
+        return NULL;
+
+    Program* prog = program_create();
+
+    // Se souvenir des étiquettes à l'instruction N
+    size_t current_inst_index = 0;
+    typedef struct {
+        string label;
+        size_t inst_index;
+    } Pair;
+    Pair* pairs = array_create(Pair);
+    for (size_t i = 0; i < array_size(tokens); ++i) {
+        Token* t = tokens[i];
+        if (t->type == TT_LABEL_DEF) {
+            array_push(pairs, ((Pair){t->label, current_inst_index}));
+        } else if (t->type == TT_INST) {
+            ++current_inst_index;
+        }
+    }
+
+    // Ecrire les instructions
+    Instruction* current_inst = NULL;
+    for (size_t i = 0; i < array_size(tokens); ++i) {
+        Token* t = tokens[i];
+
+        switch (t->type) {
+            case TT_LABEL_GOTO:
+                for (size_t j = 0; j < array_size(pairs); ++j) {
+                    Pair pair = pairs[j];
+                    if (string_equals(t->label, pair.label)) {
+                        current_inst->arg = (int32_t)pair.inst_index;
+                        break;
+                    }
+                }
+                break;
+            case TT_NUMBER:
+            case TT_ADDRESS:
+                current_inst->arg = t->value;
+                break;
+            case TT_INST:
+                array_push(prog->inst, ((Instruction){(int32_t)t->value, 0}));
+                current_inst = &prog->inst[array_size(prog->inst) - 1];
+                break;
+            default:
+                break;
+        }
+    }
+
+    array_delete(pairs);
+
+    return prog;
 }
