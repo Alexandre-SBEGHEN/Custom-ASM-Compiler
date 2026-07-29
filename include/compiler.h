@@ -210,4 +210,19 @@ void tokens_disambiguate(Token** tokens);
  */
 bool tokens_check_validity(Token** tokens);
 
+/**
+ * Crée un programme compilé, compréhensible par l'interpréteur,
+ * à partir de tokens.
+ *
+ * @param[in] tokens Pointeur vers le tableau de tokens.
+ *
+ * @return Pointeur vers le programme compilé.
+ *
+ * @note Cette fonction effectue une allocation dynamique
+ * de mémoire, penser à libérer la mémoire.
+ *
+ * @see program_delete()
+ */
+Program* tokens_parse(Token** tokens);
+
 #endif

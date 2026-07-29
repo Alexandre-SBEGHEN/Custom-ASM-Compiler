@@ -345,3 +345,8 @@ bool tokens_check_validity(Token** tokens) {
 
     return tokens_are_valid;
 }
+
+/* Parsing des tokens */
+Program* tokens_parse(Token** tokens) {
+    return NULL;
+}
