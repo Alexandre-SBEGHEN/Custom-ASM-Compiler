@@ -401,3 +401,8 @@ Program* tokens_parse(Token** tokens) {
 
     return prog;
 }
+
+/* Compilation d'un programme sous fichier texte */
+Program* program_compile(const char* filename) {
+    return NULL;
+}

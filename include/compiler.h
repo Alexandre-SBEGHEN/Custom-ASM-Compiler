@@ -232,4 +232,23 @@ bool tokens_check_validity(Token** tokens);
  */
 Program* tokens_parse(Token** tokens);
 
+/**
+ * @brief Compile le code issu d'un fichier ASM.
+ *
+ * Effectue toute la chaîne de compilation et se charge
+ * de libérer la mémoire allouée durant le cycle, pour les strings
+ * ou encore les tokens.
+ *
+ * @param[in] filename Chemin vers le fichier.
+ * @return Pointeur vers le programme compilé, NULL en cas d'échec
+ * de compilation.
+ *
+ * @note Cette fonction effectue une allocation dynamique
+ * de mémoire, penser à libérer la mémoire.
+ *
+ * @see tokens_check_validity()
+ * @see program_delete()
+ */
+Program* program_compile(const char* filename);
+
 #endif
