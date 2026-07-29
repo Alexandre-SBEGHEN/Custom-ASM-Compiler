@@ -17,7 +17,13 @@
 
 #include "machine.h"
 
-/* --- Constantes ---------------------------------------------------------- */
+/* --- Alias --------------------------------------------------------------- */
+
+typedef enum OpcodeEnum Opcode;
+typedef struct InstructionStruct Instruction;
+typedef struct ProgramStruct Program;
+
+/* --- Enums et Structs ---------------------------------------------------- */
 
 /**
  * @brief Code des différentes instructions.
@@ -33,14 +39,6 @@ enum OpcodeEnum {
     OP_JZ,
     OP_HALT
 };
-
-/* --- Alias --------------------------------------------------------------- */
-
-typedef enum OpcodeEnum Opcode;
-typedef struct InstructionStruct Instruction;
-typedef struct ProgramStruct Program;
-
-/* --- Structs ------------------------------------------------------------- */
 
 /**
  * @brief Structure d'une instruction.

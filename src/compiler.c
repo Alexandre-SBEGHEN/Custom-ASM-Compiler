@@ -14,7 +14,7 @@
 #include "mystring.h"
 #include "stdbool.h"
 
-const KeywordEntry KEYWORDS[] = {
+static const KeywordEntry KEYWORDS[] = {
     {"LOAD", OP_LOAD_DIRECT},
     {"STORE", OP_STORE_TO},
     {"INCR", OP_INCR},
@@ -23,7 +23,7 @@ const KeywordEntry KEYWORDS[] = {
     {"JZ", OP_JZ},
     {"HALT", OP_HALT}
 };
-const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KeywordEntry);
+static const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KeywordEntry);
 
 /* Lecture de fichier dans une string */
 char* file_to_string(const char* filename) {

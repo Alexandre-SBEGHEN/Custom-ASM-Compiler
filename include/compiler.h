@@ -58,11 +58,6 @@ struct KeywordEntryStruct {
     Opcode opcode; /**< Opcode correspondant */
 };
 
-/* --- Constantes ---------------------------------------------------------- */
-
-extern const KeywordEntry KEYWORDS[];
-extern const size_t KEYWORDS_COUNT;
-
 /* --- Fonctions ----------------------------------------------------------- */
 
 /**

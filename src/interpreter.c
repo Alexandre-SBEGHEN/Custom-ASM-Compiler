@@ -7,7 +7,6 @@
 
 #include "interpreter.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include "myarray.h"
 #include "stdbool.h"
 

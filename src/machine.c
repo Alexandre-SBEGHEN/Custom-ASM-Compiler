@@ -6,7 +6,6 @@
  */
 
 #include "machine.h"
-#include <stdlib.h>
 #include "myarray.h"
 
 /** Création dynamique d'une structure registre Register */
