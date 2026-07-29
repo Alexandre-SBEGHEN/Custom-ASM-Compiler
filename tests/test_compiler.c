@@ -487,6 +487,9 @@ void test_tokens_check_validity(void) {
 void test_tokens_parse(void) {
     Program* prog;
 
+    // Cas où l'input est NULL
+    assert(tokens_parse(NULL) == NULL);
+
     // --- Programme 1 : a = 1
     Token** tokens_a_equals_1 = array_create(Token*);
     {
