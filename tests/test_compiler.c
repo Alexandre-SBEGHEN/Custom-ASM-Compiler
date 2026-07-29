@@ -479,6 +479,155 @@ void test_tokens_check_validity(void) {
     array_delete(tokens);
 }
 
+/**
+ * @brief Test de la fonction tokens_parse().
+ *
+ * @see tokens_parse()
+ */
+void test_tokens_parse(void) {
+    Program* prog;
+
+    // --- Programme 1 : a = 1
+    Token** tokens_a_equals_1 = array_create(Token*);
+    {
+        array_push(tokens_a_equals_1, token_create(TT_LABEL_DEF, 0, string_create("main")));
+        array_push(tokens_a_equals_1, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
+        array_push(tokens_a_equals_1, token_create(TT_NUMBER, 1, NULL));
+        array_push(tokens_a_equals_1, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
+        array_push(tokens_a_equals_1, token_create(TT_ADDRESS, 0, NULL));
+        array_push(tokens_a_equals_1, token_create(TT_INST, (int32_t)OP_HALT, NULL));
+    }
+    Instruction expected_prog_a_equals_1[3] = {
+        {OP_LOAD_DIRECT, 1},
+        {OP_STORE_TO, 0},
+        {OP_HALT, 0}
+    };
+    prog = tokens_parse(tokens_a_equals_1);
+    assert(prog != NULL);
+    assert(array_size(prog->inst) == 3);
+    for (size_t i = 0; i < 3; ++i) {
+        assert(prog->inst[i].op == expected_prog_a_equals_1[i].op);
+        assert(prog->inst[i].arg == expected_prog_a_equals_1[i].arg);
+    }
+
+    for (size_t i = 0; i < array_size(tokens_a_equals_1); ++i)
+        token_delete(tokens_a_equals_1[i]);
+    array_delete(tokens_a_equals_1);
+    program_delete(prog);
+
+    // --- Programme 2 : a = a + 10
+    Token** tokens_a_equals_a_plus_10 = array_create(Token*);
+    {
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_LABEL_DEF, 0, string_create("main")));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_NUMBER, -9, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_ADDRESS, 2, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_LABEL_DEF, 0, string_create("for")));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_LOAD_FROM, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_ADDRESS, 0, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_INCR, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_ADDRESS, 0, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_LOAD_FROM, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_ADDRESS, 2, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_INCR, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_ADDRESS, 2, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_JZ, NULL));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_LABEL_GOTO, 0, string_create("for")));
+        array_push(tokens_a_equals_a_plus_10, token_create(TT_INST, (int32_t)OP_HALT, NULL));
+    }
+    Instruction expected_prog_a_equals_a_plus_10[10] = {
+        {OP_LOAD_DIRECT, -9},
+        {OP_STORE_TO, 2},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 2},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 2},
+        {OP_JZ, 2},
+        {OP_HALT, 0}
+    };
+    prog = tokens_parse(tokens_a_equals_a_plus_10);
+    assert(prog != NULL);
+    assert(array_size(prog->inst) == 10);
+    for (size_t i = 0; i < 10; ++i) {
+        assert(prog->inst[i].op == expected_prog_a_equals_a_plus_10[i].op);
+        assert(prog->inst[i].arg == expected_prog_a_equals_a_plus_10[i].arg);
+    }
+
+    for (size_t i = 0; i < array_size(tokens_a_equals_a_plus_10); ++i)
+        token_delete(tokens_a_equals_a_plus_10[i]);
+    array_delete(tokens_a_equals_a_plus_10);
+    program_delete(prog);
+
+    // --- Programme 3 : a = |a|
+    Token** tokens_a_equals_abs_of_a = array_create(Token*);
+    {
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_LABEL_DEF, 0, string_create("main")));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_LOAD_FROM, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_ADDRESS, 0, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_INCR, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_ADDRESS, 1, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_LOAD_FROM, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_ADDRESS, 0, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_INCR, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_JZ, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_LABEL_GOTO, 0, string_create("absolute")));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_JUMP, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_LABEL_GOTO, 0, string_create("end")));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_LABEL_DEF, 0, string_create("absolute")));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_LOAD_FROM, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_ADDRESS, 0, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_INCR, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_INCR, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_ADDRESS, 0, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_LOAD_FROM, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_ADDRESS, 1, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_INCR, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_ADDRESS, 1, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_JZ, NULL));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_LABEL_GOTO, 0, string_create("absolute")));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_LABEL_DEF, 0, string_create("end")));
+        array_push(tokens_a_equals_abs_of_a, token_create(TT_INST, (int32_t)OP_HALT, NULL));
+    }
+    Instruction expected_prog_a_equals_abs_of_a[16] = {
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_JZ, 7},
+        {OP_JUMP, 15},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 1},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_JZ, 7},
+        {OP_HALT, 0}
+    };
+    prog = tokens_parse(tokens_a_equals_abs_of_a);
+    assert(prog != NULL);
+    assert(array_size(prog->inst) == 16);
+    for (size_t i = 0; i < 16; ++i) {
+        assert(prog->inst[i].op == expected_prog_a_equals_abs_of_a[i].op);
+        assert(prog->inst[i].arg == expected_prog_a_equals_abs_of_a[i].arg);
+    }
+
+    for (size_t i = 0; i < array_size(tokens_a_equals_abs_of_a); ++i)
+        token_delete(tokens_a_equals_abs_of_a[i]);
+    array_delete(tokens_a_equals_abs_of_a);
+    program_delete(prog);
+}
+
 int main(void) {
     test_file_to_string();
     test_remove_comments();
@@ -492,6 +641,7 @@ int main(void) {
     test_keywords_to_tokens();
     test_tokens_disambiguate();
     test_tokens_check_validity();
+    test_tokens_parse();
 
     return 0;
 }
