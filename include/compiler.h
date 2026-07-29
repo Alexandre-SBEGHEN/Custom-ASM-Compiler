@@ -218,9 +218,16 @@ bool tokens_check_validity(Token** tokens);
  *
  * @return Pointeur vers le programme compilé.
  *
+ * @note Cette fonction suppose que les tokens sont déjà
+ * valides, et ont déjà été passés dans la fonction
+ * tokens_check_validity(). Il pourrait y avoir des
+ * comportements non définis / crash si cela n'a pas
+ * été fait au préalable.
+ *
  * @note Cette fonction effectue une allocation dynamique
  * de mémoire, penser à libérer la mémoire.
  *
+ * @see tokens_check_validity()
  * @see program_delete()
  */
 Program* tokens_parse(Token** tokens);
