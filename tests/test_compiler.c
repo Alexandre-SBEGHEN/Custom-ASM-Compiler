@@ -487,7 +487,7 @@ void test_tokens_check_validity(void) {
 void test_tokens_parse(void) {
     Program* prog;
 
-    // Cas où l'input est NULL
+    // --- Cas où l'input est NULL
     assert(tokens_parse(NULL) == NULL);
 
     // --- Programme 1 : a = 1
@@ -631,6 +631,91 @@ void test_tokens_parse(void) {
     program_delete(prog);
 }
 
+/**
+ * @brief Test de la fonction program_compile().
+ *
+ * @see program_compile()
+ */
+void test_program_compile(void) {
+    // --- Cas où l'input est NULL
+    assert(program_compile(NULL) == NULL);
+
+    // --- Programme 1 : a = 1
+    char* asm_a_equals_1 = file_to_string(
+    PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_1.asm"
+    );
+    Instruction expected_prog_a_equals_1[3] = {
+        {OP_LOAD_DIRECT, 1},
+        {OP_STORE_TO, 0},
+        {OP_HALT, 0}
+    };
+    Program* prog = program_compile(asm_a_equals_1);
+
+    assert(prog != NULL);
+    for (size_t i = 0; i < 3; ++i) {
+        assert(prog->inst[i].op == expected_prog_a_equals_1[i].op);
+        assert(prog->inst[i].arg == expected_prog_a_equals_1[i].arg);
+    }
+    program_delete(prog);
+
+    // --- Programme 2 : a = a + 10
+    char* asm_a_equals_a_plus_10 = file_to_string(
+    PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_a_plus_10.asm"
+    );
+    Instruction expected_prog_a_equals_a_plus_10[10] = {
+        {OP_LOAD_DIRECT, -9},
+        {OP_STORE_TO, 2},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 2},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 2},
+        {OP_JZ, 2},
+        {OP_HALT, 0}
+    };
+    prog = program_compile(asm_a_equals_a_plus_10);
+
+    assert(prog != NULL);
+    for (size_t i = 0; i < 10; ++i) {
+        assert(prog->inst[i].op == expected_prog_a_equals_a_plus_10[i].op);
+        assert(prog->inst[i].arg == expected_prog_a_equals_a_plus_10[i].arg);
+    }
+    program_delete(prog);
+
+    // --- Programme 3 : a = |a|
+    char* asm_a_equals_abs_of_a = file_to_string(
+    PROJECT_ROOT "/tests/testdata/test_compiler/test_program_compile/a_equals_abs_of_a.asm"
+    );
+    Instruction expected_prog_a_equals_abs_of_a[16] = {
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_JZ, 7},
+        {OP_JUMP, 15},
+        {OP_LOAD_FROM, 0},
+        {OP_INCR, 0},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 0},
+        {OP_LOAD_FROM, 1},
+        {OP_INCR, 0},
+        {OP_STORE_TO, 1},
+        {OP_JZ, 7},
+        {OP_HALT, 0}
+    };
+    prog = program_compile(asm_a_equals_abs_of_a);
+
+    assert(prog != NULL);
+    for (size_t i = 0; i < 16; ++i) {
+        assert(prog->inst[i].op == expected_prog_a_equals_abs_of_a[i].op);
+        assert(prog->inst[i].arg == expected_prog_a_equals_abs_of_a[i].arg);
+    }
+    program_delete(prog);
+}
+
+
 int main(void) {
     test_file_to_string();
     test_remove_comments();
@@ -645,6 +730,8 @@ int main(void) {
     test_tokens_disambiguate();
     test_tokens_check_validity();
     test_tokens_parse();
+
+    test_program_compile();
 
     return 0;
 }
