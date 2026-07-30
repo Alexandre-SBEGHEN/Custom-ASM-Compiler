@@ -24,6 +24,7 @@
 /* --- Alias --------------------------------------------------------------- */
 
 typedef enum TokenTypeEnum TokenType;
+typedef enum CompilerErrorsEnum CompilerErrors;
 typedef struct TokenStruct Token;
 typedef struct KeywordEntryStruct KeywordEntry;
 
@@ -39,6 +40,20 @@ enum TokenTypeEnum {
     TT_NUMBER,
     TT_ADDRESS,
     TT_INST
+};
+
+/**
+ * @brief Codes d'erreur du compilateur lors de
+ * la compilation d'un programme.
+ */
+enum CompilerErrorsEnum {
+    CERR_SUCCESS, /**< Aucune erreur */
+    CERR_NO_TOKENS, /**< Tokens inexistants */
+    CERR_ORPHAN_OPERAND, /**< Opérande orphelin */
+    CERR_INST_W_WRONG_OPERAND, /**< Instruction avec mauvais/sans opérande */
+    CERR_JUMP_W_O_LABEL, /**< Instruction saut sans étiquette */
+    CERR_LABEL_ALREADY_DEFINED, /**< Définition d'une étiquette déjà existante */
+    CERR_LABEL_UNDEFINED, /**< Saut vers une étiquette inexistante */
 };
 
 /**
@@ -208,7 +223,7 @@ void tokens_disambiguate(Token** tokens);
  * @param[in] tokens Pointeur vers le tableau de tokens.
  * @return Validité des tokens.
  */
-bool tokens_check_validity(Token** tokens);
+CompilerErrors tokens_check_validity(Token** tokens);
 
 /**
  * Crée un programme compilé, compréhensible par l'interpréteur,

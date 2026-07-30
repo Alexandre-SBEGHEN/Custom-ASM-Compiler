@@ -260,9 +260,9 @@ void tokens_disambiguate(Token** tokens) {
 }
 
 /* Validité des tokens */
-bool tokens_check_validity(Token** tokens) {
+CompilerErrors tokens_check_validity(Token** tokens) {
     if (tokens == NULL)
-        return false;
+        return CERR_NO_TOKENS;
 
     const size_t tokens_len = array_size(tokens);
 
@@ -274,7 +274,7 @@ bool tokens_check_validity(Token** tokens) {
 
     string* declared_labels = array_create(string);
 
-    bool tokens_are_valid = true;
+    CompilerErrors tokens_validity = CERR_SUCCESS;
 
     for (size_t i = 0; i < tokens_len; ++i) {
         size_t declared_labels_len = array_size(declared_labels);
@@ -294,7 +294,7 @@ bool tokens_check_validity(Token** tokens) {
         bool is_orphan = (is_number && !previous_is_load) || (is_address && !previous_is_load_or_store);
 
         if (is_orphan) {
-            tokens_are_valid = false;
+            tokens_validity = CERR_ORPHAN_OPERAND;
             break;
         }
 
@@ -309,7 +309,7 @@ bool tokens_check_validity(Token** tokens) {
             (is_store && !next_is_address);
 
         if (wrong_or_no_operand) {
-            tokens_are_valid = false;
+            tokens_validity = CERR_INST_W_WRONG_OPERAND;
             break;
         }
 
@@ -321,7 +321,7 @@ bool tokens_check_validity(Token** tokens) {
         bool jump_missing_label = is_jump && !next_is_label;
 
         if (jump_missing_label) {
-            tokens_are_valid = false;
+            tokens_validity = CERR_JUMP_W_O_LABEL;
             break;
         }
 
@@ -338,9 +338,10 @@ bool tokens_check_validity(Token** tokens) {
         bool declaring_existing_label = is_label_def && label_already_exists;
 
         if (declaring_existing_label) {
-            tokens_are_valid = false;
+            tokens_validity = CERR_LABEL_ALREADY_DEFINED;
             break;
-        } else if (is_label_def) {
+        }
+        if (is_label_def) {
             array_push(declared_labels, string_create(token->label));
         }
 
@@ -357,7 +358,7 @@ bool tokens_check_validity(Token** tokens) {
         bool jump_to_nonexisting_label = is_label_goto && label_does_not_exist;
 
         if (jump_to_nonexisting_label) {
-            tokens_are_valid = false;
+            tokens_validity = CERR_LABEL_UNDEFINED;
             break;
         }
     }
@@ -370,7 +371,7 @@ bool tokens_check_validity(Token** tokens) {
     array_delete(declared_labels);
     array_delete(all_labels);
 
-    return tokens_are_valid;
+    return tokens_validity;
 }
 
 /* Parsing des tokens */
@@ -443,7 +444,7 @@ Program* program_compile(const char* filename) {
 
     // Parsing
     tokens_disambiguate(tokens);
-    if (tokens_check_validity(tokens))
+    if (tokens_check_validity(tokens) == CERR_SUCCESS)
         prog = tokens_parse(tokens);
 
     // Libération de mémoire

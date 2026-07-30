@@ -348,7 +348,7 @@ void test_tokens_check_validity(void) {
     {
         // TT_NUMBER en tout premier token, sans instruction avant
         array_push(tokens, token_create(TT_NUMBER, 5, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_ORPHAN_OPERAND);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -357,7 +357,7 @@ void test_tokens_check_validity(void) {
         // TT_ADDRESS après une instruction qui n'attend pas d'opérande (INCR)
         array_push(tokens, token_create(TT_INST, (int32_t)OP_INCR, NULL));
         array_push(tokens, token_create(TT_ADDRESS, 10, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_ORPHAN_OPERAND);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -368,7 +368,7 @@ void test_tokens_check_validity(void) {
     {
         // LOAD en fin de flux, sans opérande
         array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_DIRECT, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_INST_W_WRONG_OPERAND);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -377,7 +377,7 @@ void test_tokens_check_validity(void) {
         // LOAD suivi d'une instruction au lieu d'un opérande
         array_push(tokens, token_create(TT_INST, (int32_t)OP_LOAD_FROM, NULL));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_INST_W_WRONG_OPERAND);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -386,7 +386,7 @@ void test_tokens_check_validity(void) {
         // STORE suivi d'un TT_NUMBER (opérande immédiat interdit pour STORE)
         array_push(tokens, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
         array_push(tokens, token_create(TT_NUMBER, 3, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_INST_W_WRONG_OPERAND);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -394,7 +394,7 @@ void test_tokens_check_validity(void) {
 
         // STORE en fin de flux, sans opérande
         array_push(tokens, token_create(TT_INST, (int32_t)OP_STORE_TO, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_INST_W_WRONG_OPERAND);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -405,7 +405,7 @@ void test_tokens_check_validity(void) {
     {
         // JUMP en fin de flux, sans étiquette
         array_push(tokens, token_create(TT_INST, (int32_t)OP_JUMP, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_JUMP_W_O_LABEL);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -414,7 +414,7 @@ void test_tokens_check_validity(void) {
         // JZ suivi d'un TT_NUMBER au lieu d'une étiquette
         array_push(tokens, token_create(TT_INST, (int32_t)OP_JZ, NULL));
         array_push(tokens, token_create(TT_NUMBER, 1, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_JUMP_W_O_LABEL);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -428,7 +428,7 @@ void test_tokens_check_validity(void) {
         array_push(tokens, token_create(TT_LABEL_DEF, 0, string_create("boucle")));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
 
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_LABEL_ALREADY_DEFINED);
 
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
@@ -441,7 +441,7 @@ void test_tokens_check_validity(void) {
         array_push(tokens, token_create(TT_INST, (int32_t)OP_JUMP, NULL));
         array_push(tokens, token_create(TT_LABEL_GOTO, 0, string_create("fin")));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
-        assert(!tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_LABEL_UNDEFINED);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -458,7 +458,7 @@ void test_tokens_check_validity(void) {
         array_push(tokens, token_create(TT_INST, (int32_t)OP_INCR, NULL));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_DECR, NULL));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
-        assert(tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_SUCCESS);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -471,7 +471,7 @@ void test_tokens_check_validity(void) {
         array_push(tokens, token_create(TT_NUMBER, 1, NULL));
         array_push(tokens, token_create(TT_LABEL_DEF, 0, string_create("fin")));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
-        assert(tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_SUCCESS);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
@@ -483,7 +483,7 @@ void test_tokens_check_validity(void) {
         array_push(tokens, token_create(TT_INST, (int32_t)OP_JZ, NULL));
         array_push(tokens, token_create(TT_LABEL_GOTO, 0, string_create("boucle")));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
-        assert(tokens_check_validity(tokens));
+        assert(tokens_check_validity(tokens) == CERR_SUCCESS);
         for (size_t i = 0; i < array_size(tokens); ++i)
             token_delete(tokens[i]);
         array_delete(tokens);
