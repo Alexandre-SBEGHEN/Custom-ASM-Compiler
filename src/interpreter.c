@@ -32,9 +32,9 @@ void program_delete(Program* prog) {
 }
 
 /* Exécution d'un programme compilé */
-int program_interpret(const Program* prog, Machine* mac) {
+InterpreterErrors program_interpret(const Program* prog, Machine* mac) {
     if (prog == NULL || mac == NULL)
-        return 1;
+        return IERR_MISSING_MAC_OR_REG;
 
     size_t inst_index = 0;
 
@@ -42,7 +42,7 @@ int program_interpret(const Program* prog, Machine* mac) {
     while (true) {
         // Index en dehors du programme (erreur 1)
         if (inst_index >= array_size(prog->inst))
-            return 1;
+            return IERR_OVERFLOW;
 
         // Obtenir la paire opération / argument
         const Opcode op = prog->inst[inst_index].op;
@@ -91,10 +91,10 @@ int program_interpret(const Program* prog, Machine* mac) {
                 break;
             // HALT
             case OP_HALT:
-                return 0;
+                return IERR_SUCCESS;
             // Instruction inconnue (erreur 2)
             default:
-                return 2;
+                return IERR_UNKNOWN_INSTRUCTION;
         }
 
         // Instruction suivante

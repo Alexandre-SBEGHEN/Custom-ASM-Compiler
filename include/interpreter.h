@@ -20,6 +20,7 @@
 /* --- Alias --------------------------------------------------------------- */
 
 typedef enum OpcodeEnum Opcode;
+typedef enum InterpreterErrorsEnum InterpreterErrors;
 typedef struct InstructionStruct Instruction;
 typedef struct ProgramStruct Program;
 
@@ -38,6 +39,17 @@ enum OpcodeEnum {
     OP_JUMP,
     OP_JZ,
     OP_HALT
+};
+
+/**
+ * @brief Codes d'erreur de l'interpréteur lors de
+ * l'exécution d'un programme.
+ */
+enum InterpreterErrorsEnum {
+    IERR_SUCCESS, /**< Aucune erreur */
+    IERR_MISSING_MAC_OR_REG, /**< Machine et/ou registre manquant(s) */
+    IERR_OVERFLOW, /**< Index de lecture en dehors du programme  */
+    IERR_UNKNOWN_INSTRUCTION /**< Instruction inconnue */
 };
 
 /**
@@ -80,9 +92,9 @@ void program_delete(Program* prog);
  *
  * @param prog Pointeur vers la structure Program.
  * @param mac Pointeur vers la structure Machine.
- * @return 0 en cas de réussite, autre valeur en cas d'échec.
+ * @return Code d'erreur (ou réussite).
  */
-int program_interpret(const Program* prog, Machine* mac);
+InterpreterErrors program_interpret(const Program* prog, Machine* mac);
 
 /**
  * @brief Génère une structure Program à partir d'un fichier binaire (asm compilé).
