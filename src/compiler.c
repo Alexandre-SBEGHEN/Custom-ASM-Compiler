@@ -27,6 +27,9 @@ static const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KeywordEntry);
 
 /* Lecture de fichier dans une string */
 char* file_to_string(const char* filename) {
+    if (filename == NULL)
+        return NULL;
+
     FILE* file = fopen(filename, "r");
     if (file == NULL)
         return NULL;
@@ -52,6 +55,9 @@ char* file_to_string(const char* filename) {
 
 /* Suppression des commentaires */
 char* remove_comments(const char* str) {
+    if (str == NULL)
+        return NULL;
+
     char* copy = strdup(str);
     if (copy == NULL)
         return NULL;
@@ -90,6 +96,9 @@ char* remove_comments(const char* str) {
 
 /* Pré-tokénisation → tableau de mots clés */
 string* string_to_keywords(const char* str) {
+    if (str == NULL)
+        return NULL;
+
     char* copy = strdup(str);
     if (copy == NULL)
         return NULL;
@@ -151,6 +160,9 @@ void token_delete(Token* token) {
 
 /* Mot-clé -> Opcode */
 Opcode get_opcode_from_keyword(const char* keyword) {
+    if (keyword == NULL)
+        return OP_NOTHING;
+
     size_t keyword_index = 0;
     while (keyword_index < KEYWORDS_COUNT && !string_equals(keyword, KEYWORDS[keyword_index].keyword))
         ++keyword_index;
@@ -163,6 +175,9 @@ Opcode get_opcode_from_keyword(const char* keyword) {
 
 /* Vérifier si une string correspond à une étiquette */
 bool string_is_a_label(const char* str) {
+    if (str == NULL)
+        return false;
+
     for (size_t i = 0; str[i] != '\0'; ++i)
         if (!isalpha(str[i]) && str[i] != '_')
             return false;
@@ -172,6 +187,9 @@ bool string_is_a_label(const char* str) {
 
 /* Tokénisation d'un mot-clé */
 Token* keyword_to_token(const string keyword) {
+    if (keyword == NULL)
+        return NULL;
+
     const size_t len = string_length(keyword);
 
     if (keyword == NULL || len < 2)
@@ -208,6 +226,9 @@ Token* keyword_to_token(const string keyword) {
 
 /* Tokénisation d'un tableau de mot clés */
 Token** keywords_to_tokens(string* keywords) {
+    if (keywords == NULL)
+        return NULL;
+
     Token** tokens = array_create(Token*);
     if (tokens == NULL)
         return NULL;
@@ -223,6 +244,9 @@ Token** keywords_to_tokens(string* keywords) {
 
 /* Ajustement des tokens */
 void tokens_disambiguate(Token** tokens) {
+    if (tokens == NULL)
+        return;
+
     for (size_t i = 0; i < array_size(tokens) - 1; ++i) {
         Token* token = tokens[i];
         Token* next = tokens[i + 1];
@@ -237,6 +261,9 @@ void tokens_disambiguate(Token** tokens) {
 
 /* Validité des tokens */
 bool tokens_check_validity(Token** tokens) {
+    if (tokens == NULL)
+        return false;
+
     const size_t tokens_len = array_size(tokens);
 
     string* all_labels = array_create(string);
