@@ -83,25 +83,40 @@ void machine_delete(Machine* mac) {
 
 /** Chargement direct du registre */
 void ram_load_direct(Machine* mac, int32_t val) {
+    if (mac == NULL)
+        return;
+
     mac->reg->val = val;
 }
 
 /** Chargement du registre depuis la mémoire */
 void ram_load_from(Machine* mac, size_t index) {
+    if (mac == NULL)
+        return;
+
     mac->reg->val = mac->mem->data[index];
 }
 
 /** Rangement du registre vers la mémoire */
 void ram_store_to(Machine* mac, size_t index) {
+    if (mac == NULL)
+        return;
+
     mac->mem->data[index] = mac->reg->val;
 }
 
 /** Incrémentation du registre */
 void ram_increment(Machine* mac) {
+    if (mac == NULL)
+        return;
+
     mac->reg->val += 1;
 }
 
 /** Décrémentation du registre */
 void ram_decrement(Machine* mac) {
+    if (mac == NULL)
+        return;
+
     mac->reg->val -= 1;
 }

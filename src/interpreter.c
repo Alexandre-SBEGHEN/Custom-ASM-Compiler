@@ -24,12 +24,18 @@ Program* program_create() {
 
 /* Libération de mémoire d'une structure Program */
 void program_delete(Program* prog) {
+    if (prog == NULL)
+        return;
+
     array_delete(prog->inst);
     free(prog);
 }
 
 /* Exécution d'un programme compilé */
 int program_interpret(const Program* prog, Machine* mac) {
+    if (prog == NULL || mac == NULL)
+        return 1;
+
     size_t inst_index = 0;
 
     // Boucle du programme
@@ -98,6 +104,9 @@ int program_interpret(const Program* prog, Machine* mac) {
 
 /* Création d'un programme à partir d'un fichier .bin */
 Program* file_bin_to_program(const char* filename) {
+    if (filename == NULL)
+        return NULL;
+
     FILE* file = fopen(filename, "rb");
     if (file == NULL)
         return NULL;
