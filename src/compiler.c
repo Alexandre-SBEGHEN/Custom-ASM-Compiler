@@ -226,7 +226,7 @@ Token* keyword_to_token(const string keyword) {
 
 /* Tokénisation d'un tableau de mot clés */
 Token** keywords_to_tokens(string* keywords) {
-    if (keywords == NULL)
+    if (keywords == NULL || array_size(keywords) == 0)
         return NULL;
 
     Token** tokens = array_create(Token*);
@@ -265,6 +265,8 @@ CompilerErrors tokens_check_validity(Token** tokens) {
         return CERR_NO_TOKENS;
 
     const size_t tokens_len = array_size(tokens);
+    if (tokens_len == 0)
+        return CERR_NO_TOKENS;
 
     string* all_labels = array_create(string);
     for (size_t i = 0; i < tokens_len; ++i)
@@ -376,7 +378,7 @@ CompilerErrors tokens_check_validity(Token** tokens) {
 
 /* Parsing des tokens */
 Program* tokens_parse(Token** tokens) {
-    if (tokens == NULL)
+    if (tokens == NULL || array_size(tokens) == 0)
         return NULL;
 
     Program* prog = program_create();
