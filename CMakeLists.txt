@@ -4,7 +4,7 @@ project(RAM_Machine_ASM_Compiler_Interpreter_V2 C)
 set(CMAKE_C_STANDARD 11)
 
 # Exécutable principal
-add_executable(RAM_Machine_ASM_Compiler_Interpreter_V2
+add_executable(ramc
         src/main.c
         src/myarray.c
         src/mystring.c
@@ -12,7 +12,7 @@ add_executable(RAM_Machine_ASM_Compiler_Interpreter_V2
         src/interpreter.c
         src/compiler.c
 )
-target_include_directories(RAM_Machine_ASM_Compiler_Interpreter_V2 PRIVATE include/)
+target_include_directories(ramc PRIVATE include/)
 
 # Tests
 enable_testing()
