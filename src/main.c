@@ -41,6 +41,7 @@ struct PairStringCommandStruct {
 enum ExitCodeEnum {
     EXIT_SUCCESS,  /**< Aucune erreur */
     EXIT_UNSUPPORTED_COMMAND, /**< Commande non supportée */
+    EXIT_FILE_NOT_FOUND /**< Fichier(s) non trouvé(s) */
 };
 
 /* --- Constantes ---------------------------------------------------------- */
@@ -144,6 +145,7 @@ int main(int argc, char** argv) {
                     if (!output_exists)
                         printf("You need to specify an output file\n");
                     printf("\n");
+                    exit_code = EXIT_FILE_NOT_FOUND;
                     break;
                 }
                 break;
@@ -159,6 +161,7 @@ int main(int argc, char** argv) {
                     else if (!input_exists)
                         printf("Cannot find '%s' source code\n", argv[2]);
                     printf("\n");
+                    exit_code = EXIT_FILE_NOT_FOUND;
                     break;
                 }
                 break;
@@ -174,6 +177,7 @@ int main(int argc, char** argv) {
                     else if (!input_exists)
                         printf("Cannot find '%s' binary\n", argv[2]);
                     printf("\n");
+                    exit_code = EXIT_FILE_NOT_FOUND;
                     break;
                 }
                 break;
