@@ -407,44 +407,29 @@ Program* program_compile(const char* filename) {
     if (filename == NULL)
         return NULL;
 
+    // Etapes
     char* code = file_to_string(filename);
-    if (code == NULL)
-        return NULL;
-
-    char* code_without_comments = remove_comments(code);
-    if (code_without_comments == NULL) {
-        free(code);
-        return NULL;
-    }
-
-    string* keywords = string_to_keywords(code_without_comments);
-    if (keywords == NULL) {
-        free(code_without_comments);
-        free(code);
-        return NULL;
-    }
-
-    Token** tokens = keywords_to_tokens(keywords);
-    if (tokens == NULL) {
-        for (size_t i = 0; i < array_size(keywords); ++i)
-            string_delete(keywords[i]);
-        array_delete(keywords);
-        free(code_without_comments);
-        free(code);
-        return NULL;
-    }
-
-    tokens_disambiguate(tokens);
+    char* code_without_comments = (code == NULL) ? NULL : remove_comments(code);
+    string* keywords = (code_without_comments == NULL) ? NULL : string_to_keywords(code_without_comments);
+    Token** tokens = (keywords == NULL) ? NULL : keywords_to_tokens(keywords);
     Program* prog = NULL;
+
+    // Parsing
+    tokens_disambiguate(tokens);
     if (tokens_check_validity(tokens))
         prog = tokens_parse(tokens);
 
-    for (size_t i = 0; i < array_size(tokens); ++i)
-        token_delete(tokens[i]);
-    array_delete(tokens);
-    for (size_t i = 0; i < array_size(keywords); ++i)
-        string_delete(keywords[i]);
-    array_delete(keywords);
+    // Libération de mémoire
+    if (tokens != NULL) {
+        for (size_t i = 0; i < array_size(tokens); ++i)
+            token_delete(tokens[i]);
+        array_delete(tokens);
+    }
+    if (keywords != NULL) {
+        for (size_t i = 0; i < array_size(keywords); ++i)
+            string_delete(keywords[i]);
+        array_delete(keywords);
+    }
     free(code_without_comments);
     free(code);
 
