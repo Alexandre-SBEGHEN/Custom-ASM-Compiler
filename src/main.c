@@ -81,9 +81,10 @@ int main(int argc, char** argv) {
     } else {
         ProgramOption option = get_program_option_from_string(argv[1]);
 
+        // Exécution de la commande
         switch (option) {
             // Commande inconnue
-            case OPTN_NONE:
+            case OPTN_NONE: {
                 printf(
                     "Command line error:\n"
                     "Unsupported command:\n"
@@ -93,8 +94,9 @@ int main(int argc, char** argv) {
                 );
                 exit_code = EXIT_UNSUPPORTED_COMMAND;
                 break;
+            }
             // Compilation
-            case OPTN_COMPILE:
+            case OPTN_COMPILE: {
                 bool input_exists = file_exists(argv[2]);
                 bool output_exists = argc >= 4;
                 bool error = (argc < 3) || !input_exists || !output_exists;
@@ -109,12 +111,12 @@ int main(int argc, char** argv) {
                     printf("\n");
                     break;
                 }
-
                 break;
+            }
             // Compilation & exécution
-            case OPTN_COMPILE_AND_EXECUTE:
-                input_exists = file_exists(argv[2]);
-                error = (argc < 3) || !input_exists ;
+            case OPTN_COMPILE_AND_EXECUTE: {
+                bool input_exists = file_exists(argv[2]);
+                bool error = (argc < 3) || !input_exists ;
                 if (error) {
                     printf("Command line error:\n");
                     if (argc < 3)
@@ -124,12 +126,12 @@ int main(int argc, char** argv) {
                     printf("\n");
                     break;
                 }
-
                 break;
+            }
             // Exécution
-            case OPTN_EXECUTE_COMPILED:
-                input_exists = file_exists(argv[2]);
-                error = (argc < 3) || !input_exists ;
+            case OPTN_EXECUTE_COMPILED: {
+                bool input_exists = file_exists(argv[2]);
+                bool error = (argc < 3) || !input_exists ;
                 if (error) {
                     printf("Command line error:\n");
                     if (argc < 3)
@@ -139,8 +141,8 @@ int main(int argc, char** argv) {
                     printf("\n");
                     break;
                 }
-
                 break;
+            }
         }
     }
 
