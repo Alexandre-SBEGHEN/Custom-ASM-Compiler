@@ -69,9 +69,9 @@ int main(int argc, char** argv) {
             "Usage: %s <command> [<file_names>...]\n"
             "\n"
             "<Commands>\n"
-            "\t%-4s : %s\n"
-            "\t%-4s : %s\n"
-            "\t%-4s : %s\n"
+            "  %-4s : %s\n"
+            "  %-4s : %s\n"
+            "  %-4s : %s\n"
             "\n",
             exec_name,
             "c", "Compile a source code into a binary file",
