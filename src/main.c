@@ -9,38 +9,70 @@
 #include <stdbool.h>
 #include "mystring.h"
 
-typedef enum ProgramOptionEnum ProgramOption;
-typedef struct PairStringOptionStruct PairStringOption;
+/* --- Alias --------------------------------------------------------------- */
+
+typedef enum ProgramCommandEnum ProgramOption;
+typedef struct PairStringCommandStruct PairStringOption;
 typedef enum ExitCodeEnum ExitCode;
 
-enum ProgramOptionEnum {
-    OPTN_NONE,
-    OPTN_COMPILE,
-    OPTN_COMPILE_AND_EXECUTE,
-    OPTN_EXECUTE_COMPILED
-};
-struct PairStringOptionStruct {
-    char str[6];
-    ProgramOption option;
-};
-enum ExitCodeEnum {
-    EXIT_SUCCESS,
-    EXIT_UNSUPPORTED_COMMAND,
+/* --- Enums et Structs ---------------------------------------------------- */
+
+/**
+ * @brief Commandes possibles dans le programme.
+ */
+enum ProgramCommandEnum {
+    CMD_NONE, /**< Commande inconnue */
+    CMD_COMPILE, /**< Compilation d'un fichier source */
+    CMD_COMPILE_AND_EXECUTE, /**< Compilation & exécution d'un fichier source */
+    CMD_EXECUTE_COMPILED /**< Exécution d'un binaire */
 };
 
+/**
+ * @brief Paire string / commande.
+ */
+struct PairStringCommandStruct {
+    char str[6]; /**< String */
+    ProgramOption option; /**< La commande associée. */
+};
+
+/**
+ * @brief Code de sortie du programme.
+ */
+enum ExitCodeEnum {
+    EXIT_SUCCESS,  /**< Aucune erreur */
+    EXIT_UNSUPPORTED_COMMAND, /**< Commande non supportée */
+};
+
+/* --- Constantes ---------------------------------------------------------- */
+
 const PairStringOption OPTIONS[] = {
-    {"c", OPTN_COMPILE},
-    {"cx", OPTN_COMPILE_AND_EXECUTE},
-    {"x", OPTN_EXECUTE_COMPILED}
+    {"c", CMD_COMPILE},
+    {"cx", CMD_COMPILE_AND_EXECUTE},
+    {"x", CMD_EXECUTE_COMPILED}
 };
 const size_t OPTIONS_COUNT = sizeof(OPTIONS) / sizeof(PairStringOption);
 
-ProgramOption get_program_option_from_string(char* str) {
+/* --- Fonctions ----------------------------------------------------------- */
+
+/**
+ * @brief Permet d'obtenir une commande à partir d'une string.
+ *
+ * @param[in] str Pointeur vers la string.
+ * @return Commande associée, CMD_NONE si commande non trouvée.
+ */
+ProgramOption get_program_option_from_string(const char* str) {
     for (size_t i = 0; i < OPTIONS_COUNT; ++i)
         if (string_equals(str, OPTIONS[i].str))
             return OPTIONS[i].option;
-    return OPTN_NONE;
+    return CMD_NONE;
 }
+
+/**
+ * @brief Vérifie si un fichier existe.
+ *
+ * @param[in] filename Chemin vers le fichier.
+ * @return Existence du fichier.
+ */
 bool file_exists(const char* filename) {
     FILE* f = fopen(filename, "r");
     if (f) {
@@ -49,6 +81,8 @@ bool file_exists(const char* filename) {
     }
     return false;
 }
+
+/* --- Main ---------------------------------------------------------------- */
 
 int main(int argc, char** argv) {
     ExitCode exit_code = EXIT_SUCCESS;
@@ -78,13 +112,14 @@ int main(int argc, char** argv) {
             "cx", "Compile and execute a source code without creating a binary file",
             "x", "Execute a binary file"
         );
+
     } else {
         ProgramOption option = get_program_option_from_string(argv[1]);
 
         // Exécution de la commande
         switch (option) {
             // Commande inconnue
-            case OPTN_NONE: {
+            case CMD_NONE: {
                 printf(
                     "Command line error:\n"
                     "Unsupported command:\n"
@@ -96,7 +131,7 @@ int main(int argc, char** argv) {
                 break;
             }
             // Compilation
-            case OPTN_COMPILE: {
+            case CMD_COMPILE: {
                 bool input_exists = file_exists(argv[2]);
                 bool output_exists = argc >= 4;
                 bool error = (argc < 3) || !input_exists || !output_exists;
@@ -114,7 +149,7 @@ int main(int argc, char** argv) {
                 break;
             }
             // Compilation & exécution
-            case OPTN_COMPILE_AND_EXECUTE: {
+            case CMD_COMPILE_AND_EXECUTE: {
                 bool input_exists = file_exists(argv[2]);
                 bool error = (argc < 3) || !input_exists ;
                 if (error) {
@@ -129,7 +164,7 @@ int main(int argc, char** argv) {
                 break;
             }
             // Exécution
-            case OPTN_EXECUTE_COMPILED: {
+            case CMD_EXECUTE_COMPILED: {
                 bool input_exists = file_exists(argv[2]);
                 bool error = (argc < 3) || !input_exists ;
                 if (error) {
@@ -144,6 +179,7 @@ int main(int argc, char** argv) {
                 break;
             }
         }
+
     }
 
     return exit_code;
