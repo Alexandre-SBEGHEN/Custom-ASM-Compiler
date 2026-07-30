@@ -15,7 +15,7 @@
  *
  * @see register_create()
  */
-void test_register_create(void) {
+static void test_register_create(void) {
     Register* reg = register_create();
 
     assert(reg != NULL);
@@ -29,7 +29,7 @@ void test_register_create(void) {
  *
  * @see memory_create()
  */
-void test_memory_create(void) {
+static void test_memory_create(void) {
     for (size_t size = 1; size < 128; ++size) {
         Memory* mem = memory_create(size);
 
@@ -46,7 +46,7 @@ void test_memory_create(void) {
  *
  * @see machine_create()
  */
-void test_machine_create(void) {
+static void test_machine_create(void) {
     Machine* mac = machine_create(1);
 
     assert(mac != NULL);
@@ -61,7 +61,7 @@ void test_machine_create(void) {
  *
  * @see ram_load_direct()
  */
-void test_ram_load_direct(void) {
+static void test_ram_load_direct(void) {
     Machine* mac = machine_create(1);
 
     ram_load_direct(mac, -1);
@@ -83,7 +83,7 @@ void test_ram_load_direct(void) {
  *
  * @see ram_load_from()
  */
-void test_ram_load_from(void) {
+static void test_ram_load_from(void) {
     Machine* mac = machine_create(5);
 
     const int32_t testval[] = {0, 1, 3, 2, -5};
@@ -102,7 +102,7 @@ void test_ram_load_from(void) {
  *
  * @see ram_store_to()
  */
-void test_ram_store_to(void) {
+static void test_ram_store_to(void) {
     Machine* mac = machine_create(5);
 
     const int32_t testval[] = {0, 1, 3, 2, -5};
@@ -121,7 +121,7 @@ void test_ram_store_to(void) {
  *
  * @see register_increment()
  */
-void test_ram_increment(void) {
+static void test_ram_increment(void) {
     Machine* mac = machine_create(1);
 
     ram_increment(mac);
@@ -147,7 +147,7 @@ void test_ram_increment(void) {
  *
  * @see register_decrement()
  */
-void test_ram_decrement(void) {
+static void test_ram_decrement(void) {
     Machine* mac = machine_create(1);
 
     ram_decrement(mac);
