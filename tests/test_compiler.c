@@ -434,8 +434,10 @@ void test_tokens_check_validity(void) {
             token_delete(tokens[i]);
         array_delete(tokens);
         tokens = array_create(Token*);
+    }
 
-        // --- Critère 5 : saut vers une étiquette jamais déclarée ---
+    // --- Critère 5 : saut vers une étiquette jamais déclarée ---
+    {
         array_push(tokens, token_create(TT_INST, (int32_t)OP_JUMP, NULL));
         array_push(tokens, token_create(TT_LABEL_GOTO, 0, string_create("fin")));
         array_push(tokens, token_create(TT_INST, (int32_t)OP_HALT, NULL));
