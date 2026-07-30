@@ -137,12 +137,7 @@ Program* file_bin_to_program(const char* filename) {
         );
 
         // On encode inst et arg dans le programme
-        Instruction inst = {(Opcode)(op), arg};
-        array_push(prog->inst, inst);
-        /*
-        prog->inst[i].op = (Opcode)(op);
-        prog->inst[i].arg = arg;
-        */
+        array_push(prog->inst, ((Instruction){(Opcode)(op), arg}));
     }
 
     fclose(file);
