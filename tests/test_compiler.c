@@ -649,6 +649,11 @@ void test_tokens_parse(void) {
     }
 }
 
+/**
+ * @brief Test de la fonction program_is_compilable().
+ *
+ * @see program_is_compilable()
+ */
 void test_program_is_compilable(void) {
     typedef struct {
         char filename[256];
