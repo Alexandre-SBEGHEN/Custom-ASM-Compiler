@@ -136,78 +136,82 @@ void test_program_interpret(void) {
 void test_file_bin_to_program(void) {
     Program* prog;
 
-    // Programme 1 (a = 1)
-    Instruction insts_a_equals_1[] = {
-        {OP_LOAD_DIRECT, 1},
-        {OP_STORE_TO, 0},
-        {OP_HALT, 0}
-    };
-    prog = file_bin_to_program(
-        PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_1.bin"
-    );
-    assert(prog != NULL);
-    for (size_t i = 0; i < array_size(prog->inst); ++i) {
-        assert(prog->inst[i].op == insts_a_equals_1[i].op);
-        assert(prog->inst[i].arg == insts_a_equals_1[i].arg);
+    // --- Programme 1 : a = 1
+    {
+        Instruction insts_a_equals_1[] = {
+            {OP_LOAD_DIRECT, 1},
+            {OP_STORE_TO, 0},
+            {OP_HALT, 0}
+        };
+        prog = file_bin_to_program(
+            PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_1.bin"
+        );
+        assert(prog != NULL);
+        for (size_t i = 0; i < array_size(prog->inst); ++i) {
+            assert(prog->inst[i].op == insts_a_equals_1[i].op);
+            assert(prog->inst[i].arg == insts_a_equals_1[i].arg);
+        }
+
+        program_delete(prog);
     }
 
-    program_delete(prog);
+    // --- Programme 2 : a = a + 10
+    {
+        Instruction insts_a_equals_a_plus_10[] = {
+            {OP_LOAD_DIRECT, -9},
+            {OP_STORE_TO, 2},
+            {OP_LOAD_FROM, 0},
+            {OP_INCR, 0},
+            {OP_STORE_TO, 0},
+            {OP_LOAD_FROM, 2},
+            {OP_INCR, 0},
+            {OP_STORE_TO, 2},
+            {OP_JZ, 2},
+            {OP_HALT, 0}
+        };
+        prog = file_bin_to_program(
+            PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_a_plus_10.bin"
+        );
+        assert(prog != NULL);
+        for (size_t i = 0; i < array_size(prog->inst); ++i) {
+            assert(prog->inst[i].op == insts_a_equals_a_plus_10[i].op);
+            assert(prog->inst[i].arg == insts_a_equals_a_plus_10[i].arg);
+        }
 
-
-    // Programme 2 (a = a + 10)
-    Instruction insts_a_equals_a_plus_10[] = {
-        {OP_LOAD_DIRECT, -9},
-        {OP_STORE_TO, 2},
-        {OP_LOAD_FROM, 0},
-        {OP_INCR, 0},
-        {OP_STORE_TO, 0},
-        {OP_LOAD_FROM, 2},
-        {OP_INCR, 0},
-        {OP_STORE_TO, 2},
-        {OP_JZ, 2},
-        {OP_HALT, 0}
-    };
-    prog = file_bin_to_program(
-        PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_a_plus_10.bin"
-    );
-    assert(prog != NULL);
-    for (size_t i = 0; i < array_size(prog->inst); ++i) {
-        assert(prog->inst[i].op == insts_a_equals_a_plus_10[i].op);
-        assert(prog->inst[i].arg == insts_a_equals_a_plus_10[i].arg);
+        program_delete(prog);
     }
 
-    program_delete(prog);
+    // --- Programme 3 : a = |a|
+    {
+        Instruction insts_a_equals_abs_of_a[] = {
+            {OP_LOAD_FROM, 0},
+            {OP_INCR, 0},
+            {OP_STORE_TO, 1},
+            {OP_LOAD_FROM, 0},
+            {OP_INCR, 0},
+            {OP_JZ, 7},
+            {OP_JUMP, 15},
+            {OP_LOAD_FROM, 0},
+            {OP_INCR, 0},
+            {OP_INCR, 0},
+            {OP_STORE_TO, 0},
+            {OP_LOAD_FROM, 1},
+            {OP_INCR, 0},
+            {OP_STORE_TO, 1},
+            {OP_JZ, 7},
+            {OP_HALT, 0}
+        };
+        prog = file_bin_to_program(
+            PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_abs_of_a.bin"
+        );
+        assert(prog != NULL);
+        for (size_t i = 0; i < array_size(prog->inst); ++i) {
+            assert(prog->inst[i].op == insts_a_equals_abs_of_a[i].op);
+            assert(prog->inst[i].arg == insts_a_equals_abs_of_a[i].arg);
+        }
 
-
-    // Programme 3 (a = |a|)
-    Instruction insts_a_equals_abs_of_a[] = {
-        {OP_LOAD_FROM, 0},
-        {OP_INCR, 0},
-        {OP_STORE_TO, 1},
-        {OP_LOAD_FROM, 0},
-        {OP_INCR, 0},
-        {OP_JZ, 7},
-        {OP_JUMP, 15},
-        {OP_LOAD_FROM, 0},
-        {OP_INCR, 0},
-        {OP_INCR, 0},
-        {OP_STORE_TO, 0},
-        {OP_LOAD_FROM, 1},
-        {OP_INCR, 0},
-        {OP_STORE_TO, 1},
-        {OP_JZ, 7},
-        {OP_HALT, 0}
-    };
-    prog = file_bin_to_program(
-        PROJECT_ROOT "/tests/testdata/test_interpreter/test_file_bin_to_program/test_a_equals_abs_of_a.bin"
-    );
-    assert(prog != NULL);
-    for (size_t i = 0; i < array_size(prog->inst); ++i) {
-        assert(prog->inst[i].op == insts_a_equals_abs_of_a[i].op);
-        assert(prog->inst[i].arg == insts_a_equals_abs_of_a[i].arg);
+        program_delete(prog);
     }
-
-    program_delete(prog);
 }
 
 int main(void) {
