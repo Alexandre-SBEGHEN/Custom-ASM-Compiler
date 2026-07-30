@@ -114,6 +114,21 @@ sont rédigées ont du sens ?
 Si la validation passe, le **Parsing** s'effectue. Des données compréhensibles et exploitables par l'interpréteur
 sont créées → c'est le programme compilé.
 
+### Codes d'erreur du compilateur
+
+Si une erreur survient lors du processus de compilation, celui-ci s'arrête, et un code
+d'erreur est renvoyé.
+
+| Code | Signification |
+|-|-|
+| 0 | Aucune erreur |
+| 1 | Tokens inexistants |
+| 2 | Opérande orphelin (ex: `#?` ou `@?` sans leur instruction `LOAD` ou `STORE`) |
+| 3 | Instruction avec mauvais ou sans opérande (ex: un `LOAD` seul) |
+| 4 | Instruction de saut sans étiquette (ex: un `JUMP` seul) |
+| 5 | Définition d'une étiquette déjà existante |
+| 6 | Saut vers une étiquette inexistante |
+
 ## Programme compilé
 
 Une fois compilé, le programme est représenté sous la forme d'un tableau de N lignes et 2 colonnes. La première
@@ -150,5 +165,6 @@ interprète le programme renvoie la valeur 0. Sinon, elle renvoie un code d'erre
 | Code | Signification |
 |-|-|
 | 0 | Aucune erreur |
-| 1 | Overflow, index de lecture en dehors du programme (`<0` OU `>= taille`) |
-| 2 | Instruction inconnue |
+| 1 | Machine et/ou registre manquant(s) |
+| 2 | Overflow, index de lecture en dehors du programme (`<0` OU `>= taille`) |
+| 3 | Instruction inconnue |
