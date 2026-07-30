@@ -244,7 +244,7 @@ Token** keywords_to_tokens(string* keywords) {
 
 /* Ajustement des tokens */
 void tokens_disambiguate(Token** tokens) {
-    if (tokens == NULL)
+    if (tokens == NULL || array_size(tokens) == 0)
         return;
 
     for (size_t i = 0; i < array_size(tokens) - 1; ++i) {
@@ -432,7 +432,33 @@ Program* tokens_parse(Token** tokens) {
 
 /* Est-ce qu'un programme est compilable ? */
 CompilerErrors program_is_compilable(const char* filename) {
-    return CERR_SUCCESS;
+    if (filename == NULL)
+        return CERR_NO_TOKENS;
+
+    // Etapes
+    char* code = file_to_string(filename);
+    char* code_without_comments = (code == NULL) ? NULL : remove_comments(code);
+    string* keywords = (code_without_comments == NULL) ? NULL : string_to_keywords(code_without_comments);
+    Token** tokens = (keywords == NULL) ? NULL : keywords_to_tokens(keywords);
+
+    tokens_disambiguate(tokens);
+    CompilerErrors error = tokens_check_validity(tokens);
+
+    // Libération de mémoire
+    if (tokens != NULL) {
+        for (size_t i = 0; i < array_size(tokens); ++i)
+            token_delete(tokens[i]);
+        array_delete(tokens);
+    }
+    if (keywords != NULL) {
+        for (size_t i = 0; i < array_size(keywords); ++i)
+            string_delete(keywords[i]);
+        array_delete(keywords);
+    }
+    free(code_without_comments);
+    free(code);
+
+    return error;
 }
 
 /* Compilation d'un programme sous fichier texte */

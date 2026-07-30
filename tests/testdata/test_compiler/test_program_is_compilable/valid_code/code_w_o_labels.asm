@@ -1,0 +1,5 @@
+LOAD #5;
+STORE @10;
+INCR;
+DECR;
+HALT;

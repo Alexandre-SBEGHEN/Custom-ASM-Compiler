@@ -1,0 +1,4 @@
+boucle:
+    DECR;
+boucle:
+    HALT;

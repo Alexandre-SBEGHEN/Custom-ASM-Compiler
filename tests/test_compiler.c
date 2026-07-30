@@ -5,6 +5,7 @@
  * @date 2026-06-26
  */
 
+#include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -648,6 +649,46 @@ void test_tokens_parse(void) {
     }
 }
 
+void test_program_is_compilable(void) {
+    typedef struct {
+        char filename[256];
+        CompilerErrors expected_error;
+    } Pair;
+
+    Pair pairs[13] = {
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/orphan_operand/number_first.asm",
+            CERR_ORPHAN_OPERAND},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/orphan_operand/address_after_incr.asm",
+            CERR_ORPHAN_OPERAND},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/inst_w_wrong_operand/load_at_end.asm",
+            CERR_INST_W_WRONG_OPERAND},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/inst_w_wrong_operand/load_then_inst.asm",
+            CERR_INST_W_WRONG_OPERAND},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/inst_w_wrong_operand/store_then_number.asm",
+            CERR_INST_W_WRONG_OPERAND},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/inst_w_wrong_operand/store_at_end.asm",
+            CERR_INST_W_WRONG_OPERAND},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/jump_w_o_label/jump_at_end.asm",
+            CERR_JUMP_W_O_LABEL},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/jump_w_o_label/jump_then_number.asm",
+            CERR_JUMP_W_O_LABEL},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/label_already_defined/redef.asm",
+            CERR_LABEL_ALREADY_DEFINED},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/label_undefined/undef.asm",
+            CERR_LABEL_UNDEFINED},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/valid_code/code_w_o_labels.asm",
+            CERR_SUCCESS},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/valid_code/forward_jump.asm",
+            CERR_SUCCESS},
+    {PROJECT_ROOT "/tests/testdata/test_compiler/test_program_is_compilable/valid_code/backward_jump.asm",
+             CERR_SUCCESS},
+    };
+
+    for (size_t i = 0; i < array_size(pairs); ++i) {
+        assert(program_is_compilable(pairs[i].filename) == pairs[i].expected_error);
+    }
+}
+
 /**
  * @brief Test de la fonction program_compile().
  *
@@ -749,6 +790,7 @@ int main(void) {
     test_tokens_check_validity();
     test_tokens_parse();
 
+    test_program_is_compilable();
     test_program_compile();
 
     return 0;
