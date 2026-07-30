@@ -71,7 +71,8 @@ int main(int argc, char** argv) {
             "<Commands>\n"
             "\t%-4s : %s\n"
             "\t%-4s : %s\n"
-            "\t%-4s : %s\n",
+            "\t%-4s : %s\n"
+            "\n",
             exec_name,
             "c", "Compile a source code into a binary file",
             "cx", "Compile and execute a source code without creating a binary file",
@@ -86,7 +87,8 @@ int main(int argc, char** argv) {
                 printf(
                     "Command line error:\n"
                     "Unsupported command:\n"
-                    "%s\n",
+                    "%s\n"
+                    "\n",
                     argv[1]
                 );
                 exit_code = EXIT_UNSUPPORTED_COMMAND;
@@ -104,6 +106,7 @@ int main(int argc, char** argv) {
                         printf("Cannot find '%s' source code\n", argv[2]);
                     if (!output_exists)
                         printf("You need to specify an output file\n");
+                    printf("\n");
                     break;
                 }
 
@@ -118,6 +121,7 @@ int main(int argc, char** argv) {
                         printf("You need to specify an input file\n");
                     else if (!input_exists)
                         printf("Cannot find '%s' source code\n", argv[2]);
+                    printf("\n");
                     break;
                 }
 
@@ -132,6 +136,7 @@ int main(int argc, char** argv) {
                         printf("You need to specify an input file\n");
                     else if (!input_exists)
                         printf("Cannot find '%s' binary\n", argv[2]);
+                    printf("\n");
                     break;
                 }
 
