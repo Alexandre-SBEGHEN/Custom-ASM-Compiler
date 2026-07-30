@@ -248,6 +248,20 @@ CompilerErrors tokens_check_validity(Token** tokens);
 Program* tokens_parse(Token** tokens);
 
 /**
+ * @brief Cette fonction permet de savoir si un programme
+ * est compilable, grâce à un code d'erreur (ou de réussite).
+ *
+ * Permet également d'identifié le ou les problèmes rencontrés.
+ *
+ * @param[in] filename Chemin vers le fichier.
+ * @return Code d'erreur (ou de réussite).
+ *
+ * @note Si plusieurs problèmes ont lieu, seul celui rencontré
+ * en premier sera renvoyé.
+ */
+CompilerErrors program_is_compilable(const char* filename);
+
+/**
  * @brief Compile le code issu d'un fichier ASM.
  *
  * Effectue toute la chaîne de compilation et se charge

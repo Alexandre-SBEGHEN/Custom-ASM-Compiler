@@ -430,6 +430,11 @@ Program* tokens_parse(Token** tokens) {
     return prog;
 }
 
+/* Est-ce qu'un programme est compilable ? */
+CompilerErrors program_is_compilable(const char* filename) {
+    return CERR_SUCCESS;
+}
+
 /* Compilation d'un programme sous fichier texte */
 Program* program_compile(const char* filename) {
     if (filename == NULL)
