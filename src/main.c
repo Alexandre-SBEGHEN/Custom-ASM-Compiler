@@ -7,13 +7,19 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <unistd.h>
+#include <sys/stat.h>
 #include "mystring.h"
+#include "machine.h"
+#include "compiler.h"
+#include "interpreter.h"
 
 /* --- Alias --------------------------------------------------------------- */
 
 typedef enum ProgramCommandEnum ProgramOption;
 typedef struct PairStringCommandStruct PairStringOption;
 typedef enum ExitCodeEnum ExitCode;
+typedef enum FileCheckResultEnum FileCheckResult;
 
 /* --- Enums et Structs ---------------------------------------------------- */
 
@@ -39,9 +45,17 @@ struct PairStringCommandStruct {
  * @brief Code de sortie du programme.
  */
 enum ExitCodeEnum {
-    EXIT_SUCCESS,  /**< Aucune erreur */
-    EXIT_UNSUPPORTED_COMMAND, /**< Commande non supportée */
-    EXIT_FILE_NOT_FOUND /**< Fichier(s) non trouvé(s) */
+    EXCODE_SUCCESS,  /**< Aucune erreur */
+    EXCODE_UNSUPPORTED_COMMAND, /**< Commande non supportée */
+};
+
+/**
+ * @brief Code de vérification d'un fichier.
+ */
+enum FileCheckResultEnum {
+    FILE_OK, /**< Fichier OK */
+    FILE_NOT_FOUND, /**< Fichier non trouvé */
+    FILE_IS_A_DIRECTORY, /**< Le fichier est un répertoire */
 };
 
 /* --- Constantes ---------------------------------------------------------- */
@@ -69,24 +83,66 @@ ProgramOption get_program_option_from_string(const char* str) {
 }
 
 /**
- * @brief Vérifie si un fichier existe.
+ * @brief Cette fonction permet d'obtenir la taille
+ * (en octets) d'un fichier.
  *
  * @param[in] filename Chemin vers le fichier.
- * @return Existence du fichier.
+ * @return Taille du fichier, -1 si fichier non trouvé.
  */
-bool file_exists(const char* filename) {
-    FILE* f = fopen(filename, "r");
-    if (f) {
-        fclose(f);
-        return true;
-    }
-    return false;
+long file_size(const char* filename) {
+    struct stat info;
+    if (stat(filename, &info) != 0)
+        return -1; // Pas trouvé
+
+    return info.st_size;
+}
+
+/**
+ * @brief Vérification de fichier d'entrée.
+ *
+ * Vérifie si le chemin mène à un fichier d'entrée valide :
+ * - Existe
+ * - N'est pas un dossier
+ *
+ * @param[in] filename Chemin vers le fichier.
+ * @return Résultat de la vérification.
+ */
+FileCheckResult input_file_check(const char* filename) {
+    struct stat info;
+    if (stat(filename, &info) != 0)
+        return FILE_NOT_FOUND; // Pas trouvé
+
+    if (!S_ISREG(info.st_mode))
+        return FILE_IS_A_DIRECTORY; // C'est un répertoire
+
+    return FILE_OK;
+}
+
+/**
+ * @brief Vérification de fichier de sortie.
+ *
+ * Vérifie si le chemin mène à un fichier de sortie valide :
+ * - Existe ou non
+ * - N'est pas un dossier
+ *
+ * @param[in] filename Chemin vers le fichier.
+ * @return Résultat de la vérification.
+ */
+FileCheckResult output_file_check(const char* filename) {
+    struct stat info;
+    if (stat(filename, &info) != 0)
+        return FILE_OK; // Existe pas, sera créé donc OK
+
+    if (S_ISDIR(info.st_mode))
+        return FILE_IS_A_DIRECTORY; // C'est un répertoire
+
+    return FILE_OK; // Existe déjà, sera peut-être écrasé
 }
 
 /* --- Main ---------------------------------------------------------------- */
 
 int main(int argc, char** argv) {
-    ExitCode exit_code = EXIT_SUCCESS;
+    ExitCode exit_code = EXCODE_SUCCESS;
     const char* exec_name = argv[0];
 
     // Présentation du programme
@@ -128,59 +184,90 @@ int main(int argc, char** argv) {
                     "\n",
                     argv[1]
                 );
-                exit_code = EXIT_UNSUPPORTED_COMMAND;
+                exit_code = EXCODE_UNSUPPORTED_COMMAND;
                 break;
             }
             // Compilation
             case CMD_COMPILE: {
-                bool input_exists = file_exists(argv[2]);
-                bool output_exists = argc >= 4;
-                bool error = (argc < 3) || !input_exists || !output_exists;
+                //Erreur(s)
+                bool missing_input = argc < 3;
+                bool missing_output = argc < 4;
+                FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
+                FileCheckResult output_check = missing_output ? FILE_NOT_FOUND : output_file_check(argv[3]);
+                bool error = (input_check != FILE_OK || output_check != FILE_OK);
                 if (error) {
                     printf("Command line error:\n");
-                    if (argc < 3)
+
+                    // Erreur d'input
+                    if (missing_input)
                         printf("You need to specify an input file\n");
-                    else if (!input_exists)
+                    else if (input_check == FILE_NOT_FOUND)
                         printf("Cannot find '%s' source code\n", argv[2]);
-                    if (!output_exists)
+                    else if (input_check == FILE_IS_A_DIRECTORY)
+                        printf("'%s' is a directory\n", argv[2]);
+
+                    // Erreur d'output
+                    if (missing_output)
                         printf("You need to specify an output file\n");
-                    printf("\n");
-                    exit_code = EXIT_FILE_NOT_FOUND;
+                    else if (output_check == FILE_IS_A_DIRECTORY)
+                        printf("'%s' is a directory\n", argv[3]);
+
                     break;
                 }
+
+                // Compilation
+                Program* prog = program_compile(argv[2]);
+
+
+
+                // Succès
+                printf(
+                    "File compiled successfully to %s\n"
+                    "\n",
+                    argv[3]
+                );
                 break;
             }
             // Compilation & exécution
             case CMD_COMPILE_AND_EXECUTE: {
-                bool input_exists = file_exists(argv[2]);
-                bool error = (argc < 3) || !input_exists ;
+                // Erreur(s)
+                bool missing_input = argc < 3;
+                FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
+                bool error = (input_check != FILE_OK);
                 if (error) {
                     printf("Command line error:\n");
-                    if (argc < 3)
+
+                    // Erreur d'input
+                    if (missing_input)
                         printf("You need to specify an input file\n");
-                    else if (!input_exists)
+                    else if (input_check == FILE_NOT_FOUND)
                         printf("Cannot find '%s' source code\n", argv[2]);
-                    printf("\n");
-                    exit_code = EXIT_FILE_NOT_FOUND;
+                    else if (input_check == FILE_IS_A_DIRECTORY)
+                        printf("'%s' is a directory\n", argv[2]);
                     break;
                 }
+
+
                 break;
             }
             // Exécution
             case CMD_EXECUTE_COMPILED: {
-                bool input_exists = file_exists(argv[2]);
-                bool error = (argc < 3) || !input_exists ;
+                // Erreur(s)
+                bool missing_input = argc < 3;
+                FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
+                bool error = (input_check != FILE_OK);
                 if (error) {
                     printf("Command line error:\n");
-                    if (argc < 3)
+
+                    // Erreur d'input
+                    if (missing_input)
                         printf("You need to specify an input file\n");
-                    else if (!input_exists)
-                        printf("Cannot find '%s' binary\n", argv[2]);
-                    printf("\n");
-                    exit_code = EXIT_FILE_NOT_FOUND;
+                    else if (input_check == FILE_NOT_FOUND)
+                        printf("Cannot find '%s' source code\n", argv[2]);
+                    else if (input_check == FILE_IS_A_DIRECTORY)
+                        printf("'%s' is a directory\n", argv[2]);
                     break;
                 }
-                break;
             }
         }
 
