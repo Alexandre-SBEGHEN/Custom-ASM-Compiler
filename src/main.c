@@ -47,6 +47,7 @@ struct PairStringCommandStruct {
 enum ExitCodeEnum {
     EXCODE_SUCCESS,  /**< Aucune erreur */
     EXCODE_UNSUPPORTED_COMMAND, /**< Commande non supportée */
+    EXCODE_INPUT_OUTPUT_ERROR, /**< Erreur liée aux fichiers d'entrée/sortie */
 };
 
 /**
@@ -212,6 +213,7 @@ int main(int argc, char** argv) {
                     else if (output_check == FILE_IS_A_DIRECTORY)
                         printf("'%s' is a directory\n", argv[3]);
 
+                    exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                     break;
                 }
 
@@ -244,6 +246,8 @@ int main(int argc, char** argv) {
                         printf("Cannot find '%s' source code\n", argv[2]);
                     else if (input_check == FILE_IS_A_DIRECTORY)
                         printf("'%s' is a directory\n", argv[2]);
+
+                    exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                     break;
                 }
 
@@ -266,6 +270,8 @@ int main(int argc, char** argv) {
                         printf("Cannot find '%s' source code\n", argv[2]);
                     else if (input_check == FILE_IS_A_DIRECTORY)
                         printf("'%s' is a directory\n", argv[2]);
+
+                    exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                     break;
                 }
             }
