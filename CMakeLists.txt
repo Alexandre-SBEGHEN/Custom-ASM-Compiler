@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2)
-project(RAM_Machine_ASM_Compiler_Interpreter_V2 C)
+project(RAM_ASM_Compiler C)
 
 set(CMAKE_C_STANDARD 11)
 
