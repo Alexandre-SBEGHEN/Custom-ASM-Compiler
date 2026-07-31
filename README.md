@@ -1,4 +1,4 @@
-# Assembly compiler & interpreter for RAM Machine
+# Assembly compiler & interpreter for RA-Machine
 
 ## Contexte
 
