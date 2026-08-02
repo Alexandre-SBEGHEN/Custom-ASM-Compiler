@@ -273,7 +273,7 @@ int main(int argc, char** argv) {
 
     // Vérification des erreurs potentielles en amont
     const bool missing_input = input == NULL;
-    const bool missing_output = input == NULL;
+    const bool missing_output = output == NULL;
     const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(input);
     const FileCheckResult output_check = missing_output ? FILE_NOT_FOUND : output_file_check(output);
     bool command_line_error;
