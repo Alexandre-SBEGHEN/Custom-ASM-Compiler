@@ -179,7 +179,7 @@ bool string_is_a_label(const char* str) {
         return false;
 
     for (size_t i = 0; str[i] != '\0'; ++i)
-        if (!isalpha(str[i]) && str[i] != '_')
+        if (!islower((unsigned char)str[i]) && str[i] != '_')
             return false;
 
     return true;
@@ -283,6 +283,11 @@ CompilerErrors tokens_check_validity(Token** tokens) {
         Token* previous = (i > 0) ? tokens[i-1] : NULL;
         Token* token = tokens[i];
         Token* next = (i < tokens_len - 1) ? tokens[i+1] : NULL;
+
+        if (token->type == TT_NOTHING) {
+            tokens_validity = CERR_UNKNOWN_INSTRUCTION;
+            break;
+        }
 
         // Critère 1 : opérande orphelin
         bool is_number = token->type == TT_NUMBER;

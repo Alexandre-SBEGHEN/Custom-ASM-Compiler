@@ -49,6 +49,7 @@ enum TokenTypeEnum {
 enum CompilerErrorsEnum {
     CERR_SUCCESS, /**< Aucune erreur */
     CERR_NO_TOKENS, /**< Tokens inexistants */
+    CERR_UNKNOWN_INSTRUCTION, /**< Instruction inconnue */
     CERR_ORPHAN_OPERAND, /**< Opérande orphelin */
     CERR_INST_W_WRONG_OPERAND, /**< Instruction avec mauvais/sans opérande */
     CERR_JUMP_W_O_LABEL, /**< Instruction saut sans étiquette */

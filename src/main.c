@@ -248,6 +248,9 @@ void print_file_compilation_error(const CompilerErrors error) {
         case CERR_NO_TOKENS:
             printf("File is empty\n");
             break;
+        case CERR_UNKNOWN_INSTRUCTION:
+            printf("Unknown instruction\n");
+            break;
         case CERR_ORPHAN_OPERAND:
             printf("Orphan operand found\n");
             break;
@@ -261,7 +264,7 @@ void print_file_compilation_error(const CompilerErrors error) {
             printf("Declaration of an already existing label\n");
             break;
         case CERR_LABEL_UNDEFINED:
-            printf("Jump to an undefined label\n");
+            printf("Mentionning an undefined label\n");
             break;
     }
 }
