@@ -146,6 +146,13 @@ FileCheckResult output_file_check(const char* filename) {
 /* --- Affichage --------------------------------------- */
 
 /**
+ * @brief Fait un print d'un retour à la ligne.
+ */
+void print_line_break(void) {
+    printf("\n");
+}
+
+/**
  * @brief Affiche l'en-tête du programme.
  *
  * Contient des infos sur le programme comme le nom,
@@ -157,8 +164,8 @@ void print_program_header(void) {
         "Assembly compiler & interpreter for RAM Machine, Alexandre SBEGHEN, 2026\n"
         "GitHub: https://github.com/Alexandre-SBEGHEN\n"
         "Repo: https://github.com/Alexandre-SBEGHEN/RAM-Machine-ASM-Compiler-Interpreter\n"
-        "\n"
     );
+    print_line_break();
 }
 
 /**
@@ -174,8 +181,7 @@ void print_application_usage(const char* executable_name) {
         "<Commands>\n"
         "  %-4s : %s\n"
         "  %-4s : %s\n"
-        "  %-4s : %s\n"
-        "\n",
+        "  %-4s : %s\n",
         executable_name,
         "c", "Compile a source code into a binary file",
         "cx", "Compile and execute a source code without creating a binary file",
@@ -198,8 +204,7 @@ void print_command_line_error_header(void) {
 void print_unsopported_command_error(const char* command) {
     printf(
         "Unsupported command:\n"
-        "%s\n"
-        "\n",
+        "%s\n",
         command
     );
 }
@@ -262,6 +267,7 @@ int main(int argc, char** argv) {
     // [Guide d'utilisation]
     if (entered_no_command) {
         print_application_usage(executable_name);
+        print_line_break();
         return EXCODE_SUCCESS;
     }
 
@@ -284,6 +290,7 @@ int main(int argc, char** argv) {
         case CMD_UNKNOWN: {
             print_command_line_error_header();
             print_unsopported_command_error(command);
+            print_line_break();
             exit_code = EXCODE_UNSUPPORTED_COMMAND;
             break;
         }
@@ -295,6 +302,7 @@ int main(int argc, char** argv) {
                 print_command_line_error_header();
                 print_input_file_error(input, missing_input, input_check, "source code");
                 print_output_file_error(output, missing_output, output_check);
+                print_line_break();
                 exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                 break;
             }
@@ -311,6 +319,7 @@ int main(int argc, char** argv) {
             if (command_line_error) {
                 print_command_line_error_header();
                 print_input_file_error(input, missing_input, input_check, "source code");
+                print_line_break();
                 exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                 break;
             }
@@ -326,6 +335,7 @@ int main(int argc, char** argv) {
             if (command_line_error) {
                 print_command_line_error_header();
                 print_input_file_error(input, missing_input, input_check, "binary");
+                print_line_break();
                 exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                 break;
             }
