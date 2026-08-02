@@ -493,8 +493,7 @@ Program* program_compile(const char* filename) {
 
     // Parsing
     tokens_disambiguate(tokens);
-    if (tokens_check_validity(tokens) == CERR_SUCCESS)
-        prog = tokens_parse(tokens);
+    prog = tokens_parse(tokens);
 
     // Libération de mémoire
     if (tokens != NULL) {

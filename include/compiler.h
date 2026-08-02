@@ -274,10 +274,12 @@ CompilerErrors program_is_compilable(const char* filename);
  * @return Pointeur vers le programme compilé, NULL en cas d'échec
  * de compilation.
  *
+ * @note Un appel à cette fonction présuppose que le programme
+ * est commpilable, et a été vérifié en amont.
  * @note Cette fonction effectue une allocation dynamique
  * de mémoire, penser à libérer la mémoire.
  *
- * @see tokens_check_validity()
+ * @see program_is_compilable()
  * @see program_delete()
  */
 Program* program_compile(const char* filename);
