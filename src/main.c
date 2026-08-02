@@ -178,8 +178,12 @@ int main(int argc, char** argv) {
         const char* input = (argc >= 3) ? argv[2] : NULL;
         const char* output = (argc >= 4) ? argv[3] : NULL;
 
+        // Vérification des erreurs potentielles en amont
         const bool missing_input = input == NULL;
         const bool missing_output = input == NULL;
+        const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(input);
+        const FileCheckResult output_check = missing_output ? FILE_NOT_FOUND : output_file_check(output);
+        bool command_line_error;
 
         // Exécution de la commande
         switch (command) {
@@ -198,10 +202,8 @@ int main(int argc, char** argv) {
             // Compilation
             case CMD_COMPILE: {
                 //Erreur(s)
-                const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(input);
-                const FileCheckResult output_check = missing_output ? FILE_NOT_FOUND : output_file_check(output);
-                const bool error = (input_check != FILE_OK || output_check != FILE_OK);
-                if (error) {
+                command_line_error = (input_check != FILE_OK || output_check != FILE_OK);
+                if (command_line_error) {
                     printf("Command line error:\n");
 
                     // Erreur d'input
@@ -237,9 +239,8 @@ int main(int argc, char** argv) {
             // Compilation & exécution
             case CMD_COMPILE_AND_EXECUTE: {
                 // Erreur(s)
-                const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
-                const bool error = (input_check != FILE_OK);
-                if (error) {
+                command_line_error = (input_check != FILE_OK);
+                if (command_line_error) {
                     printf("Command line error:\n");
 
                     // Erreur d'input
@@ -258,9 +259,8 @@ int main(int argc, char** argv) {
             // Exécution
             case CMD_EXECUTE_COMPILED: {
                 // Erreur(s)
-                const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
-                const bool error = (input_check != FILE_OK);
-                if (error) {
+                command_line_error = (input_check != FILE_OK);
+                if (command_line_error) {
                     printf("Command line error:\n");
 
                     // Erreur d'input
