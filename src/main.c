@@ -240,13 +240,18 @@ void print_output_file_error(const char* output, const bool missing_output, cons
         printf("'%s' is a directory\n", output);
 }
 
+void print_file_compilation_error(const CompilerErrors error) {
+    printf("Compilation error:\n");
+    printf("%d", error);
+}
+
 /**
  * @brief Affiche le message de réussite
  * de compilation du fichier.
  *
  * @param[in] filename Chemin du fichier compilé.
  */
-void print_file_compiled(const char* filename) {
+void print_file_compilation_success(const char* filename) {
     printf(
         "File compiled successfully to %s\n"
         "\n",
@@ -307,8 +312,16 @@ int main(int argc, char** argv) {
                 break;
             }
 
+            // Erreur de compilation
+            const CompilerErrors compilation_error = program_is_compilable(input);
+            if (compilation_error != CERR_SUCCESS) {
+                print_file_compilation_error(compilation_error);
+                print_line_break();
+                break;
+            }
+
             // Succès
-            print_file_compiled(output);
+            print_file_compilation_success(output);
             exit_code = EXCODE_SUCCESS;
             break;
         }
