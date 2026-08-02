@@ -16,8 +16,8 @@
 
 /* --- Alias --------------------------------------------------------------- */
 
-typedef enum ProgramCommandEnum ProgramOption;
-typedef struct PairStringCommandStruct PairStringOption;
+typedef enum ProgramCommandEnum ProgramCommand;
+typedef struct PairStringCommandStruct PairStringCommand;
 typedef enum ExitCodeEnum ExitCode;
 typedef enum FileCheckResultEnum FileCheckResult;
 
@@ -27,7 +27,7 @@ typedef enum FileCheckResultEnum FileCheckResult;
  * @brief Commandes possibles dans le programme.
  */
 enum ProgramCommandEnum {
-    CMD_NONE, /**< Commande inconnue */
+    CMD_UNKNOWN, /**< Commande inconnue */
     CMD_COMPILE, /**< Compilation d'un fichier source */
     CMD_COMPILE_AND_EXECUTE, /**< Compilation & exécution d'un fichier source */
     CMD_EXECUTE_COMPILED /**< Exécution d'un binaire */
@@ -38,7 +38,7 @@ enum ProgramCommandEnum {
  */
 struct PairStringCommandStruct {
     char str[6]; /**< String */
-    ProgramOption option; /**< La commande associée. */
+    ProgramCommand option; /**< La commande associée. */
 };
 
 /**
@@ -61,12 +61,12 @@ enum FileCheckResultEnum {
 
 /* --- Constantes ---------------------------------------------------------- */
 
-const PairStringOption COMMANDS[] = {
+const PairStringCommand COMMANDS[] = {
     {"c", CMD_COMPILE},
     {"cx", CMD_COMPILE_AND_EXECUTE},
     {"x", CMD_EXECUTE_COMPILED}
 };
-const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(PairStringOption);
+const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(PairStringCommand);
 
 /* --- Fonctions ----------------------------------------------------------- */
 
@@ -76,11 +76,11 @@ const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(PairStringOption);
  * @param[in] str Pointeur vers la string.
  * @return Commande associée, CMD_NONE si commande non trouvée.
  */
-ProgramOption get_program_command_from_string(const char* str) {
+ProgramCommand get_program_command_from_string(const char* str) {
     for (size_t i = 0; i < COMMANDS_COUNT; ++i)
         if (string_equals(str, COMMANDS[i].str))
             return COMMANDS[i].option;
-    return CMD_NONE;
+    return CMD_UNKNOWN;
 }
 
 /**
@@ -144,7 +144,7 @@ FileCheckResult output_file_check(const char* filename) {
 
 int main(int argc, char** argv) {
     ExitCode exit_code = EXCODE_SUCCESS;
-    const char* exec_name = argv[0];
+    const char* executable_name = argv[0];
 
     // Présentation du programme
     printf(
@@ -165,26 +165,32 @@ int main(int argc, char** argv) {
             "  %-4s : %s\n"
             "  %-4s : %s\n"
             "\n",
-            exec_name,
+            executable_name,
             "c", "Compile a source code into a binary file",
             "cx", "Compile and execute a source code without creating a binary file",
             "x", "Execute a binary file"
         );
 
     } else {
-        // Obtenir la commande entrée par l'utilisateur
-        ProgramOption cmd = get_program_command_from_string(argv[1]);
+        // Obtenir les entrées utilisateur
+        const char* command_str = argv[1];
+        const ProgramCommand command = get_program_command_from_string(command_str);
+        const char* input = (argc >= 3) ? argv[2] : NULL;
+        const char* output = (argc >= 4) ? argv[3] : NULL;
+
+        const bool missing_input = input == NULL;
+        const bool missing_output = input == NULL;
 
         // Exécution de la commande
-        switch (cmd) {
+        switch (command) {
             // Commande inconnue
-            case CMD_NONE: {
+            case CMD_UNKNOWN: {
                 printf(
                     "Command line error:\n"
                     "Unsupported command:\n"
                     "%s\n"
                     "\n",
-                    argv[1]
+                    command_str
                 );
                 exit_code = EXCODE_UNSUPPORTED_COMMAND;
                 break;
@@ -192,11 +198,9 @@ int main(int argc, char** argv) {
             // Compilation
             case CMD_COMPILE: {
                 //Erreur(s)
-                bool missing_input = argc < 3;
-                bool missing_output = argc < 4;
-                FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
-                FileCheckResult output_check = missing_output ? FILE_NOT_FOUND : output_file_check(argv[3]);
-                bool error = (input_check != FILE_OK || output_check != FILE_OK);
+                const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(input);
+                const FileCheckResult output_check = missing_output ? FILE_NOT_FOUND : output_file_check(output);
+                const bool error = (input_check != FILE_OK || output_check != FILE_OK);
                 if (error) {
                     printf("Command line error:\n");
 
@@ -204,39 +208,37 @@ int main(int argc, char** argv) {
                     if (missing_input)
                         printf("You need to specify an input file\n");
                     else if (input_check == FILE_NOT_FOUND)
-                        printf("Cannot find '%s' source code\n", argv[2]);
+                        printf("Cannot find '%s' source code\n", input);
                     else if (input_check == FILE_IS_A_DIRECTORY)
-                        printf("'%s' is a directory\n", argv[2]);
+                        printf("'%s' is a directory\n", input);
 
                     // Erreur d'output
                     if (missing_output)
                         printf("You need to specify an output file\n");
                     else if (output_check == FILE_IS_A_DIRECTORY)
-                        printf("'%s' is a directory\n", argv[3]);
+                        printf("'%s' is a directory\n", output);
 
                     exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                     break;
                 }
 
                 // Compilation
-                Program* prog = program_compile(argv[2]);
-
-
+                // Program* prog = program_compile(input);
+                // program_delete(prog);
 
                 // Succès
                 printf(
                     "File compiled successfully to %s\n"
                     "\n",
-                    argv[3]
+                    output
                 );
                 break;
             }
             // Compilation & exécution
             case CMD_COMPILE_AND_EXECUTE: {
                 // Erreur(s)
-                bool missing_input = argc < 3;
-                FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
-                bool error = (input_check != FILE_OK);
+                const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
+                const bool error = (input_check != FILE_OK);
                 if (error) {
                     printf("Command line error:\n");
 
@@ -244,23 +246,20 @@ int main(int argc, char** argv) {
                     if (missing_input)
                         printf("You need to specify an input file\n");
                     else if (input_check == FILE_NOT_FOUND)
-                        printf("Cannot find '%s' source code\n", argv[2]);
+                        printf("Cannot find '%s' source code\n", input);
                     else if (input_check == FILE_IS_A_DIRECTORY)
-                        printf("'%s' is a directory\n", argv[2]);
+                        printf("'%s' is a directory\n", input);
 
                     exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                     break;
                 }
-
-
                 break;
             }
             // Exécution
             case CMD_EXECUTE_COMPILED: {
                 // Erreur(s)
-                bool missing_input = argc < 3;
-                FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
-                bool error = (input_check != FILE_OK);
+                const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(argv[2]);
+                const bool error = (input_check != FILE_OK);
                 if (error) {
                     printf("Command line error:\n");
 
@@ -268,9 +267,9 @@ int main(int argc, char** argv) {
                     if (missing_input)
                         printf("You need to specify an input file\n");
                     else if (input_check == FILE_NOT_FOUND)
-                        printf("Cannot find '%s' source code\n", argv[2]);
+                        printf("Cannot find '%s' source code\n", input);
                     else if (input_check == FILE_IS_A_DIRECTORY)
-                        printf("'%s' is a directory\n", argv[2]);
+                        printf("'%s' is a directory\n", input);
 
                     exit_code = EXCODE_INPUT_OUTPUT_ERROR;
                     break;
