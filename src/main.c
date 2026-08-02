@@ -242,7 +242,28 @@ void print_output_file_error(const char* output, const bool missing_output, cons
 
 void print_file_compilation_error(const CompilerErrors error) {
     printf("Compilation error:\n");
-    printf("%d", error);
+    switch (error) {
+        case CERR_SUCCESS:
+            break;
+        case CERR_NO_TOKENS:
+            printf("File is empty\n");
+            break;
+        case CERR_ORPHAN_OPERAND:
+            printf("Orphan operand found\n");
+            break;
+        case CERR_INST_W_WRONG_OPERAND:
+            printf("Instruction with wrong or witout operand\n");
+            break;
+        case CERR_JUMP_W_O_LABEL:
+            printf("Jump found without label\n");
+            break;
+        case CERR_LABEL_ALREADY_DEFINED:
+            printf("Declaration of an already existing label\n");
+            break;
+        case CERR_LABEL_UNDEFINED:
+            printf("Jump to an undefined label\n");
+            break;
+    }
 }
 
 /**
