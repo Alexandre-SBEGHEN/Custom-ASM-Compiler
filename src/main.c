@@ -61,12 +61,12 @@ enum FileCheckResultEnum {
 
 /* --- Constantes ---------------------------------------------------------- */
 
-const PairStringOption OPTIONS[] = {
+const PairStringOption COMMANDS[] = {
     {"c", CMD_COMPILE},
     {"cx", CMD_COMPILE_AND_EXECUTE},
     {"x", CMD_EXECUTE_COMPILED}
 };
-const size_t OPTIONS_COUNT = sizeof(OPTIONS) / sizeof(PairStringOption);
+const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(PairStringOption);
 
 /* --- Fonctions ----------------------------------------------------------- */
 
@@ -76,10 +76,10 @@ const size_t OPTIONS_COUNT = sizeof(OPTIONS) / sizeof(PairStringOption);
  * @param[in] str Pointeur vers la string.
  * @return Commande associée, CMD_NONE si commande non trouvée.
  */
-ProgramOption get_program_option_from_string(const char* str) {
-    for (size_t i = 0; i < OPTIONS_COUNT; ++i)
-        if (string_equals(str, OPTIONS[i].str))
-            return OPTIONS[i].option;
+ProgramOption get_program_command_from_string(const char* str) {
+    for (size_t i = 0; i < COMMANDS_COUNT; ++i)
+        if (string_equals(str, COMMANDS[i].str))
+            return COMMANDS[i].option;
     return CMD_NONE;
 }
 
@@ -172,10 +172,11 @@ int main(int argc, char** argv) {
         );
 
     } else {
-        ProgramOption option = get_program_option_from_string(argv[1]);
+        // Obtenir la commande entrée par l'utilisateur
+        ProgramOption cmd = get_program_command_from_string(argv[1]);
 
         // Exécution de la commande
-        switch (option) {
+        switch (cmd) {
             // Commande inconnue
             case CMD_NONE: {
                 printf(
@@ -276,7 +277,6 @@ int main(int argc, char** argv) {
                 }
             }
         }
-
     }
 
     return exit_code;
