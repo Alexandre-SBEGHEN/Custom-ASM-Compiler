@@ -332,7 +332,19 @@ CompilerErrors tokens_check_validity(Token** tokens) {
             break;
         }
 
-        // Critère 4 : redéfinition d'une étiquette déjà existante
+        // Critère 4 : étiquette sans instruction jump
+        bool is_label_goto = token->type == TT_LABEL_GOTO;
+        bool previous_is_jump = previous != NULL && previous->type == TT_INST &&
+            (previous->value == (Opcode)OP_JUMP || previous->value == (Opcode)OP_JZ);
+
+        bool label_is_missing_jump = is_label_goto && !previous_is_jump;
+
+        if (label_is_missing_jump) {
+            tokens_validity = CERR_ORPHAN_LABEL;
+            break;
+        }
+
+        // Critère 5 : redéfinition d'une étiquette déjà existante
         bool is_label_def = token->type == TT_LABEL_DEF;
         bool label_already_exists = false;
         if (declared_labels_len > 0 && token->label != NULL)
@@ -352,8 +364,7 @@ CompilerErrors tokens_check_validity(Token** tokens) {
             array_push(declared_labels, string_create(token->label));
         }
 
-        // Critère 5 : saut vers une étiquette jamais déclarée
-        bool is_label_goto = token->type == TT_LABEL_GOTO;
+        // Critère 6 : saut vers une étiquette jamais déclarée
         bool label_does_not_exist = true;
         if (all_labels_len > 0 && token->label != NULL)
             for (size_t j = 0; j < all_labels_len; ++j)

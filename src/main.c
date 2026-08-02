@@ -260,11 +260,14 @@ void print_file_compilation_error(const CompilerErrors error) {
         case CERR_JUMP_W_O_LABEL:
             printf("Jump found without label\n");
             break;
+        case CERR_ORPHAN_LABEL:
+            printf("Orphan label (missing a jump instruction)\n");
+            break;
         case CERR_LABEL_ALREADY_DEFINED:
             printf("Declaration of an already existing label\n");
             break;
         case CERR_LABEL_UNDEFINED:
-            printf("Mentionning an undefined label\n");
+            printf("Jumping to an undefined label\n");
             break;
     }
 }

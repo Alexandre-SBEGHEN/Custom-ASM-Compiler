@@ -53,6 +53,7 @@ enum CompilerErrorsEnum {
     CERR_ORPHAN_OPERAND, /**< Opérande orphelin */
     CERR_INST_W_WRONG_OPERAND, /**< Instruction avec mauvais/sans opérande */
     CERR_JUMP_W_O_LABEL, /**< Instruction saut sans étiquette */
+    CERR_ORPHAN_LABEL, /**< Label sans son instruction jump */
     CERR_LABEL_ALREADY_DEFINED, /**< Définition d'une étiquette déjà existante */
     CERR_LABEL_UNDEFINED, /**< Saut vers une étiquette inexistante */
 };
