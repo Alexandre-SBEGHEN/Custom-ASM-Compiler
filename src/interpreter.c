@@ -152,3 +152,8 @@ Program* file_bin_to_program(const char* filename) {
     fclose(file);
     return prog;
 }
+
+/* Sauvegarde d'un programme dans un fichier */
+void program_save_to(const Program* prog, const char* filename) {
+
+}

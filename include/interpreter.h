@@ -107,4 +107,13 @@ InterpreterErrors program_interpret(const Program* prog, Machine* mac);
  */
 Program* file_bin_to_program(const char* filename);
 
+/**
+ * @brief Sauvegarde un program compilé vers
+ * un fichier binaire.
+ *
+ * @param[in] prog Pointeur vers la structure du programme.
+ * @param[in] filename Chemin vers le fichier.
+ */
+void program_save_to(const Program* prog, const char* filename);
+
 #endif
