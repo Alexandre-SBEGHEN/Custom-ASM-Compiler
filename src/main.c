@@ -49,6 +49,7 @@ enum ExitCodeEnum {
     EXCODE_UNINITIALIZED, /**< Non initialisé (pas censé apparaître !) */
     EXCODE_UNSUPPORTED_COMMAND, /**< Commande non supportée */
     EXCODE_INPUT_OUTPUT_ERROR, /**< Erreur liée aux fichiers d'entrée/sortie */
+    EXCODE_COMPILATION_ERROR /**< Erreur de compilation */
 };
 
 /**
@@ -344,6 +345,7 @@ int main(int argc, char** argv) {
             if (compilation_error != CERR_SUCCESS) {
                 print_file_compilation_error(compilation_error);
                 print_line_break();
+                exit_code = EXCODE_COMPILATION_ERROR;
                 break;
             }
 
