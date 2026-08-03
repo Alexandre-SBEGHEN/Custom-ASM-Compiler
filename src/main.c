@@ -241,6 +241,10 @@ void print_output_file_error(const char* output, const bool missing_output, cons
         printf("'%s' is a directory\n", output);
 }
 
+/**
+ * @brief Affiche une erreur de compilation,
+ * avec la description de l'erreur.
+ */
 void print_file_compilation_error(const CompilerErrors error) {
     printf("Compilation error:\n");
     switch (error) {
