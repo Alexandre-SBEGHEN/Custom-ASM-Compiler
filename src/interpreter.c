@@ -155,5 +155,29 @@ Program* file_bin_to_program(const char* filename) {
 
 /* Sauvegarde d'un programme dans un fichier */
 void program_save_to(const Program* prog, const char* filename) {
+    if (filename == NULL)
+        return;
 
+    FILE* file = fopen(filename, "wb");
+    if (file == NULL)
+        return;
+
+    // Ecriture (big endian)
+    for (size_t i = 0; i < array_size(prog->inst); ++i) {
+        Instruction inst = prog->inst[i];
+        int32_t values[] = {(int32_t)inst.op, inst.arg};
+        for (size_t j = 0; j < 2; ++j) {
+            int32_t value = values[j];
+            uint32_t uvalue = (uint32_t)value;
+            unsigned char bytes[4];
+            bytes[0] = (uvalue >> 24) & 0xFF;
+            bytes[1] = (uvalue >> 16) & 0xFF;
+            bytes[2] = (uvalue >> 8) & 0xFF;
+            bytes[3] = uvalue & 0xFF;
+
+            fwrite(bytes, sizeof(unsigned char), 4, file);
+        }
+    }
+
+    fclose(file);
 }

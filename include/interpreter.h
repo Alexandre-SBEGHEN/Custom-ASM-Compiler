@@ -12,9 +12,9 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
-
 #include "machine.h"
 
 /* --- Alias --------------------------------------------------------------- */

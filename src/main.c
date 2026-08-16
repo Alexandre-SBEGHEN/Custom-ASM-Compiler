@@ -353,6 +353,13 @@ int main(int argc, char** argv) {
                 break;
             }
 
+            // Compilation & sauvegarde
+            Program* prog = program_compile(input);
+            program_save_to(prog, output);
+
+            // Libération
+            program_delete(prog);
+
             // Succès
             print_file_compilation_success(output);
             exit_code = EXCODE_SUCCESS;
