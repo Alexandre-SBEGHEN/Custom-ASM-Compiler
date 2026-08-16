@@ -303,7 +303,7 @@ void print_machine_data(const Machine* mac) {
     printf("%-16s %d\n", "register", mac->reg->val);
     for (size_t i = 0; i < DEFAULT_MACHINE_MEMORY_SIZE; ++i) {
         char memindex[16];
-        sprintf(memindex, "memory[%d]", i);
+        sprintf(memindex, "memory[%zu]", i);
         printf("%-16s %d\n", memindex, mac->mem->data[i]);
     }
     printf("~--------------------~\n");
