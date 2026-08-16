@@ -69,6 +69,7 @@ const PairStringCommand COMMANDS[] = {
     {"x", CMD_EXECUTE_COMPILED}
 };
 const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(PairStringCommand);
+const size_t DEFAULT_MACHINE_MEMORY_SIZE = 8;
 
 /* --- Fonctions ----------------------------------------------------------- */
 
@@ -291,6 +292,23 @@ void print_file_compilation_success(const char* filename) {
     );
 }
 
+/**
+ * @brief Affiche les données de la machine RAM.
+ * Registre et cases mémoire.
+ *
+ * @param[in] mac Pointeur vers la structure Machine.
+ */
+void print_machine_data(const Machine* mac) {
+    printf("~--- Machine Data ---~\n");
+    printf("%-16s %d\n", "register", mac->reg->val);
+    for (size_t i = 0; i < DEFAULT_MACHINE_MEMORY_SIZE; ++i) {
+        char memindex[16];
+        sprintf(memindex, "memory[%d]", i);
+        printf("%-16s %d\n", memindex, mac->mem->data[i]);
+    }
+    printf("~--------------------~\n");
+}
+
 /* --- Main ---------------------------------------------------------------- */
 
 int main(int argc, char** argv) {
@@ -320,6 +338,9 @@ int main(int argc, char** argv) {
     const FileCheckResult input_check = missing_input ? FILE_NOT_FOUND : input_file_check(input);
     const FileCheckResult output_check = missing_output ? FILE_NOT_FOUND : output_file_check(output);
     bool command_line_error;
+
+    // Préparer la machine RAM
+    Machine* mac = machine_create(DEFAULT_MACHINE_MEMORY_SIZE);
 
     // Exécution de la commande
     switch (program_command) {
@@ -377,6 +398,25 @@ int main(int argc, char** argv) {
                 break;
             }
 
+            // Erreur de compilation
+            const CompilerErrors compilation_error = program_is_compilable(input);
+            if (compilation_error != CERR_SUCCESS) {
+                print_file_compilation_error(compilation_error);
+                print_line_break();
+                exit_code = EXCODE_COMPILATION_ERROR;
+                break;
+            }
+
+            // Compilation & exécution
+            Program* prog = program_compile(input);
+            program_interpret(prog, mac);
+
+            print_machine_data(mac);
+            print_line_break();
+
+            // Libération
+            program_delete(prog);
+
             // Succès
             exit_code = EXCODE_SUCCESS;
             break;
@@ -399,5 +439,6 @@ int main(int argc, char** argv) {
         }
     }
 
+    machine_delete(mac);
     return exit_code;
 }
