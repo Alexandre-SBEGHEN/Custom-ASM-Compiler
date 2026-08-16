@@ -1,4 +1,7 @@
 main:
+    LOAD #-67; # valeur souhaitée
+    STORE @0;
+
     LOAD @0;
     INCR;
     STORE @1;
