@@ -128,22 +128,25 @@ Token* token_create(const TokenType type, const int32_t value, const char* label
 
     // Allocation, return NULL si échec
     if ((token = malloc(sizeof(Token))) == NULL)
-        return NULL;
+        goto fail_token;
 
     // Allocation du label
-    if (label == NULL) {
+    if (label == NULL)
         token->label = NULL;
-    } else {
-        if ((token->label = string_create(label)) == NULL) {
-            free(token);
-            return NULL;
-        }
-    }
+    else if ((token->label = string_create(label)) == NULL)
+            goto fail_label;
 
     // Assignation des champs
     token->type = type;
     token->value = value;
 
+    goto success;
+
+fail_label:
+    free(token);
+fail_token:
+    return NULL;
+success:
     return token;
 }
 
