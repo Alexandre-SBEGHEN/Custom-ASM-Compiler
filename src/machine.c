@@ -35,7 +35,6 @@ Memory* memory_create(const size_t size) {
     if ((mem = malloc(sizeof(Memory))) == NULL)
         return NULL;
 
-
     // Allocation des données, echec -> free reg puis return NULL
     mem->data = array_create(int32_t);
     for (size_t i = 0; i < size; ++i)
@@ -55,19 +54,21 @@ Machine* machine_create(const size_t memsize) {
     Machine* mac;
 
     if ((mac = malloc(sizeof(Machine))) == NULL)
-        return NULL;
+        goto fail_mac;
+    if ((mac->mem = memory_create(memsize)) == NULL)
+        goto fail_mem;
+    if ((mac->reg = register_create()) == NULL)
+        goto fail_reg;
 
-    if ((mac->mem = memory_create(memsize)) == NULL) {
-        free(mac);
-        return NULL;
-    }
+    goto success;
 
-    if ((mac->reg = register_create()) == NULL) {
-        memory_delete(mac->mem);
-        free(mac);
-        return NULL;
-    }
-
+fail_reg:
+    memory_delete(mac->mem);
+fail_mem:
+    free(mac);
+fail_mac:
+    return NULL;
+success:
     return mac;
 }
 
