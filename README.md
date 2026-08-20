@@ -47,6 +47,14 @@ Cette machine est équipée du jeu d'instructions suivant :
 | `JUMP <étiquette>` | Saut inconditionnel à l'étiquette |
 | `JZ <étiquette>` | Saut à l'étiquette si (registre ≤ 0) |
 | `HALT` | Arrêt du programme |
+
+### Instructions annexes
+
+Ce sont des instructions qui ne figurent pas dans la machine RAM que j'ai apprise en cours,
+cependant j'ai trouvé intéressant de les inclure.
+
+| Instruction | Description |
+|-|-|
 | `PRINT_CHAR` | Affiche l'entier contenu dans le registre sous la forme d'un caractère |
 | `PRINT_INT` | Affiche l'entier contenu dans le registre |
 
