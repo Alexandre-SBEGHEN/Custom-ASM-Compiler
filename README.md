@@ -57,6 +57,8 @@ cependant j'ai trouvé intéressant de les inclure.
 |-|-|
 | `PRINT_CHAR` | Affiche l'entier contenu dans le registre sous la forme d'un caractère |
 | `PRINT_INT` | Affiche l'entier contenu dans le registre |
+| `READ_CHAR` | Lit un caractère depuis l'entrée utilisateur et le stocke dans le registre |
+| `READ_INT` | Lit un entier depuis l'entrée utilisateur et le stocke dans le registre |
 
 ## Compilateur
 
@@ -163,6 +165,8 @@ hexadécimal, la présence ou non d'un opérande, et son équivalent assembleur 
 | `0x00000008` | non | `HALT` |
 | `0x00000009` | non | `PRINT_CHAR` |
 | `0x0000000A` | non | `PRINT_INT` |
+| `0x0000000B` | non | `READ_CHAR` |
+| `0x0000000C` | non | `READ_INT` |
 
 ## Interpréteur
 
