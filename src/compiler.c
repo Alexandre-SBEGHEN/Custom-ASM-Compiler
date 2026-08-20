@@ -23,6 +23,8 @@ static const KeywordEntry KEYWORDS[] = {
     {"JZ", OP_JZ},
     {"PRINT_CHAR", OP_PRINT_CHAR},
     {"PRINT_INT", OP_PRINT_INT},
+    {"READ_CHAR", OP_READ_CHAR},
+    {"READ_INT", OP_READ_INT},
     {"HALT", OP_HALT}
 };
 static const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KeywordEntry);

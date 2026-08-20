@@ -89,14 +89,36 @@ InterpreterErrors program_interpret(const Program* prog, Machine* mac) {
                     continue;
                 }
                 break;
-            // Afficher un caractère
+            // PRINT_CHAR
             case OP_PRINT_CHAR:
                 printf("%c", (char)mac->reg->val);
                 break;
-            // Afficher un entier
+            // PRINT_INT
             case OP_PRINT_INT:
                 printf("%d", mac->reg->val);
                 break;
+            // READ_CHAR
+            case OP_READ_CHAR: {
+                char input = 0;
+                if (scanf("%c", &input) == 1) // Si lecture réussit
+                    mac->reg->val = (int32_t)input;
+
+                // Vider le buffer
+                int c;
+                while ((c = getchar()) != '\n' && c != EOF);
+                break;
+            }
+            // READ_INT
+            case OP_READ_INT: {
+                int32_t input = 0;
+                if (scanf("%d", &input) > 0) // Si lecture réussit
+                    mac->reg->val = input;
+
+                // Vider le buffer
+                int c;
+                while ((c = getchar()) != '\n' && c != EOF);
+                break;
+            }
             // HALT
             case OP_HALT:
                 return IERR_SUCCESS;

@@ -40,7 +40,9 @@ enum OpcodeEnum {
     OP_JZ,
     OP_HALT,
     OP_PRINT_CHAR,
-    OP_PRINT_INT
+    OP_PRINT_INT,
+    OP_READ_CHAR,
+    OP_READ_INT
 };
 
 /**
