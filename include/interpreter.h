@@ -38,7 +38,9 @@ enum OpcodeEnum {
     OP_DECR,
     OP_JUMP,
     OP_JZ,
-    OP_HALT
+    OP_HALT,
+    OP_PRINT_CHAR,
+    OP_PRINT_INT
 };
 
 /**

@@ -411,7 +411,6 @@ int main(int argc, char** argv) {
             Program* prog = program_compile(input);
             program_interpret(prog, mac);
 
-            print_machine_data(mac);
             print_line_break();
 
             // Libération
@@ -437,7 +436,6 @@ int main(int argc, char** argv) {
             Program* prog = file_bin_to_program(input);
             program_interpret(prog, mac);
 
-            print_machine_data(mac);
             print_line_break();
 
             // Succès

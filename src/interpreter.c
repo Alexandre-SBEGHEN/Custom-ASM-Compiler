@@ -89,6 +89,14 @@ InterpreterErrors program_interpret(const Program* prog, Machine* mac) {
                     continue;
                 }
                 break;
+            // Afficher un caractère
+            case OP_PRINT_CHAR:
+                printf("%c", (char)mac->reg->val);
+                break;
+            // Afficher un entier
+            case OP_PRINT_INT:
+                printf("%d", mac->reg->val);
+                break;
             // HALT
             case OP_HALT:
                 return IERR_SUCCESS;

@@ -21,6 +21,8 @@ static const KeywordEntry KEYWORDS[] = {
     {"DECR", OP_DECR},
     {"JUMP", OP_JUMP},
     {"JZ", OP_JZ},
+    {"PRINT_CHAR", OP_PRINT_CHAR},
+    {"PRINT_INT", OP_PRINT_INT},
     {"HALT", OP_HALT}
 };
 static const size_t KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KeywordEntry);
