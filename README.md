@@ -47,6 +47,8 @@ Cette machine est équipée du jeu d'instructions suivant :
 | `JUMP <étiquette>` | Saut inconditionnel à l'étiquette |
 | `JZ <étiquette>` | Saut à l'étiquette si (registre ≤ 0) |
 | `HALT` | Arrêt du programme |
+| `PRINT_CHAR` | Affiche l'entier contenu dans le registre sous la forme d'un caractère |
+| `PRINT_INT` | Affiche l'entier contenu dans le registre |
 
 ## Compilateur
 
@@ -151,6 +153,8 @@ hexadécimal, la présence ou non d'un opérande, et son équivalent assembleur 
 | `0x00000006` | oui | `JUMP ?` |
 | `0x00000007` | oui | `JZ ?` |
 | `0x00000008` | non | `HALT` |
+| `0x00000009` | non | `PRINT_CHAR` |
+| `0x0000000A` | non | `PRINT_INT` |
 
 ## Interpréteur
 
