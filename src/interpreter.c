@@ -31,16 +31,27 @@ void program_delete(Program* prog) {
     free(prog);
 }
 
+/**
+ * @brief Vérifie qu'un indice mémoire est dans les bornes de la machine.
+ *
+ * @param[in] mac Pointeur vers la machine.
+ * @param[in] index Indice mémoire à vérifier.
+ * @return true si l'indice est valide, false sinon.
+ */
+static bool memory_index_is_valid(const Machine* mac, const int32_t index) {
+    return index >= 0 && (size_t)index < array_size(mac->mem->data);
+}
+
 /* Exécution d'un programme compilé */
 InterpreterErrors program_interpret(const Program* prog, Machine* mac) {
-    if (prog == NULL || mac == NULL)
+    if (prog == NULL || mac == NULL || mac->mem == NULL || mac->reg == NULL)
         return IERR_MISSING_MAC_OR_REG;
 
     size_t inst_index = 0;
 
     // Boucle du programme
     while (true) {
-        // Index en dehors du programme (erreur 1)
+        // Index en dehors du programme
         if (inst_index >= array_size(prog->inst))
             return IERR_OVERFLOW;
 
@@ -59,10 +70,15 @@ InterpreterErrors program_interpret(const Program* prog, Machine* mac) {
                 break;
             // LOAD @?
             case OP_LOAD_FROM:
-                ram_load_from(mac, arg);
+                if (!memory_index_is_valid(mac, arg))
+                    return IERR_MEMORY_OUT_OF_BOUNDS;
+                ram_load_from(mac, (size_t)arg);
+                break;
             // STORE @?
             case OP_STORE_TO:
-                ram_store_to(mac, arg);
+                if (!memory_index_is_valid(mac, arg))
+                    return IERR_MEMORY_OUT_OF_BOUNDS;
+                ram_store_to(mac, (size_t)arg);
                 break;
             // INCR
             case OP_INCR:
@@ -74,18 +90,16 @@ InterpreterErrors program_interpret(const Program* prog, Machine* mac) {
                 break;
             // JUMP ?
             case OP_JUMP:
-                // Gérer l'overflow (erreur 1)
                 if (arg < 0)
-                    return 1;
-                inst_index = arg;
+                    return IERR_OVERFLOW;
+                inst_index = (size_t)arg;
                 continue;
             // JZ ?
             case OP_JZ:
-                // Gérer l'overflow (erreur 1)
                 if (arg < 0)
-                    return 1;
+                    return IERR_OVERFLOW;
                 if (mac->reg->val <= 0) {
-                    inst_index = arg;
+                    inst_index = (size_t)arg;
                     continue;
                 }
                 break;

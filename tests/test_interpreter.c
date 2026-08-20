@@ -31,7 +31,8 @@ static void test_program_create(void) {
  * @see program_interpret()
  */
 static void test_program_interpret(void) {
-    Machine* mac = machine_create(2);
+    // Taille 3 : le programme a = a + 10 utilise STORE @2 comme compteur
+    Machine* mac = machine_create(3);
     Program* prog = program_create();
 
     // Programme 1 (a = 1)
@@ -120,6 +121,76 @@ static void test_program_interpret(void) {
     mac->mem->data[0] = -67;
     program_interpret(prog, mac);
     assert(mac->mem->data[0] == 67);
+
+    program_delete(prog);
+    machine_delete(mac);
+}
+
+/**
+ * @brief Test des accès mémoire hors bornes et du fallthrough LOAD/STORE.
+ *
+ * Vérifie que LOAD @ / STORE @ refusent un indice négatif ou
+ * supérieur ou égal à la taille de la mémoire, et que LOAD_FROM
+ * n'écrase plus la mémoire via un fallthrough accidentel vers STORE.
+ *
+ * @see program_interpret()
+ */
+static void test_program_interpret_memory_bounds(void) {
+    Machine* mac = machine_create(2);
+    Program* prog = program_create();
+    InterpreterErrors err;
+
+    // STORE hors bornes (indice == taille)
+    array_push(prog->inst, ((Instruction){OP_LOAD_DIRECT, 1}));
+    array_push(prog->inst, ((Instruction){OP_STORE_TO, 2}));
+    array_push(prog->inst, ((Instruction){OP_HALT, 0}));
+    err = program_interpret(prog, mac);
+    assert(err == IERR_MEMORY_OUT_OF_BOUNDS);
+    assert(mac->mem->data[0] == 0);
+    assert(mac->mem->data[1] == 0);
+
+    program_delete(prog);
+    prog = program_create();
+
+    // LOAD hors bornes
+    mac->reg->val = 0;
+    array_push(prog->inst, ((Instruction){OP_LOAD_FROM, 5}));
+    array_push(prog->inst, ((Instruction){OP_HALT, 0}));
+    err = program_interpret(prog, mac);
+    assert(err == IERR_MEMORY_OUT_OF_BOUNDS);
+    assert(mac->reg->val == 0);
+
+    program_delete(prog);
+    prog = program_create();
+
+    // Adresse négative
+    array_push(prog->inst, ((Instruction){OP_STORE_TO, -1}));
+    array_push(prog->inst, ((Instruction){OP_HALT, 0}));
+    err = program_interpret(prog, mac);
+    assert(err == IERR_MEMORY_OUT_OF_BOUNDS);
+
+    program_delete(prog);
+    prog = program_create();
+
+    // Accès valide + LOAD_FROM ne doit pas altérer une autre case
+    mac->mem->data[0] = 10;
+    mac->mem->data[1] = 99;
+    array_push(prog->inst, ((Instruction){OP_LOAD_FROM, 0}));
+    array_push(prog->inst, ((Instruction){OP_HALT, 0}));
+    err = program_interpret(prog, mac);
+    assert(err == IERR_SUCCESS);
+    assert(mac->reg->val == 10);
+    assert(mac->mem->data[0] == 10);
+    assert(mac->mem->data[1] == 99);
+
+    program_delete(prog);
+    prog = program_create();
+
+    // JUMP négatif renvoie bien IERR_OVERFLOW (et non un autre code)
+    array_push(prog->inst, ((Instruction){OP_JUMP, -1}));
+    array_push(prog->inst, ((Instruction){OP_HALT, 0}));
+    err = program_interpret(prog, mac);
+    assert(err == IERR_OVERFLOW);
 
     program_delete(prog);
     machine_delete(mac);
@@ -217,6 +288,7 @@ static void test_file_bin_to_program(void) {
 int main(void) {
     test_program_create();
     test_program_interpret();
+    test_program_interpret_memory_bounds();
     test_file_bin_to_program();
 
     return 0;
