@@ -1,0 +1,32 @@
+main:
+	LOAD #72;	# H
+	PRINT_CHAR;
+	LOAD #101;	# e
+	PRINT_CHAR;
+	LOAD #108;	# l
+	PRINT_CHAR;
+	LOAD #108;	# l
+	PRINT_CHAR;
+	LOAD #111;	# o
+	PRINT_CHAR;
+
+	LOAD #32;	# [SPACE]
+	PRINT_CHAR;
+
+	LOAD #87;	# W
+    PRINT_CHAR;
+	LOAD #111;	# o
+    PRINT_CHAR;
+    LOAD #114;	# r
+    PRINT_CHAR;
+    LOAD #108;	# l
+    PRINT_CHAR;
+    LOAD #100;	# d
+    PRINT_CHAR;
+
+	LOAD #33;	# !
+	PRINT_CHAR;
+	LOAD #10;	# [LINE FEED]
+	PRINT_CHAR;
+
+	HALT;
