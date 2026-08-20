@@ -309,6 +309,10 @@ void print_machine_data(const Machine* mac) {
     printf("~--------------------~\n");
 }
 
+void print_program_finished(const InterpreterErrors error) {
+    printf("Program finished with exit code %d\n", error);
+}
+
 /* --- Main ---------------------------------------------------------------- */
 
 int main(int argc, char** argv) {
@@ -409,8 +413,12 @@ int main(int argc, char** argv) {
 
             // Compilation & exécution
             Program* prog = program_compile(input);
-            program_interpret(prog, mac);
+            InterpreterErrors exec = program_interpret(prog, mac);
 
+            print_line_break();
+            print_program_finished(exec);
+            print_line_break();
+            print_machine_data(mac);
             print_line_break();
 
             // Libération
@@ -434,9 +442,16 @@ int main(int argc, char** argv) {
 
             // Chargement & interprétation
             Program* prog = file_bin_to_program(input);
-            program_interpret(prog, mac);
+            InterpreterErrors exec = program_interpret(prog, mac);
 
             print_line_break();
+            print_program_finished(exec);
+            print_line_break();
+            print_machine_data(mac);
+            print_line_break();
+
+            // Libération
+            program_delete(prog);
 
             // Succès
             exit_code = EXCODE_SUCCESS;
