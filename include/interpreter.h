@@ -53,7 +53,8 @@ enum InterpreterErrorsEnum {
     IERR_SUCCESS, /**< Aucune erreur */
     IERR_MISSING_MAC_OR_REG, /**< Machine et/ou registre manquant(s) */
     IERR_OVERFLOW, /**< Index de lecture en dehors du programme  */
-    IERR_UNKNOWN_INSTRUCTION /**< Instruction inconnue */
+    IERR_UNKNOWN_INSTRUCTION, /**< Instruction inconnue */
+    IERR_MEMORY_OUT_OF_BOUNDS /**< Accès mémoire hors des bornes */
 };
 
 /**
