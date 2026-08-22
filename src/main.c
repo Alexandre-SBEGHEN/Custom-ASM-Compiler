@@ -310,6 +310,12 @@ void print_machine_data(const Machine* mac) {
     printf("~--------------------~\n");
 }
 
+/**
+ * @brief Affiche un message avec un code de sortie
+ * en fin d'interprétation d'un programme
+ *
+ * @param[in] error Code de sortie.
+ */
 void print_program_finished(const InterpreterErrors error) {
     printf("Program finished with exit code %d\n", error);
 }
