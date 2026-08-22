@@ -166,7 +166,7 @@ void print_program_header(void) {
         "Assembly compiler & interpreter for RAM Machine, Alexandre SBEGHEN, 2026\n"
         "Version " PROJECT_VERSION "\n"
         "GitHub: https://github.com/Alexandre-SBEGHEN\n"
-        "Repo: https://github.com/Alexandre-SBEGHEN/RAM-Machine-ASM-Compiler-Interpreter\n"
+        "Repo: https://github.com/Alexandre-SBEGHEN/Custom-ASM-Compiler\n"
     );
     print_line_break();
 }
