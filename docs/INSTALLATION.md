@@ -1,8 +1,8 @@
-## Installation
+# Installation
 
-### Linux
+## Linux
 
-#### Droits d'exécution
+### Droits d'exécution
 
 Il est possible que vous n'ayez pas les droits pour exécuter le programme. Dans ce cas, entrez :
 
@@ -10,7 +10,7 @@ Il est possible que vous n'ayez pas les droits pour exécuter le programme. Dans
 chmod +x ramc-v1.1.0-linux-x86_64
 ```
 
-#### Exécution
+### Exécution
 
 Pour exécuter le programme, entrez :
 
@@ -18,9 +18,9 @@ Pour exécuter le programme, entrez :
 ./ramc-v1.1.0-linux-x86_64
 ```
 
-### macOS ARM64
+## macOS ARM64
 
-#### Droits d'exécution
+### Droits d'exécution
 
 Il est possible que vous n'ayez pas les droits pour exécuter le programme. Dans ce cas, entrez :
 
@@ -28,7 +28,7 @@ Il est possible que vous n'ayez pas les droits pour exécuter le programme. Dans
 chmod +x ramc-v1.1.0-macos-arm64
 ```
 
-#### Gatekeeper
+### Gatekeeper
 
 Le logiciel Gatekeeper peut vous empêcher d'exécuter le programme par soucis de sécurité. Dans ce cas, entrez :
 
@@ -36,7 +36,7 @@ Le logiciel Gatekeeper peut vous empêcher d'exécuter le programme par soucis d
 xattr -d com.apple.quarantine ramc-v1.1.0-macos-arm64
 ```
 
-#### Exécution
+### Exécution
 
 Pour exécuter le programme, entrez :
 
