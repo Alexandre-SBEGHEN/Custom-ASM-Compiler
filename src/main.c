@@ -204,7 +204,7 @@ static void print_command_line_error_header(void) {
  * @brief Affiche l'erreur de la commande
  * comme étant non supportée.
  */
-static void print_unsopported_command_error(const char* command) {
+static void print_unsupported_command_error(const char* command) {
     printf(
         "Unsupported command:\n"
         "%s\n",
@@ -358,7 +358,7 @@ int main(int argc, char** argv) {
         // Commande inconnue
         case CMD_UNKNOWN: {
             print_command_line_error_header();
-            print_unsopported_command_error(command);
+            print_unsupported_command_error(command);
             print_line_break();
             exit_code = EXCODE_UNSUPPORTED_COMMAND;
             break;
