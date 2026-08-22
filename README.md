@@ -129,19 +129,8 @@ sont créées → c'est le programme compilé.
 ### Codes d'erreur du compilateur
 
 Si une erreur survient lors du processus de compilation, celui-ci s'arrête, et un code
-d'erreur est renvoyé.
-
-| Code | Signification |
-|-|-|
-| 0 | Aucune erreur |
-| 1 | Tokens inexistants |
-| 2 | Instruction inconnue |
-| 3 | Opérande orphelin (ex: `#?` ou `@?` sans leur instruction `LOAD` ou `STORE`) |
-| 4 | Instruction avec mauvais ou sans opérande (ex: un `LOAD` seul ou `STORE #0`) |
-| 5 | Instruction de saut sans étiquette (ex: un `JUMP` seul) |
-| 6 | Etiquette sans instruction de saut lui précédant |
-| 7 | Définition d'une étiquette déjà existante |
-| 8 | Saut vers une étiquette inexistante |
+d'erreur est renvoyé. La liste des codes d'erreurs peut être trouvée
+[ici](docs/COMPILER_ERROR.md).
 
 ## Programme compilé
 
@@ -175,18 +164,13 @@ section précédente. À la lecture, le fichier est chargé en mémoire sous la 
 représentant un tableau de N lignes et 2 colonnes, où N est le nombre d'instructions du programme.
 
 L'interpréteur parcourt ensuite ce tableau séquentiellement, en exécutant chaque instruction sur la machine RAM
-(registre + mémoire), jusqu'à rencontrer l'instruction `HALT`. Si l'exécution du programme réussit, la fonction qui
-interprète le programme renvoie la valeur 0. Sinon, elle renvoie un code d'erreur.
+(registre + mémoire), jusqu'à rencontrer l'instruction `HALT`.
 
 ### Codes d'erreur de l'interpréteur
 
-| Code | Signification |
-|-|-|
-| 0 | Aucune erreur |
-| 1 | Machine et/ou registre manquant(s) |
-| 2 | Overflow, index de lecture en dehors du programme (`<0` OU `>= taille`) |
-| 3 | Instruction inconnue |
-| 4 | Accès mémoire hors des bornes (`LOAD @` / `STORE @` avec un indice invalide) |
+Si l'exécution du programme réussit, la fonction qui
+interprète le programme renvoie la valeur 0. Sinon, elle renvoie un code d'erreur. La liste des
+codes d'erreurs peut être trouvée [ici](docs/INTERPRETER_ERROR.md).
 
 ## Contributions
 
