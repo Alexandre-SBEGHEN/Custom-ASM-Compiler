@@ -138,7 +138,7 @@ static void test_program_interpret(void) {
 static void test_program_interpret_memory_bounds(void) {
     Machine* mac = machine_create(2);
     Program* prog = program_create();
-    InterpreterErrors err;
+    InterpreterError err;
 
     // STORE hors bornes (indice == taille)
     array_push(prog->inst, ((Instruction){OP_LOAD_DIRECT, 1}));

@@ -657,7 +657,7 @@ static void test_tokens_parse(void) {
 static void test_program_is_compilable(void) {
     typedef struct {
         char filename[256];
-        CompilerErrors expected_error;
+        CompilerError expected_error;
     } Pair;
 
     Pair pairs[13] = {

@@ -267,7 +267,7 @@ void tokens_disambiguate(Token** tokens) {
 }
 
 /* Validité des tokens */
-CompilerErrors tokens_check_validity(Token** tokens) {
+CompilerError tokens_check_validity(Token** tokens) {
     if (tokens == NULL)
         return CERR_NO_TOKENS;
 
@@ -283,7 +283,7 @@ CompilerErrors tokens_check_validity(Token** tokens) {
 
     string* declared_labels = array_create(string);
 
-    CompilerErrors tokens_validity = CERR_SUCCESS;
+    CompilerError tokens_validity = CERR_SUCCESS;
 
     for (size_t i = 0; i < tokens_len; ++i) {
         size_t declared_labels_len = array_size(declared_labels);
@@ -456,7 +456,7 @@ Program* tokens_parse(Token** tokens) {
 }
 
 /* Est-ce qu'un programme est compilable ? */
-CompilerErrors program_is_compilable(const char* filename) {
+CompilerError program_is_compilable(const char* filename) {
     if (filename == NULL)
         return CERR_NO_TOKENS;
 
@@ -467,7 +467,7 @@ CompilerErrors program_is_compilable(const char* filename) {
     Token** tokens = (keywords == NULL) ? NULL : keywords_to_tokens(keywords);
 
     tokens_disambiguate(tokens);
-    CompilerErrors error = tokens_check_validity(tokens);
+    CompilerError error = tokens_check_validity(tokens);
 
     // Libération de mémoire
     if (tokens != NULL) {

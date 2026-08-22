@@ -24,7 +24,7 @@
 /* --- Alias --------------------------------------------------------------- */
 
 typedef enum TokenTypeEnum TokenType;
-typedef enum CompilerErrorsEnum CompilerErrors;
+typedef enum CompilerErrorEnum CompilerError;
 typedef struct TokenStruct Token;
 typedef struct KeywordEntryStruct KeywordEntry;
 
@@ -46,7 +46,7 @@ enum TokenTypeEnum {
  * @brief Codes d'erreur du compilateur lors de
  * la compilation d'un programme.
  */
-enum CompilerErrorsEnum {
+enum CompilerErrorEnum {
     CERR_SUCCESS, /**< Aucune erreur */
     CERR_NO_TOKENS, /**< Tokens inexistants */
     CERR_UNKNOWN_INSTRUCTION, /**< Instruction inconnue */
@@ -225,7 +225,7 @@ void tokens_disambiguate(Token** tokens);
  * @param[in] tokens Pointeur vers le tableau de tokens.
  * @return Validité des tokens.
  */
-CompilerErrors tokens_check_validity(Token** tokens);
+CompilerError tokens_check_validity(Token** tokens);
 
 /**
  * Crée un programme compilé, compréhensible par l'interpréteur,
@@ -261,7 +261,7 @@ Program* tokens_parse(Token** tokens);
  * @note Si plusieurs problèmes ont lieu, seul celui rencontré
  * en premier sera renvoyé.
  */
-CompilerErrors program_is_compilable(const char* filename);
+CompilerError program_is_compilable(const char* filename);
 
 /**
  * @brief Compile le code issu d'un fichier ASM.

@@ -247,7 +247,7 @@ static void print_output_file_error(const char* output, const bool missing_outpu
  * @brief Affiche une erreur de compilation,
  * avec la description de l'erreur.
  */
-static void print_file_compilation_error(const CompilerErrors error) {
+static void print_file_compilation_error(const CompilerError error) {
     printf("Compilation error:\n");
     switch (error) {
         case CERR_SUCCESS:
@@ -316,7 +316,7 @@ static void print_machine_data(const Machine* mac) {
  *
  * @param[in] error Code de sortie.
  */
-static void print_program_finished(const InterpreterErrors error) {
+static void print_program_finished(const InterpreterError error) {
     printf("Program finished with exit code %d\n", error);
 }
 
@@ -377,7 +377,7 @@ int main(int argc, char** argv) {
             }
 
             // Erreur de compilation
-            const CompilerErrors compilation_error = program_is_compilable(input);
+            const CompilerError compilation_error = program_is_compilable(input);
             if (compilation_error != CERR_SUCCESS) {
                 print_file_compilation_error(compilation_error);
                 print_line_break();
@@ -410,7 +410,7 @@ int main(int argc, char** argv) {
             }
 
             // Erreur de compilation
-            const CompilerErrors compilation_error = program_is_compilable(input);
+            const CompilerError compilation_error = program_is_compilable(input);
             if (compilation_error != CERR_SUCCESS) {
                 print_file_compilation_error(compilation_error);
                 print_line_break();
@@ -420,7 +420,7 @@ int main(int argc, char** argv) {
 
             // Compilation & exécution
             Program* prog = program_compile(input);
-            InterpreterErrors exec = program_interpret(prog, mac);
+            InterpreterError exec = program_interpret(prog, mac);
 
             print_line_break();
             print_program_finished(exec);
@@ -449,7 +449,7 @@ int main(int argc, char** argv) {
 
             // Chargement & interprétation
             Program* prog = file_bin_to_program(input);
-            InterpreterErrors exec = program_interpret(prog, mac);
+            InterpreterError exec = program_interpret(prog, mac);
 
             print_line_break();
             print_program_finished(exec);

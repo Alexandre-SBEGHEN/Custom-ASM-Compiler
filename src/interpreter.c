@@ -43,7 +43,7 @@ static bool memory_index_is_valid(const Machine* mac, const int32_t index) {
 }
 
 /* Exécution d'un programme compilé */
-InterpreterErrors program_interpret(const Program* prog, Machine* mac) {
+InterpreterError program_interpret(const Program* prog, Machine* mac) {
     if (prog == NULL || mac == NULL || mac->mem == NULL || mac->reg == NULL)
         return IERR_MISSING_MAC_OR_REG;
 

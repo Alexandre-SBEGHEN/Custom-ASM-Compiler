@@ -20,7 +20,7 @@
 /* --- Alias --------------------------------------------------------------- */
 
 typedef enum OpcodeEnum Opcode;
-typedef enum InterpreterErrorsEnum InterpreterErrors;
+typedef enum InterpreterErrorEnum InterpreterError;
 typedef struct InstructionStruct Instruction;
 typedef struct ProgramStruct Program;
 
@@ -49,7 +49,7 @@ enum OpcodeEnum {
  * @brief Codes d'erreur de l'interpréteur lors de
  * l'exécution d'un programme.
  */
-enum InterpreterErrorsEnum {
+enum InterpreterErrorEnum {
     IERR_SUCCESS, /**< Aucune erreur */
     IERR_MISSING_MAC_OR_REG, /**< Machine et/ou registre manquant(s) */
     IERR_OVERFLOW, /**< Index de lecture en dehors du programme  */
@@ -99,7 +99,7 @@ void program_delete(Program* prog);
  * @param mac Pointeur vers la structure Machine.
  * @return Code d'erreur (ou réussite).
  */
-InterpreterErrors program_interpret(const Program* prog, Machine* mac);
+InterpreterError program_interpret(const Program* prog, Machine* mac);
 
 /**
  * @brief Génère une structure Program à partir d'un fichier binaire (asm compilé).
