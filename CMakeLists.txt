@@ -34,5 +34,5 @@ target_include_directories(test_compiler PRIVATE include/)
 add_test(NAME test_compiler COMMAND test_compiler)
 
 # Variables
-add_compile_definitions(PROJECT_VERSION="1.1.0")
+add_compile_definitions(PROJECT_VERSION="1.1.1")
 add_compile_definitions(PROJECT_ROOT="${CMAKE_SOURCE_DIR}")
