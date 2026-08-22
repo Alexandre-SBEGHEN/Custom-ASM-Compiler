@@ -63,13 +63,13 @@ enum FileCheckResultEnum {
 
 /* --- Constantes ---------------------------------------------------------- */
 
-const PairStringCommand COMMANDS[] = {
+static const PairStringCommand COMMANDS[] = {
     {"c", CMD_COMPILE},
     {"cx", CMD_COMPILE_AND_EXECUTE},
     {"x", CMD_EXECUTE_COMPILED}
 };
-const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(PairStringCommand);
-const size_t DEFAULT_MACHINE_MEMORY_SIZE = 8;
+static const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(PairStringCommand);
+static const size_t DEFAULT_MACHINE_MEMORY_SIZE = 8;
 
 /* --- Fonctions ----------------------------------------------------------- */
 
@@ -81,7 +81,7 @@ const size_t DEFAULT_MACHINE_MEMORY_SIZE = 8;
  * @param[in] str Pointeur vers la string.
  * @return Commande associée, CMD_NONE si commande non trouvée.
  */
-ProgramCommand get_program_command_from_string(const char* str) {
+static ProgramCommand get_program_command_from_string(const char* str) {
     for (size_t i = 0; i < COMMANDS_COUNT; ++i)
         if (string_equals(str, COMMANDS[i].str))
             return COMMANDS[i].option;
@@ -95,7 +95,7 @@ ProgramCommand get_program_command_from_string(const char* str) {
  * @param[in] filename Chemin vers le fichier.
  * @return Taille du fichier, -1 si fichier non trouvé.
  */
-long file_size(const char* filename) {
+static long file_size(const char* filename) {
     struct stat info;
     if (stat(filename, &info) != 0)
         return -1; // Pas trouvé
@@ -113,7 +113,7 @@ long file_size(const char* filename) {
  * @param[in] filename Chemin vers le fichier.
  * @return Résultat de la vérification.
  */
-FileCheckResult input_file_check(const char* filename) {
+static FileCheckResult input_file_check(const char* filename) {
     struct stat info;
     if (stat(filename, &info) != 0)
         return FILE_NOT_FOUND; // Pas trouvé
@@ -134,7 +134,7 @@ FileCheckResult input_file_check(const char* filename) {
  * @param[in] filename Chemin vers le fichier.
  * @return Résultat de la vérification.
  */
-FileCheckResult output_file_check(const char* filename) {
+static FileCheckResult output_file_check(const char* filename) {
     struct stat info;
     if (stat(filename, &info) != 0)
         return FILE_OK; // Existe pas, sera créé donc OK
@@ -150,7 +150,7 @@ FileCheckResult output_file_check(const char* filename) {
 /**
  * @brief Fait un print d'un retour à la ligne.
  */
-void print_line_break(void) {
+static void print_line_break(void) {
     printf("\n");
 }
 
@@ -160,7 +160,7 @@ void print_line_break(void) {
  * Contient des infos sur le programme comme le nom,
  * l'auteur, la date de création, etc.
  */
-void print_program_header(void) {
+static void print_program_header(void) {
     printf(
         "\n"
         "Assembly compiler & interpreter for RAM Machine, Alexandre SBEGHEN, 2026\n"
@@ -177,7 +177,7 @@ void print_program_header(void) {
  *
  * @param[in] executable_name Nom de l'exécutable
  */
-void print_application_usage(const char* executable_name) {
+static void print_application_usage(const char* executable_name) {
     printf(
         "Usage: %s <command> [<file_names>...]\n"
         "\n"
@@ -196,7 +196,7 @@ void print_application_usage(const char* executable_name) {
  * @brief Affiche l'en-tête du message d'erreur
  * de ligne de commande.
  */
-void print_command_line_error_header(void) {
+static void print_command_line_error_header(void) {
     printf("Command line error:\n");
 }
 
@@ -204,7 +204,7 @@ void print_command_line_error_header(void) {
  * @brief Affiche l'erreur de la commande
  * comme étant non supportée.
  */
-void print_unsopported_command_error(const char* command) {
+static void print_unsopported_command_error(const char* command) {
     printf(
         "Unsupported command:\n"
         "%s\n",
@@ -220,7 +220,7 @@ void print_unsopported_command_error(const char* command) {
  * @param[in] input_check Résultat de vérification du fichier.
  * @param[in] kind_of_input Type de fichier (texte, sourcen, binaire, etc.).
  */
-void print_input_file_error(const char* input, const bool missing_input, const FileCheckResult input_check, const char* kind_of_input) {
+static void print_input_file_error(const char* input, const bool missing_input, const FileCheckResult input_check, const char* kind_of_input) {
     if (missing_input)
         printf("You need to specify an input file\n");
     else if (input_check == FILE_NOT_FOUND)
@@ -236,7 +236,7 @@ void print_input_file_error(const char* input, const bool missing_input, const F
  * @param[in] missing_output Est-ce que le fichier est manquant ?
  * @param[in] output_check Résultat de vérification du fichier.
  */
-void print_output_file_error(const char* output, const bool missing_output, const FileCheckResult output_check) {
+static void print_output_file_error(const char* output, const bool missing_output, const FileCheckResult output_check) {
     if (missing_output)
         printf("You need to specify an output file\n");
     else if (output_check == FILE_IS_A_DIRECTORY)
@@ -247,7 +247,7 @@ void print_output_file_error(const char* output, const bool missing_output, cons
  * @brief Affiche une erreur de compilation,
  * avec la description de l'erreur.
  */
-void print_file_compilation_error(const CompilerErrors error) {
+static void print_file_compilation_error(const CompilerErrors error) {
     printf("Compilation error:\n");
     switch (error) {
         case CERR_SUCCESS:
@@ -285,7 +285,7 @@ void print_file_compilation_error(const CompilerErrors error) {
  *
  * @param[in] filename Chemin du fichier compilé.
  */
-void print_file_compilation_success(const char* filename) {
+static void print_file_compilation_success(const char* filename) {
     printf(
         "File compiled successfully to %s\n"
         "\n",
@@ -299,7 +299,7 @@ void print_file_compilation_success(const char* filename) {
  *
  * @param[in] mac Pointeur vers la structure Machine.
  */
-void print_machine_data(const Machine* mac) {
+static void print_machine_data(const Machine* mac) {
     printf("~--- Machine Data ---~\n");
     printf("%-16s %d\n", "register", mac->reg->val);
     for (size_t i = 0; i < DEFAULT_MACHINE_MEMORY_SIZE; ++i) {
@@ -316,7 +316,7 @@ void print_machine_data(const Machine* mac) {
  *
  * @param[in] error Code de sortie.
  */
-void print_program_finished(const InterpreterErrors error) {
+static void print_program_finished(const InterpreterErrors error) {
     printf("Program finished with exit code %d\n", error);
 }
 
