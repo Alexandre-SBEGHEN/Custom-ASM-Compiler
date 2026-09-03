@@ -1,4 +1,22 @@
-# Assembly compiler & interpreter for RA-Machine
+<h1 align="center">Custom Assembly Compiler & Interpreter</h1>
+
+<h5 align="center">par Alexandre SBEGHEN</h6>
+
+<div align="center">
+   <img alt="C" src="https://img.shields.io/badge/C-00599C?style=flat&logo=c&logoColor=white" >
+   <img alt="CMake" src="https://img.shields.io/badge/CMake-F23F42?style=flat" >
+   <img alt="CLion" src="https://img.shields.io/badge/CLion-FC4E9A?style=flat&logo=clion&logoColor=white" >
+   <img alt="Github Actions" src="https://img.shields.io/badge/Github_Actions-249AF9?style=flat&logo=githubactions&logoColor=white" >
+</div>
+
+<div align="center">
+   <img alt="License" src="https://img.shields.io/github/license/Alexandre-SBEGHEN/Custom-ASM-Compiler">
+   <img alt="Repo Size" src="https://img.shields.io/github/repo-size/Alexandre-SBEGHEN/Custom-ASM-Compiler">
+   <a href="https://www.codefactor.io/repository/github/alexandre-sbeghen/custom-asm-compiler"><img src="https://www.codefactor.io/repository/github/alexandre-sbeghen/custom-asm-compiler/badge" alt="CodeFactor" /></a>
+   <img alt="CMake status badge" src="https://github.com/Alexandre-SBEGHEN/Custom-ASM-Compiler/actions/workflows/cmake-test.yml/badge.svg" >
+</div>
+
+---
 
 ## Contexte
 
